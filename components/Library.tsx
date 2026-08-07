@@ -72,6 +72,7 @@ export default function Library() {
   const [query, setQuery] = useState("");
   const [tagFilter, setTagFilter] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
+  const [tagsExpanded, setTagsExpanded] = useState(false);
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -329,24 +330,49 @@ export default function Library() {
         </div>
 
         {tags.length > 0 && (
-          <div
-            className="flex gap-2 mb-4 overflow-x-auto"
-            aria-label="Filter by tag"
-          >
-            {tags.map((t) => (
+          <section className="tag-filter mb-4" aria-labelledby="tag-filter-label">
+            <div className="tag-filter-heading">
+              <span id="tag-filter-label" className="tag-filter-label">
+                Filter by tag
+              </span>
+              {tagFilter && (
+                <button
+                  className="tag-filter-clear pressable"
+                  onClick={() => {
+                    void tap();
+                    setTagFilter(null);
+                  }}
+                  aria-label={`Clear tag filter ${tagFilter}`}
+                >
+                  Clear <span aria-hidden="true">×</span>
+                </button>
+              )}
+            </div>
+            <div className={tagsExpanded ? "tag-filter-list expanded" : "tag-filter-list"}>
+              {tags.map((t) => (
+                <button
+                  key={t}
+                  className="chip pressable"
+                  aria-pressed={tagFilter === t}
+                  onClick={() => {
+                    void tap();
+                    setTagFilter(tagFilter === t ? null : t);
+                  }}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+            {tags.length > 4 && (
               <button
-                key={t}
-                className="chip pressable"
-                aria-pressed={tagFilter === t}
-                onClick={() => {
-                  void tap();
-                  setTagFilter(tagFilter === t ? null : t);
-                }}
+                className="tag-filter-toggle pressable"
+                onClick={() => setTagsExpanded((expanded) => !expanded)}
+                aria-expanded={tagsExpanded}
               >
-                {t}
+                {tagsExpanded ? "Show less" : `Show all ${tags.length} tags`}
               </button>
-            ))}
-          </div>
+            )}
+          </section>
         )}
 
         {!loaded && (

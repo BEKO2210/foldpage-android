@@ -308,6 +308,60 @@ body {
 }
 
 /* Tag chips */
+.tag-filter-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2rem;
+  margin-bottom: 0.35rem;
+}
+.tag-filter-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tag-filter-clear,
+.tag-filter-toggle {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.2rem;
+  text-decoration: underline;
+  text-underline-offset: 0.15rem;
+}
+.tag-filter-list {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-right: 2.5rem;
+  scrollbar-width: thin;
+  /* The paper-coloured fade makes clipped tags visibly continue off-screen. */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+}
+.tag-filter-list.expanded {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  padding-right: 0;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.tag-filter-list.expanded .chip {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.tag-filter-toggle {
+  display: block;
+  margin-top: 0.35rem;
+}
 .chip {
   min-height: 44px;
   display: inline-flex;
