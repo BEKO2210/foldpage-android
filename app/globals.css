@@ -525,11 +525,12 @@ body {
     transform: none;
   }
 }
-/* `backwards`, not `both`: a forwards fill would leave the final keyframe's
-   transform applied as an identity matrix, and any transform other than
-   `none` turns this element into the containing block for its `position:
-   fixed` descendants — which pins the bottom nav to the end of the page
-   instead of the bottom of the screen. */
+/* `backwards`, not `both`, on every wrapper that animates a transform: a
+   forwards fill leaves the final keyframe applied as an identity matrix, and
+   any transform other than `none` makes the element the containing block for
+   its `position: fixed` descendants — which pins the bottom nav, the reader
+   bar, the progress bar and the toast to the end of the page instead of the
+   edge of the screen. */
 .page-enter {
   animation: fp-page-in var(--dur-med) var(--ease-out) backwards;
 }
@@ -565,11 +566,11 @@ body {
   }
 }
 .page-push {
-  animation: fp-page-push var(--dur-med) var(--ease-out) both;
+  animation: fp-page-push var(--dur-med) var(--ease-out) backwards;
 }
 
 .reader-in {
-  animation: fp-page-in var(--dur-med) var(--ease-out) both;
+  animation: fp-page-in var(--dur-med) var(--ease-out) backwards;
   animation-delay: 40ms;
 }
 
