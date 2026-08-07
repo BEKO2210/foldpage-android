@@ -17,7 +17,7 @@ export default function TopBar({
           {back.label}
         </Link>
       ) : (
-        <Link href="/" className="flex items-center gap-2 no-underline" style={{ color: "var(--ink)" }}>
+        <Link href="/" className="brandlink gap-2 no-underline" style={{ color: "var(--ink)" }}>
           <span className="corner" aria-hidden="true" />
           <span className="font-bold tracking-wide text-sm uppercase">FoldPage</span>
         </Link>

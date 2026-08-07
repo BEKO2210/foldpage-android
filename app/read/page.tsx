@@ -165,7 +165,7 @@ export default function ReadPage() {
       <TopBar
         back={{ href: "/", label: "Library" }}
         right={
-          <span className="reader-topbar-actions flex">{sizeControls}</span>
+          <span className="reader-topbar-actions flex gap-2">{sizeControls}</span>
         }
       />
       <article

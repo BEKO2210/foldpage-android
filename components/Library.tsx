@@ -400,20 +400,12 @@ export default function Library() {
               <div className="actions flex items-center justify-between mt-1">
                 <div className="flex gap-1 flex-wrap">
                   {a.tags.slice(0, 3).map((t) => (
-                    <span
-                      key={t}
-                      className="chip"
-                      style={{
-                        cursor: "default",
-                        padding: "0.15rem 0.55rem",
-                        fontSize: "0.72rem",
-                      }}
-                    >
+                    <span key={t} className="chip-label">
                       {t}
                     </span>
                   ))}
                 </div>
-                <div className="flex">
+                <div className="flex gap-2">
                   <button
                     className="iconbtn pressable"
                     aria-pressed={a.favorite}
