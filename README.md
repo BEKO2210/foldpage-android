@@ -31,6 +31,9 @@ text rather than for engagement.
   file; export to JSON, HTML or Markdown at any time.
 - **Offline by construction** — after saving, nothing needs a network. The
   entire app ships inside the APK.
+- **Stays where you left it** — switching sections keeps each one's scroll
+  position, and the hardware back button walks back through them instead of
+  dropping you out of the app.
 
 ## Privacy
 
@@ -39,6 +42,11 @@ exactly one kind of outbound request: fetching a page you asked it to save.
 Your library lives in the app's private storage on the device and is never
 uploaded anywhere. Permissions requested: `INTERNET` and `VIBRATE` — that's the
 complete list.
+
+The full wording lives on the project page:
+[Datenschutz](https://beko2210.github.io/foldpage-android/datenschutz/) ·
+[Impressum](https://beko2210.github.io/foldpage-android/impressum/) — both are
+also linked from the app's settings screen.
 
 ## Install
 
@@ -95,24 +103,45 @@ npx cap sync android
 cd android && ./gradlew assembleDebug
 ```
 
-`npm run apk:release` produces a signed release build, but needs the signing
-keystore, which is not in this repository. `npm test` runs the extraction tests.
+`npm test` runs the unit tests — article extraction, plus the contrast and
+motion constraints below. `scripts/release-build.sh` produces the signed
+release build, but needs the signing keystore, which is not in this repository.
+
+### Constraints that are tested, not just documented
+
+Two things that are easy to break silently are pinned by tests rather than
+prose, so a regression fails the run instead of shipping:
+
+- [`docs/CONTRAST.md`](docs/CONTRAST.md) — every text role in both themes,
+  enforced by `lib/contrast.test.ts` at WCAG AA (4.5:1 for body text).
+- [`docs/MOTION.md`](docs/MOTION.md) — every animation with its duration and
+  fill mode, enforced by `lib/motion.test.ts`. Page wrappers use `backwards`
+  fill on purpose: a lingering `transform` turns an element into the containing
+  block for its `position: fixed` children, which is exactly how the bottom
+  navigation once ended up floating in the middle of the screen.
 
 ## Project layout
 
 ```
 app/            routes: library, reader (/read/?id=), settings
-components/     UI — Library, TopBar, BottomNav, TagEditor, icons
+components/     UI — Library, BottomNav, TopBar, TagEditor, icons
 lib/            db (IndexedDB), parse (extraction), native (Capacitor bridge),
-                importExport
+                importExport, tests
 android/        the Capacitor Android project incl. the share-target plugin
+docs/           release runbook, contrast and motion audits, the legal pages
+                published via GitHub Pages
 scripts/        icon/splash generation and the signed release build
 ```
 
 ## Status
 
-Version 1.0 — the local-only MVP. Sync between devices exists in the web version
-of FoldPage and is deliberately absent here.
+Version 1.1 — the local-only MVP after a full UI/UX pass. Sync between devices
+exists in the web version of FoldPage and is deliberately absent here.
+
+Verified on a 412×915 viewport: no interactive element under 44 px, no
+horizontal overflow, every text role above 4.5:1 in both themes. Not yet
+verified on real hardware: the share intent, haptics, splash, adaptive icon and
+edge-to-edge insets are built and reviewed, but need a device to confirm.
 
 ## License
 
