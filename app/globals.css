@@ -822,7 +822,7 @@ input[type="file"] {
     )
     var(--card);
   background-size: 220% 100%;
-  animation: fp-shimmer 300ms linear infinite;
+  animation: fp-shimmer 1.4s linear infinite;
 }
 
 /* The empty-state art is drawn on the light paper colour. In dark mode this

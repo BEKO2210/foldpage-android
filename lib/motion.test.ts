@@ -4,10 +4,10 @@ import test from "node:test";
 
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 
-test("motion durations and card completion stay within the audit limits", () => {
+test("state-change durations and card completion stay within the audit limits", () => {
   assert.match(css, /--dur-fast:\s*150ms/);
   assert.match(css, /--dur-med:\s*250ms/);
-  assert.match(css, /animation:\s*fp-shimmer 300ms linear infinite/);
+  assert.match(css, /animation:\s*fp-shimmer 1\.4s linear infinite/);
   assert.match(
     css,
     /\.card-in\s*\{[^}]*animation:\s*fp-card-in var\(--dur-med\)[^;]*backwards;[^}]*animation-delay:\s*calc\(min\(var\(--i, 0\) \* 20ms, 100ms\)\)/s
