@@ -247,12 +247,15 @@ export default function SettingsPage() {
           </ul>
         </section>
 
-        <p
-          className="text-xs text-center mt-8"
-          style={{ color: "var(--muted)" }}
-        >
-          FoldPage for Android · local-only build
-        </p>
+        <footer className="legal-links mt-8" aria-label="Legal information">
+          <a href="https://beko2210.github.io/foldpage-android/datenschutz/">
+            Datenschutz
+          </a>
+          <span aria-hidden="true">·</span>
+          <a href="https://beko2210.github.io/foldpage-android/impressum/">
+            Impressum
+          </a>
+        </footer>
       </div>
       <BottomNav active="settings" />
     </main>
