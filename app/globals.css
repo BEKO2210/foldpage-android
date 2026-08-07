@@ -837,6 +837,124 @@ input[type="file"] {
   }
 }
 
+
+/* First launch — the app opens on an empty shelf otherwise and never says
+   what it is for. Shown once, then never again. */
+.welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(1.5rem + max(0.5rem, var(--fp-inset-top, env(safe-area-inset-top))))
+    1.5rem calc(1.5rem + max(0.5rem, var(--fp-inset-bottom, env(safe-area-inset-bottom))));
+  overflow-y: auto;
+  animation: fp-fade var(--dur-med) var(--ease-out) backwards;
+}
+.welcome.is-leaving {
+  animation: fp-fade var(--dur-fast) var(--ease-out) reverse forwards;
+}
+.welcome-inner {
+  max-width: 24rem;
+  width: 100%;
+  text-align: center;
+}
+.welcome-mark {
+  display: block;
+  margin: 0 auto 1.5rem;
+}
+.welcome-title {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  line-height: 1.15;
+  margin: 0 0 1.75rem;
+  text-wrap: balance;
+  animation: fp-rise var(--dur-med) var(--ease-out) 120ms backwards;
+}
+.welcome-list {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  text-align: left;
+}
+.welcome-list li {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--muted);
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--line);
+  animation: fp-rise var(--dur-med) var(--ease-out) backwards;
+  animation-delay: calc(200ms + var(--i, 0) * 70ms);
+}
+.welcome-list li:first-child {
+  border-left-color: var(--highlight);
+}
+.welcome-list b {
+  color: var(--ink);
+  font-weight: 700;
+}
+.welcome-cta {
+  width: 100%;
+  font-size: 1rem;
+  animation: fp-rise var(--dur-med) var(--ease-out) 440ms backwards;
+}
+
+/* The mark assembles: sheet first, then the fold, then the lines. */
+.wm-sheet {
+  animation: fp-rise var(--dur-med) var(--ease-out) backwards;
+}
+.wm-fold {
+  transform-origin: 64px 4px;
+  animation: fp-unfold var(--dur-med) var(--ease-out) 160ms backwards;
+}
+.wm-line {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 0;
+  animation: fp-draw var(--dur-med) var(--ease-out) backwards;
+  animation-delay: calc(260ms + var(--i, 0) * 70ms);
+}
+
+@keyframes fp-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fp-unfold {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes fp-draw {
+  from {
+    stroke-dashoffset: 60;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

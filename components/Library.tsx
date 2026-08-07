@@ -13,6 +13,7 @@ import {
 } from "@/lib/db";
 import { addArticleFromUrl } from "@/lib/articles";
 import TopBar from "./TopBar";
+import Welcome from "./Welcome";
 import { SECTION_EVENT } from "./AppNav";
 import {
   ArchiveIcon,
@@ -261,6 +262,7 @@ export default function Library() {
 
   return (
     <main className="w-full">
+      <Welcome />
       <TopBar
         right={
           <Link
