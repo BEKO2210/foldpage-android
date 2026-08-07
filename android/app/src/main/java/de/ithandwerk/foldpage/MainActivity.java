@@ -7,15 +7,15 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ShareTargetPlugin.queue(getIntent());
         registerPlugin(ShareTargetPlugin.class);
         super.onCreate(savedInstanceState);
-        ShareTargetPlugin.receive(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        ShareTargetPlugin.receive(intent);
+        ShareTargetPlugin.emit(intent);
     }
 }

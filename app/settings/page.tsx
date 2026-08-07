@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
+import AuthPanel from "@/components/AuthPanel";
 import { exportHtml, exportJson, exportMarkdown, parseImportFile, type ImportRow } from "@/lib/importExport";
 import { addArticleFromUrl } from "@/lib/articles";
 import { findByUrl, newId, saveArticle } from "@/lib/db";
@@ -90,6 +91,11 @@ export default function SettingsPage() {
         </h1>
 
         <section className="section-card mb-5">
+          <h2 className="text-lg font-semibold mb-2">Sync between devices</h2>
+          <AuthPanel />
+        </section>
+
+        <section className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Import</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
             Bring your library back: upload a Pocket export (CSV or HTML) or any bookmarks HTML file.
@@ -136,7 +142,8 @@ export default function SettingsPage() {
           <h2 className="text-lg font-semibold mb-2">Save from anywhere</h2>
           <ul className="text-sm grid gap-2 pl-5" style={{ color: "var(--muted)" }}>
             <li>
-              <b>Android:</b> choose FoldPage in the browser share sheet to save the current page.
+              <b>Android:</b> install FoldPage (browser menu → “Add to Home screen”) — it appears in the
+              share sheet.
             </li>
             <li>
               <b>Desktop:</b> install the browser extension (chrome://extensions → Developer mode →
