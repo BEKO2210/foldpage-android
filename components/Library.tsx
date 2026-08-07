@@ -344,7 +344,7 @@ export default function Library() {
                   alt=""
                   width={180}
                   height={180}
-                  className="mx-auto mb-5"
+                  className="empty-state-image mx-auto mb-5"
                   style={{
                     borderRadius: "0.9rem",
                     border: "1px solid var(--line)",
