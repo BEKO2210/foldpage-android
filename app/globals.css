@@ -4,9 +4,14 @@
   --ink: #1a1e26;
   --paper: #fafaf7;
   --highlight: #f5d547;
+  --accent-ink: #1a1e26;
+  --accent-text: #806b00;
   --muted: #5a6472;
   --line: #e3e4de;
+  --card-line: #8f928c;
   --card: #ffffff;
+  --toast-bg: #1a1e26;
+  --toast-text: #fafaf7;
   --serif: "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   /* motion tokens — one rhythm everywhere */
@@ -20,7 +25,9 @@
     --paper: #14171e;
     --muted: #9aa3b0;
     --line: #2a2f3a;
+    --card-line: #626b7a;
     --card: #1b1f28;
+    --accent-text: #f5d547;
   }
 }
 
@@ -43,7 +50,7 @@ body {
 }
 ::selection {
   background: var(--highlight);
-  color: #1a1e26;
+  color: var(--accent-ink);
 }
 
 .corner {
@@ -63,7 +70,7 @@ body {
   border-radius: 0.25rem;
   cursor: pointer;
   background: var(--highlight);
-  color: #1a1e26;
+  color: var(--accent-ink);
   min-height: 44px;
 }
 .btn {
@@ -164,7 +171,7 @@ body {
 .card {
   position: relative;
   background: var(--card);
-  border: 1px solid var(--line);
+  border: 1px solid var(--card-line);
   border-radius: 0.35rem;
   padding: 1.1rem 1.2rem;
   transition: transform var(--dur-fast) var(--ease-out),
@@ -303,7 +310,7 @@ body {
   white-space: nowrap;
 }
 .chip[aria-pressed="true"] {
-  color: #1a1e26;
+  color: var(--accent-ink);
 }
 .chip[aria-pressed="true"]::before {
   background: var(--highlight);
@@ -344,12 +351,7 @@ body {
   outline-offset: 1px;
 }
 .iconbtn[aria-pressed="true"] {
-  color: #b8940a;
-}
-@media (prefers-color-scheme: dark) {
-  .iconbtn[aria-pressed="true"] {
-    color: var(--highlight);
-  }
+  color: var(--accent-text);
 }
 
 /* Bottom navigation (mobile) */
@@ -498,8 +500,10 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: var(--ink);
-  color: var(--paper);
+  /* Deliberately fixed instead of reversing theme tokens: reversing made the
+     yellow Undo label 1.16:1 against the light toast in dark mode. */
+  background: var(--toast-bg);
+  color: var(--toast-text);
   font-family: var(--sans);
   font-size: 0.9rem;
   padding: 0.7rem 1rem;
@@ -539,7 +543,7 @@ body {
 /* Settings sections as cards */
 .section-card {
   background: var(--card);
-  border: 1px solid var(--line);
+  border: 1px solid var(--card-line);
   border-radius: 0.5rem;
   padding: 1.25rem 1.25rem 1.4rem;
 }
@@ -716,6 +720,14 @@ input[type="file"] {
     var(--card);
   background-size: 220% 100%;
   animation: fp-shimmer 1.4s linear infinite;
+}
+
+/* The empty-state art is drawn on the light paper colour. In dark mode this
+   keeps its ink and yellow palette while turning that paper into a dark tile. */
+@media (prefers-color-scheme: dark) {
+  .empty-state-image {
+    filter: invert(0.88) hue-rotate(180deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
