@@ -11,16 +11,19 @@
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:background">@null</item>
+        <!-- The window shows through wherever the WebView has not painted yet
+             (the status-bar strip under edge-to-edge, the moment before first
+             paint). A flat theme colour makes that invisible; the splash
+             drawable used to sit here and its wordmark showed as a second
+             header above the app's own. -->
+        <item name="android:windowBackground">@color/splash_background</item>
     </style>
 
-    <!-- Launch theme. On API 31+ the system draws the splash itself and ignores
-         a background drawable, so the mark and the paper colour have to be
-         handed over as windowSplashScreen* attributes; @drawable/splash is only
-         still here for API 24–30, which does use it. The night variant in
-         values-night swaps the paper for ink. -->
+    <!-- Launch theme. The system draws the splash from these attributes on
+         API 31+; on 24–30 the plain window background stands in. No drawable
+         here on purpose — a full-bleed splash image lingers as the window
+         background and shows through as a phantom header. -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
         <item name="windowSplashScreenBackground">@color/splash_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
         <item name="windowSplashScreenAnimationDuration">300</item>

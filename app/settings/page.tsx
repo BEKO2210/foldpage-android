@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
-import BottomNav from "@/components/BottomNav";
 import {
   exportHtml,
   exportJson,
@@ -127,11 +126,11 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="w-full page-push">
+    <main className="w-full">
       <TopBar back={{ href: "/", label: "Library" }} />
       <div className="max-w-2xl mx-auto px-4 sm:px-5 content-pad w-full">
         <h1
-          className="text-2xl font-semibold mb-8"
+          className="text-2xl font-semibold mb-5"
           style={{ fontFamily: "var(--serif)" }}
         >
           Settings
@@ -257,7 +256,6 @@ export default function SettingsPage() {
           </a>
         </footer>
       </div>
-      <BottomNav active="settings" />
     </main>
   );
 }

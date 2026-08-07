@@ -26,13 +26,37 @@ export const isNative = () => Capacitor.isNativePlatform();
 
 /* ---------- haptics ---------- */
 
-export async function tap(style: ImpactStyle = ImpactStyle.Light) {
+/** Last resort when the plugin call resolves without the phone moving.
+
+    `Haptics.impact` maps to the platform's own feedback constants, which the
+    system silently drops when "touch feedback" is switched off — the promise
+    still resolves, so there is nothing to catch. `Vibrator` is a separate
+    path that is not gated by that setting, so it is what actually makes
+    FoldPage vibrate on a device where the subtle route stays quiet. */
+async function pulse(ms: number) {
+  try {
+    await Haptics.vibrate({ duration: ms });
+    return;
+  } catch {
+    /* fall through to the web API */
+  }
+  try {
+    navigator.vibrate?.(ms);
+  } catch {
+    /* no vibrator at all */
+  }
+}
+
+export async function tap(style: ImpactStyle = ImpactStyle.Medium) {
   if (!isNative()) return;
   try {
     await Haptics.impact({ style });
   } catch {
     /* device without a vibrator */
   }
+  await pulse(
+    style === ImpactStyle.Heavy ? 24 : style === ImpactStyle.Medium ? 16 : 10
+  );
 }
 
 export async function buzzSuccess() {
@@ -42,6 +66,7 @@ export async function buzzSuccess() {
   } catch {
     /* ignore */
   }
+  await pulse(28);
 }
 
 export async function buzzWarning() {
@@ -51,6 +76,7 @@ export async function buzzWarning() {
   } catch {
     /* ignore */
   }
+  await pulse(45);
 }
 
 /* The library has three verbs and each one gets its own feel, so you can tell

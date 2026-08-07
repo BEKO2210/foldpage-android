@@ -13,7 +13,7 @@ import {
 } from "@/lib/db";
 import { addArticleFromUrl } from "@/lib/articles";
 import TopBar from "./TopBar";
-import BottomNav from "./BottomNav";
+import { SECTION_EVENT } from "./AppNav";
 import {
   ArchiveIcon,
   CheckIcon,
@@ -193,8 +193,16 @@ export default function Library() {
       const t = new URLSearchParams(window.location.search).get("tab");
       selectTab(t === "archived" || t === "favorites" ? t : "inbox", "pop");
     };
+    const onSection = (e: Event) => {
+      const next = (e as CustomEvent<Tab>).detail;
+      if (next) selectTab(next);
+    };
     window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
+    window.addEventListener(SECTION_EVENT, onSection);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener(SECTION_EVENT, onSection);
+    };
   }, [selectTab]);
 
   const visible = useMemo(() => {
@@ -252,7 +260,7 @@ export default function Library() {
   }
 
   return (
-    <main className="w-full page-enter">
+    <main className="w-full">
       <TopBar
         right={
           <Link
@@ -502,17 +510,6 @@ export default function Library() {
           <button onClick={() => void undoDelete(toast.undoId)}>Undo</button>
         </div>
       )}
-
-      <BottomNav
-        active={tab}
-        onLeave={() =>
-          sessionStorage.setItem(scrollKey(tabRef.current), String(window.scrollY))
-        }
-        onNavigate={(nextTab) => {
-          void tap();
-          selectTab(nextTab);
-        }}
-      />
     </main>
   );
 }

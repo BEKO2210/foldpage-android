@@ -129,7 +129,7 @@ export default function ReadPage() {
   if (article === undefined) return null;
   if (article === null)
     return (
-      <main className="page-push">
+      <main>
         <TopBar />
         <p className="text-center py-16" style={{ color: "var(--muted)" }}>
           {id ? "Article not found." : "No article selected."}{" "}
@@ -175,7 +175,7 @@ export default function ReadPage() {
   );
 
   return (
-    <main className="w-full page-push">
+    <main className="w-full">
       <div
         className="progressbar"
         style={{ width: `${progress * 100}%` }}
