@@ -759,9 +759,9 @@ input[type="file"] {
   }
 }
 .card-in {
-  animation: fp-card-in var(--dur-med) var(--ease-out) both;
-  /* stagger, capped so a long list never crawls in */
-  animation-delay: calc(min(var(--i, 0) * 40ms, 320ms));
+  animation: fp-card-in var(--dur-med) var(--ease-out) backwards;
+  /* 250ms motion + at most 100ms delay: the final card settles by 350ms. */
+  animation-delay: calc(min(var(--i, 0) * 20ms, 100ms));
 }
 
 /* Screens you drill into — the reader and settings — come in from the right,
@@ -799,7 +799,7 @@ input[type="file"] {
   }
 }
 .bottomnav [aria-current="page"]::after {
-  animation: fp-nav-underline var(--dur-fast) var(--ease-out) both;
+  animation: fp-nav-underline var(--dur-fast) var(--ease-out) backwards;
 }
 
 @keyframes fp-shimmer {
@@ -822,7 +822,7 @@ input[type="file"] {
     )
     var(--card);
   background-size: 220% 100%;
-  animation: fp-shimmer 1.4s linear infinite;
+  animation: fp-shimmer 300ms linear infinite;
 }
 
 /* The empty-state art is drawn on the light paper colour. In dark mode this
@@ -834,7 +834,9 @@ input[type="file"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
   }
