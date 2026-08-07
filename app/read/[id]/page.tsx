@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Article } from "@/lib/types";
 import { getArticle, updateArticle } from "@/lib/db";
@@ -12,6 +12,7 @@ import { CheckIcon, StarIcon, UndoIcon } from "@/components/icons";
 const SIZES = ["1rem", "1.15rem", "1.3rem", "1.5rem"];
 
 export default function ReadPage() {
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [article, setArticle] = useState<Article | null | undefined>(undefined);
   const [sizeIdx, setSizeIdx] = useState(1);
@@ -19,18 +20,13 @@ export default function ReadPage() {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("id");
-    if (!id) {
-      setArticle(null);
-      return;
-    }
     getArticle(id).then((a) => {
       setArticle(a ?? null);
       if (a) setProgress(a.progress);
     });
     const stored = localStorage.getItem("fp-reader-size");
     if (stored) setSizeIdx(Number(stored));
-  }, []);
+  }, [id]);
 
   // restore scroll position once content is rendered
   useEffect(() => {
