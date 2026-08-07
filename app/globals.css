@@ -332,6 +332,7 @@ body {
 }
 .bottomnav button,
 .bottomnav a {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -360,11 +361,12 @@ body {
 }
 .bottomnav [aria-current="page"]::after {
   content: "";
+  position: absolute;
+  top: 4px;
   width: 1.5rem;
   height: 3px;
   border-radius: 2px;
   background: var(--highlight);
-  margin-top: 2px;
 }
 @media (min-width: 768px) {
   .bottomnav {
