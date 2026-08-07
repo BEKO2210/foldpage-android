@@ -1,11 +1,21 @@
 <div align="center">
 
+<img src="docs/screenshots/icon.png" alt="" width="112" height="112">
+
 # FoldPage for Android
 
 **Save an article. Read it clean, offline, whenever.**
 
 A read-it-later app that keeps everything on your phone — no account, no cloud,
 no tracking.
+
+<br>
+
+<img src="docs/screenshots/library-light.png" alt="The library in the light theme: saved articles as cards with site, reading time and tags" width="30%">
+<img src="docs/screenshots/reader-light.png" alt="The reader in the light theme: serif body text with a progress bar" width="30%">
+<img src="docs/screenshots/library-dark.png" alt="The same library in the dark theme" width="30%">
+
+<sub>Library and reader, light and dark — the theme follows the system.</sub>
 
 </div>
 
@@ -34,6 +44,13 @@ text rather than for engagement.
 - **Stays where you left it** — switching sections keeps each one's scroll
   position, and the hardware back button walks back through them instead of
   dropping you out of the app.
+
+## What it looks like
+
+|                                                                                                                        |                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="docs/screenshots/reader-dark.png" alt="The reader in the dark theme" width="240">                            | **The reader** — serif body text at one of four sizes, a hairline progress bar at the top, and a toolbar that stays out of the way. Everything the page carried around the article is gone. |
+| <img src="docs/screenshots/settings-dark.png" alt="The settings screen: library stats, import and export" width="240"> | **Settings** — what your library holds, import from Pocket or a bookmarks file, export to JSON, HTML or Markdown. No account to manage, because there isn't one.                            |
 
 ## Privacy
 
@@ -124,24 +141,27 @@ prose, so a regression fails the run instead of shipping:
 
 ```
 app/            routes: library, reader (/read/?id=), settings
-components/     UI — Library, BottomNav, TopBar, TagEditor, icons
+components/     UI — Library, AppNav (persistent bottom bar), TopBar,
+                TagEditor, icons
 lib/            db (IndexedDB), parse (extraction), native (Capacitor bridge),
                 importExport, tests
 android/        the Capacitor Android project incl. the share-target plugin
-docs/           release runbook, contrast and motion audits, the legal pages
-                published via GitHub Pages
+docs/           release runbook, contrast and motion audits, screenshots,
+                and the legal pages published via GitHub Pages
 scripts/        icon/splash generation and the signed release build
 ```
 
 ## Status
 
-Version 1.1 — the local-only MVP after a full UI/UX pass. Sync between devices
+Version 1.2 — the local-only MVP after a full UI/UX pass and a round of
+fixes that only showed up on a real device. Sync between devices
 exists in the web version of FoldPage and is deliberately absent here.
 
 Verified on a 412×915 viewport: no interactive element under 44 px, no
-horizontal overflow, every text role above 4.5:1 in both themes. Not yet
-verified on real hardware: the share intent, haptics, splash, adaptive icon and
-edge-to-edge insets are built and reviewed, but need a device to confirm.
+horizontal overflow, every text role above 4.5:1 in both themes, and the bottom
+bar holds its position across a route change. Confirmed on a device: install,
+saving, reading. Still unconfirmed there: the share intent and the adaptive
+icon.
 
 ## License
 
