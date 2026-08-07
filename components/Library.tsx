@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Article } from "@/lib/types";
 import { allTags, deleteArticle, listArticles, restoreArticle, searchArticles, updateArticle } from "@/lib/db";
 import { addArticleFromUrl } from "@/lib/articles";
-import { currentUser, syncNow } from "@/lib/sync";
+import { isNative, ShareTarget } from "@/lib/native";
 import TopBar from "./TopBar";
 import { ArchiveIcon, CheckIcon, InboxIcon, SettingsIcon, StarIcon, TrashIcon, UndoIcon } from "./icons";
 
@@ -29,6 +29,7 @@ export default function Library() {
   const [loaded, setLoaded] = useState(false);
   const [toast, setToast] = useState<{ text: string; undoId: string } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handledShares = useRef(new Set<string>());
 
   const refresh = useCallback(async () => {
     setArticles(query ? await searchArticles(query) : await listArticles());
@@ -40,19 +41,32 @@ export default function Library() {
     refresh();
   }, [refresh]);
 
-  // quiet auto-sync when signed in
+  // Android share target: consume the launch intent, then listen for shares
+  // delivered while the singleTask activity is already open.
   useEffect(() => {
-    (async () => {
-      const u = await currentUser();
-      if (u && u.emailVerification) {
-        try {
-          const r = await syncNow();
-          if (r.pulled > 0) await refresh();
-        } catch {
-          /* offline or first run — manual sync lives in Settings */
-        }
-      }
+    if (!isNative()) return;
+    let active = true;
+    let listener: { remove: () => Promise<void> } | undefined;
+
+    const saveSharedText = async (text: string) => {
+      const match = text.match(/https?:\/\/[^\s<>"']+/i);
+      if (!match || handledShares.current.has(text)) return;
+      handledShares.current.add(text);
+      await handleAdd(match[0].replace(/[),.;!?]+$/, ""), "share");
+    };
+
+    void (async () => {
+      listener = await ShareTarget.addListener("shared", ({ value }) => {
+        if (active) void saveSharedText(value);
+      });
+      const { value } = await ShareTarget.consume();
+      if (active && value) await saveSharedText(value);
     })();
+
+    return () => {
+      active = false;
+      void listener?.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -70,13 +84,13 @@ export default function Library() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function handleAdd(addUrl?: string) {
+  async function handleAdd(addUrl?: string, source: Article["source"] = "manual") {
     const target = (addUrl ?? url).trim();
     if (!target) return;
     setBusy(true);
     setNotice(null);
     try {
-      const { article, duplicate } = await addArticleFromUrl(target);
+      const { article, duplicate } = await addArticleFromUrl(target, source);
       setUrl("");
       setNotice(duplicate ? "Already in your library." : `Saved: ${article.title}`);
       await refresh();
@@ -247,7 +261,7 @@ export default function Library() {
               </p>
               <h3 className="text-lg font-semibold leading-snug m-0 mb-1">
                 <Link
-                  href={`/read/${a.id}`}
+                  href={`/read?id=${encodeURIComponent(a.id)}`}
                   className="cardlink no-underline"
                   style={{ color: "var(--ink)" }}
                 >
