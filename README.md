@@ -153,15 +153,15 @@ scripts/        icon/splash generation and the signed release build
 
 ## Status
 
-Version 1.2 — the local-only MVP after a full UI/UX pass and a round of
+Version 1.2.1 — the local-only MVP after a full UI/UX pass and two rounds of
 fixes that only showed up on a real device. Sync between devices
 exists in the web version of FoldPage and is deliberately absent here.
 
 Verified on a 412×915 viewport: no interactive element under 44 px, no
 horizontal overflow, every text role above 4.5:1 in both themes, and the bottom
-bar holds its position across a route change. Confirmed on a device: install,
-saving, reading. Still unconfirmed there: the share intent and the adaptive
-icon.
+bar holds its position across a route change. Confirmed on a device: install, saving,
+reading, and that no system scrim sits above the app any more. Still
+unconfirmed there: the share intent and the adaptive icon.
 
 ## License
 
