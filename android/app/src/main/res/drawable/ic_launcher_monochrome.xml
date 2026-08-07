@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed-icon layer (Android 13+). One even-odd path: the sheet is filled,
+     the dog-ear and the three rules are punched out of it, so the launcher
+     can tint the whole mark with the user's wallpaper colour and it still
+     reads as the FoldPage page. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <!-- 0.836 puts the mark at the same 47% of the layer as the colour
+         foreground, so switching themed icons on doesn't resize the app. -->
+    <group
+        android:pivotX="256"
+        android:pivotY="256"
+        android:scaleX="0.836"
+        android:scaleY="0.836">
+        <path
+            android:fillType="evenOdd"
+            android:fillColor="#ffffff"
+            android:pathData="M128,112h192l64,64v224H128z M320,112l64,64h-64z M160,232h192v18h-192z M160,278h192v18h-192z M160,324h128v18h-128z" />
+    </group>
+</vector>

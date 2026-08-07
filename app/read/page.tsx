@@ -8,7 +8,7 @@ import { getArticle, updateArticle } from "@/lib/db";
 import TopBar from "@/components/TopBar";
 import TagEditor from "@/components/TagEditor";
 import { CheckIcon, StarIcon, UndoIcon } from "@/components/icons";
-import { buzzSuccess, openExternal, tap } from "@/lib/native";
+import { buzzSuccess, commit, openExternal, tap, uncommit } from "@/lib/native";
 
 /** Static export has no dynamic route segments, so the article id travels in
     the query string: /read/?id=<uuid>. */
@@ -94,7 +94,7 @@ export default function ReadPage() {
 
   async function toggleFavorite() {
     if (!article) return;
-    void tap();
+    void (article.favorite ? uncommit() : commit());
     const next = await updateArticle(article.id, {
       favorite: !article.favorite,
     });
@@ -110,7 +110,7 @@ export default function ReadPage() {
   if (article === undefined) return null;
   if (article === null)
     return (
-      <main className="page-enter">
+      <main className="page-push">
         <TopBar />
         <p className="text-center py-16" style={{ color: "var(--muted)" }}>
           {id ? "Article not found." : "No article selected."}{" "}
@@ -156,7 +156,7 @@ export default function ReadPage() {
   );
 
   return (
-    <main className="w-full page-enter">
+    <main className="w-full page-push">
       <div
         className="progressbar"
         style={{ width: `${progress * 100}%` }}

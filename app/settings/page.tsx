@@ -127,7 +127,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="w-full page-enter">
+    <main className="w-full page-push">
       <TopBar back={{ href: "/", label: "Library" }} />
       <div className="max-w-2xl mx-auto px-4 sm:px-5 content-pad w-full">
         <h1

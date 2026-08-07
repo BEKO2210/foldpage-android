@@ -53,6 +53,20 @@ export async function buzzWarning() {
   }
 }
 
+/* The library has three verbs and each one gets its own feel, so you can tell
+   what happened without looking: setting a flag lands with a medium thump,
+   clearing it answers with a lighter one, and throwing something away buzzes
+   like a warning. Everything else — tabs, chips, text size — is a plain tap. */
+
+/** Turning something on: favourited, archived. */
+export const commit = () => tap(ImpactStyle.Medium);
+
+/** Turning that same thing back off: unfavourited, back to the inbox. */
+export const uncommit = () => tap(ImpactStyle.Light);
+
+/** Destructive, and always paired with an undo affordance. */
+export const discard = () => buzzWarning();
+
 /* ---------- chrome ---------- */
 
 /** Keep the status bar icons legible against the current theme.

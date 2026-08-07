@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same tokens as the paper / ink / highlight CSS variables in app/globals.css. -->
+    <color name="colorPrimary">#1a1e26</color>
+    <color name="colorPrimaryDark">#14171e</color>
+    <color name="colorAccent">#f5d547</color>
+    <color name="splash_background">#fafaf7</color>
+</resources>

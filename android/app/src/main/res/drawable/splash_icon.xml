@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The FoldPage mark for the Android 12+ splash screen. Vector, so it is
+     crisp at every density, and drawn on the same 512 grid as public/icon.svg.
+     The system shows this inside a 240dp circle on a 288dp canvas; the sheet
+     is 56% of the grid, which lands just inside the 160dp safe area. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <!-- One drawable serves both themes, so the sheet carries a hairline:
+         without it the paper-on-paper light splash is invisible. -->
+    <path
+        android:pathData="M128,112h192l64,64v224H128z"
+        android:fillColor="#fafaf7"
+        android:strokeColor="#c9ccc4"
+        android:strokeWidth="6" />
+    <path
+        android:pathData="M320,112l64,64h-64z"
+        android:fillColor="#f5d547" />
+    <path
+        android:pathData="M160,232h192a9,9 0 0 1 0,18h-192a9,9 0 0 1 0,-18z"
+        android:fillColor="#c9ccc4" />
+    <path
+        android:pathData="M160,278h192a9,9 0 0 1 0,18h-192a9,9 0 0 1 0,-18z"
+        android:fillColor="#c9ccc4" />
+    <path
+        android:pathData="M160,324h128a9,9 0 0 1 0,18h-128a9,9 0 0 1 0,-18z"
+        android:fillColor="#f5d547" />
+</vector>

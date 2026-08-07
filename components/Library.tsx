@@ -26,6 +26,9 @@ import {
   ShareTarget,
   buzzSuccess,
   buzzWarning,
+  commit,
+  discard,
+  uncommit,
   isNative,
   tap,
 } from "@/lib/native";
@@ -156,14 +159,16 @@ export default function Library() {
     [articles]
   );
 
-  async function toggle(a: Article, patch: Partial<Article>) {
-    void tap();
+  /** `on` decides the haptic: setting a flag thumps, clearing it answers
+      lighter, so favourite and archive are distinguishable by feel alone. */
+  async function toggle(a: Article, patch: Partial<Article>, on: boolean) {
+    void (on ? commit() : uncommit());
     await updateArticle(a.id, patch);
     await refresh();
   }
 
   async function removeWithUndo(a: Article) {
-    void buzzWarning();
+    void discard();
     await deleteArticle(a.id);
     await refresh();
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -174,6 +179,7 @@ export default function Library() {
   async function undoDelete(id: string) {
     if (toastTimer.current) clearTimeout(toastTimer.current);
     setToast(null);
+    void commit();
     await restoreArticle(id);
     await refresh();
   }
@@ -372,7 +378,9 @@ export default function Library() {
                     aria-label={
                       a.favorite ? "Remove from favorites" : "Add to favorites"
                     }
-                    onClick={() => toggle(a, { favorite: !a.favorite })}
+                    onClick={() =>
+                      toggle(a, { favorite: !a.favorite }, !a.favorite)
+                    }
                   >
                     <StarIcon filled={a.favorite} />
                   </button>
@@ -383,9 +391,11 @@ export default function Library() {
                     }
                     title={a.state === "inbox" ? "Archive" : "Back to inbox"}
                     onClick={() =>
-                      toggle(a, {
-                        state: a.state === "inbox" ? "archived" : "inbox",
-                      })
+                      toggle(
+                        a,
+                        { state: a.state === "inbox" ? "archived" : "inbox" },
+                        a.state === "inbox"
+                      )
                     }
                   >
                     {a.state === "inbox" ? <CheckIcon /> : <UndoIcon />}
