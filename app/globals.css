@@ -324,6 +324,7 @@ body {
 }
 .tag-filter-clear,
 .tag-filter-toggle {
+  min-height: 44px;
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -351,6 +352,11 @@ body {
   padding-right: 0;
   -webkit-mask-image: none;
   mask-image: none;
+}
+.tag-filter-list.expanded .chip {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 .tag-filter-toggle {
   display: block;
