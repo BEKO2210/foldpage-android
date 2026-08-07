@@ -13,11 +13,11 @@ import {
 } from "@/lib/db";
 import { addArticleFromUrl } from "@/lib/articles";
 import TopBar from "./TopBar";
+import BottomNav from "./BottomNav";
 import {
   ArchiveIcon,
   CheckIcon,
   InboxIcon,
-  SettingsIcon,
   StarIcon,
   TrashIcon,
   UndoIcon,
@@ -34,6 +34,8 @@ import {
 } from "@/lib/native";
 
 type Tab = "inbox" | "archived" | "favorites";
+
+const scrollKey = (tab: Tab) => `foldpage:scroll:${tab}`;
 
 const TAB_META: Record<
   Tab,
@@ -61,6 +63,30 @@ export default function Library() {
   );
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const addingRef = useRef(false);
+  const tabRef = useRef<Tab>("inbox");
+
+  const restoreScroll = useCallback((nextTab: Tab) => {
+    const top = Number(sessionStorage.getItem(scrollKey(nextTab))) || 0;
+    requestAnimationFrame(() => window.scrollTo({ top, behavior: "instant" }));
+  }, []);
+
+  const selectTab = useCallback(
+    (nextTab: Tab, historyMode: "push" | "pop" = "push") => {
+      sessionStorage.setItem(scrollKey(tabRef.current), String(window.scrollY));
+      tabRef.current = nextTab;
+      setQuery("");
+      setTab(nextTab);
+      if (historyMode === "push") {
+        window.history.pushState(
+          { ...window.history.state, foldPageSection: nextTab },
+          "",
+          `/?tab=${nextTab}`
+        );
+      }
+      restoreScroll(nextTab);
+    },
+    [restoreScroll]
+  );
 
   const refresh = useCallback(async () => {
     setArticles(query ? await searchArticles(query) : await listArticles());
@@ -126,8 +152,13 @@ export default function Library() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const t = params.get("tab");
+    const initialTab =
+      t === "archived" || t === "favorites" || t === "inbox" ? t : "inbox";
+    tabRef.current = initialTab;
+    // The URL is the source of truth on the first client render.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (t === "inbox" || t === "archived" || t === "favorites") setTab(t);
+    setTab(initialTab);
+    restoreScroll(initialTab);
     const raw =
       params.get("add") || params.get("url") || params.get("text") || "";
     const match = raw.match(URL_IN_TEXT);
@@ -136,7 +167,16 @@ export default function Library() {
       void handleAdd(match[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [restoreScroll]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const t = new URLSearchParams(window.location.search).get("tab");
+      selectTab(t === "archived" || t === "favorites" ? t : "inbox", "pop");
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [selectTab]);
 
   const visible = useMemo(() => {
     let list = articles;
@@ -243,8 +283,7 @@ export default function Library() {
               role="tab"
               aria-selected={tab === t && !query}
               onClick={() => {
-                setQuery("");
-                setTab(t);
+                selectTab(t);
               }}
             >
               {TAB_META[t].label} ({counts[t]})
@@ -421,34 +460,16 @@ export default function Library() {
         </div>
       )}
 
-      <nav className="bottomnav" aria-label="Library sections">
-        {(Object.keys(TAB_META) as Tab[]).map((t) => {
-          const { Icon, label } = TAB_META[t];
-          return (
-            <button
-              key={t}
-              aria-selected={tab === t && !query}
-              onClick={() => {
-                void tap();
-                setQuery("");
-                setTab(t);
-                window.scrollTo({ top: 0 });
-              }}
-            >
-              <span className="nav-ico" aria-hidden="true">
-                <Icon size={22} />
-              </span>
-              {label}
-            </button>
-          );
-        })}
-        <Link href="/settings">
-          <span className="nav-ico" aria-hidden="true">
-            <SettingsIcon size={22} />
-          </span>
-          Settings
-        </Link>
-      </nav>
+      <BottomNav
+        active={tab}
+        onLeave={() =>
+          sessionStorage.setItem(scrollKey(tabRef.current), String(window.scrollY))
+        }
+        onNavigate={(nextTab) => {
+          void tap();
+          selectTab(nextTab);
+        }}
+      />
     </main>
   );
 }
