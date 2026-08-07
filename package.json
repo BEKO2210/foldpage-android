@@ -1,0 +1,41 @@
+{
+  "name": "foldpage-android",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint",
+    "sync": "npm run build && npx cap sync android",
+    "apk:debug": "npm run sync && cd android && ./gradlew assembleDebug",
+    "apk:release": "npm run sync && cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/app": "^7.1.0",
+    "@capacitor/browser": "^7.0.4",
+    "@capacitor/core": "^7.4.4",
+    "@capacitor/filesystem": "^7.1.7",
+    "@capacitor/haptics": "^7.0.3",
+    "@capacitor/share": "^7.0.3",
+    "@capacitor/splash-screen": "^7.0.6",
+    "@capacitor/status-bar": "^7.0.4",
+    "@mozilla/readability": "^0.6.0",
+    "idb": "^8.0.3",
+    "next": "16.2.10",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.4.4",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
