@@ -1,32 +1,44 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Article } from "@/lib/types";
 import { getArticle, updateArticle } from "@/lib/db";
 import TopBar from "@/components/TopBar";
 import TagEditor from "@/components/TagEditor";
 import { CheckIcon, StarIcon, UndoIcon } from "@/components/icons";
+import { buzzSuccess, openExternal, tap } from "@/lib/native";
 
+/** Static export has no dynamic route segments, so the article id travels in
+    the query string: /read/?id=<uuid>. */
 const SIZES = ["1rem", "1.15rem", "1.3rem", "1.5rem"];
 
 export default function ReadPage() {
-  const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const [id, setId] = useState<string | null>(null);
   const [article, setArticle] = useState<Article | null | undefined>(undefined);
   const [sizeIdx, setSizeIdx] = useState(1);
   const [progress, setProgress] = useState(0);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    getArticle(id).then((a) => {
+    // The id only exists in the URL of the loaded page, and the article only
+    // in IndexedDB — both are client-side sources this effect has to read in.
+    const q = new URLSearchParams(window.location.search).get("id");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setId(q);
+    if (!q) {
+      setArticle(null);
+      return;
+    }
+    getArticle(q).then((a) => {
       setArticle(a ?? null);
       if (a) setProgress(a.progress);
     });
     const stored = localStorage.getItem("fp-reader-size");
     if (stored) setSizeIdx(Number(stored));
-  }, [id]);
+  }, []);
 
   // restore scroll position once content is rendered
   useEffect(() => {
@@ -61,9 +73,14 @@ export default function ReadPage() {
     };
   }, [article]);
 
+  // Links inside the article body go to the system browser — handled once,
+  // app-wide, by wireExternalLinks() in NativeShell. A second listener here
+  // would open every tapped link twice.
+
   function setSize(idx: number) {
     setSizeIdx(idx);
     localStorage.setItem("fp-reader-size", String(idx));
+    void tap();
   }
 
   async function toggleArchive() {
@@ -71,12 +88,16 @@ export default function ReadPage() {
     await updateArticle(article.id, {
       state: article.state === "inbox" ? "archived" : "inbox",
     });
+    void buzzSuccess();
     router.push("/");
   }
 
   async function toggleFavorite() {
     if (!article) return;
-    const next = await updateArticle(article.id, { favorite: !article.favorite });
+    void tap();
+    const next = await updateArticle(article.id, {
+      favorite: !article.favorite,
+    });
     if (next) setArticle(next);
   }
 
@@ -89,10 +110,11 @@ export default function ReadPage() {
   if (article === undefined) return null;
   if (article === null)
     return (
-      <main>
+      <main className="page-enter">
         <TopBar />
         <p className="text-center py-16" style={{ color: "var(--muted)" }}>
-          Article not found. <Link href="/">Back to your library</Link>.
+          {id ? "Article not found." : "No article selected."}{" "}
+          <Link href="/">Back to your library</Link>.
         </p>
       </main>
     );
@@ -100,7 +122,7 @@ export default function ReadPage() {
   const sizeControls = (
     <>
       <button
-        className="iconbtn"
+        className="iconbtn pressable"
         aria-label="Smaller text"
         disabled={sizeIdx === 0}
         onClick={() => setSize(sizeIdx - 1)}
@@ -108,7 +130,7 @@ export default function ReadPage() {
         A−
       </button>
       <button
-        className="iconbtn"
+        className="iconbtn pressable"
         aria-label="Larger text"
         disabled={sizeIdx === SIZES.length - 1}
         onClick={() => setSize(sizeIdx + 1)}
@@ -116,28 +138,38 @@ export default function ReadPage() {
         A+
       </button>
       <button
-        className="iconbtn"
+        className="iconbtn pressable"
         aria-pressed={article.favorite}
         aria-label="Favorite"
         onClick={() => void toggleFavorite()}
       >
         <StarIcon filled={article.favorite} />
       </button>
-      <button className="iconbtn" aria-label={article.state === "inbox" ? "Archive" : "Unarchive"} onClick={() => void toggleArchive()}>
+      <button
+        className="iconbtn pressable"
+        aria-label={article.state === "inbox" ? "Archive" : "Unarchive"}
+        onClick={() => void toggleArchive()}
+      >
         {article.state === "inbox" ? <CheckIcon /> : <UndoIcon />}
       </button>
     </>
   );
 
   return (
-    <main className="w-full">
-      <div className="progressbar" style={{ width: `${progress * 100}%` }} aria-hidden="true" />
+    <main className="w-full page-enter">
+      <div
+        className="progressbar"
+        style={{ width: `${progress * 100}%` }}
+        aria-hidden="true"
+      />
       <TopBar
         back={{ href: "/", label: "Library" }}
-        right={<span className="reader-topbar-actions flex">{sizeControls}</span>}
+        right={
+          <span className="reader-topbar-actions flex">{sizeControls}</span>
+        }
       />
       <article
-        className="reader px-5 pb-28 w-full"
+        className="reader reader-in px-5 pb-28 w-full"
         style={{ ["--reader-size" as string]: SIZES[sizeIdx] }}
       >
         <p
@@ -147,9 +179,18 @@ export default function ReadPage() {
           {article.siteName} · {article.readingMin} min
           {article.author ? ` · ${article.author}` : ""}
         </p>
-        <h1 className="text-2xl sm:text-3xl font-semibold mb-2">{article.title}</h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold mb-2">
+          {article.title}
+        </h1>
         <p className="text-sm mb-4" style={{ fontFamily: "var(--sans)" }}>
-          <a href={article.url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--muted)" }}>
+          <a
+            href={article.url}
+            onClick={(e) => {
+              e.preventDefault();
+              void openExternal(article.url);
+            }}
+            style={{ color: "var(--muted)" }}
+          >
             View original ↗
           </a>
         </p>
@@ -161,7 +202,13 @@ export default function ReadPage() {
         ) : (
           <p style={{ color: "var(--muted)" }}>
             The content of this article wasn&apos;t downloaded (imported link).{" "}
-            <a href={article.url} target="_blank" rel="noopener noreferrer">
+            <a
+              href={article.url}
+              onClick={(e) => {
+                e.preventDefault();
+                void openExternal(article.url);
+              }}
+            >
               Read the original ↗
             </a>
           </p>

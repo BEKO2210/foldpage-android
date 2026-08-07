@@ -2,6 +2,7 @@
 
 import type { Article } from "./types";
 import { listArticles } from "./db";
+import { saveAndShare } from "./native";
 
 export interface ImportRow {
   url: string;
@@ -63,10 +64,17 @@ export function parsePocketCsv(text: string): ImportRow[] {
       title: (idx.title >= 0 && cols[idx.title]?.trim()) || url,
       tags:
         idx.tags >= 0 && cols[idx.tags]
-          ? cols[idx.tags].split("|").map((t) => t.trim()).filter(Boolean)
+          ? cols[idx.tags]
+              .split("|")
+              .map((t) => t.trim())
+              .filter(Boolean)
           : [],
-      archived: idx.status >= 0 ? cols[idx.status]?.trim() === "archive" : false,
-      addedAt: idx.time >= 0 && cols[idx.time] ? Number(cols[idx.time]) * 1000 : Date.now(),
+      archived:
+        idx.status >= 0 ? cols[idx.status]?.trim() === "archive" : false,
+      addedAt:
+        idx.time >= 0 && cols[idx.time]
+          ? Number(cols[idx.time]) * 1000
+          : Date.now(),
     });
   }
   return rows;
@@ -80,9 +88,13 @@ export function parseBookmarksHtml(text: string): ImportRow[] {
     const url = a.getAttribute("href") ?? "";
     if (!/^https?:\/\//.test(url)) return;
     const timeAdded = Number(a.getAttribute("time_added") ?? 0) * 1000;
-    const tags = (a.getAttribute("tags") ?? "").split(",").map((t) => t.trim()).filter(Boolean);
+    const tags = (a.getAttribute("tags") ?? "")
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
     // Pocket's export groups links under h1 "Unread" / "Read Archive"
-    const section = a.closest("ul")?.previousElementSibling?.textContent?.toLowerCase() ?? "";
+    const section =
+      a.closest("ul")?.previousElementSibling?.textContent?.toLowerCase() ?? "";
     rows.push({
       url,
       title: a.textContent?.trim() || url,
@@ -99,19 +111,13 @@ export function parseImportFile(filename: string, text: string): ImportRow[] {
   return parseBookmarksHtml(text);
 }
 
-function download(filename: string, mime: string, content: string) {
-  const blob = new Blob([content], { type: mime });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+/** In the app a WebView cannot download, so exports are written to
+    Documents and handed to the Android share sheet instead. */
+const download = saveAndShare;
 
 export async function exportJson() {
   const articles = await listArticles();
-  download(
+  return download(
     `foldpage-export-${new Date().toISOString().slice(0, 10)}.json`,
     "application/json",
     JSON.stringify({ exportedAt: new Date().toISOString(), articles }, null, 2)
@@ -129,13 +135,17 @@ export async function exportHtml() {
       (a: Article) => `
 <article>
   <h1>${esc(a.title)}</h1>
-  <p><a href="${esc(a.url)}">${esc(a.url)}</a> · ${a.siteName ? esc(a.siteName) : ""} · saved ${new Date(a.addedAt).toISOString().slice(0, 10)}${a.tags.length ? " · tags: " + esc(a.tags.join(", ")) : ""}</p>
+  <p><a href="${esc(a.url)}">${esc(a.url)}</a> · ${
+        a.siteName ? esc(a.siteName) : ""
+      } · saved ${new Date(a.addedAt).toISOString().slice(0, 10)}${
+        a.tags.length ? " · tags: " + esc(a.tags.join(", ")) : ""
+      }</p>
   ${a.contentHtml || `<p><em>(content not downloaded)</em></p>`}
   <hr>
 </article>`
     )
     .join("\n");
-  download(
+  return download(
     `foldpage-export-${new Date().toISOString().slice(0, 10)}.html`,
     "text/html",
     `<!doctype html><html><head><meta charset="utf-8"><title>FoldPage export</title></head><body>${body}</body></html>`
@@ -149,10 +159,14 @@ export async function exportMarkdown() {
       const div = document.createElement("div");
       div.innerHTML = a.contentHtml;
       const text = div.textContent?.trim() ?? "";
-      return `# ${a.title}\n\n- URL: ${a.url}\n- Saved: ${new Date(a.addedAt).toISOString()}\n- Tags: ${a.tags.join(", ") || "—"}\n\n${text}\n\n---\n`;
+      return `# ${a.title}\n\n- URL: ${a.url}\n- Saved: ${new Date(
+        a.addedAt
+      ).toISOString()}\n- Tags: ${
+        a.tags.join(", ") || "—"
+      }\n\n${text}\n\n---\n`;
     })
     .join("\n");
-  download(
+  return download(
     `foldpage-export-${new Date().toISOString().slice(0, 10)}.md`,
     "text/markdown",
     md

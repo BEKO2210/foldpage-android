@@ -11,6 +11,8 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    // Capacitor copies the built export into the Android project.
+    "android/**",
     "next-env.d.ts",
   ]),
 ]);

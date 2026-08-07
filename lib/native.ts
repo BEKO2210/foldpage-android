@@ -5,6 +5,7 @@ import { App } from "@capacitor/app";
 import { Browser } from "@capacitor/browser";
 import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 import { StatusBar, Style } from "@capacitor/status-bar";
+import { SplashScreen } from "@capacitor/splash-screen";
 import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 import { Share } from "@capacitor/share";
 
@@ -54,15 +55,30 @@ export async function buzzWarning() {
 
 /* ---------- chrome ---------- */
 
-/** Keep the status bar in step with the system theme. */
+/** Keep the status bar icons legible against the current theme.
+
+    We target SDK 36, where Android enforces edge-to-edge: the WebView draws
+    behind the status and navigation bars and `setBackgroundColor` /
+    `setOverlaysWebView` are no-ops. Only the icon style is still ours to set,
+    and the page itself pads around the bars via `env(safe-area-inset-*)`.
+    Dark theme means light icons, hence the inverted-looking mapping. */
 export async function applyStatusBar() {
   if (!isNative()) return;
   const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   try {
     await StatusBar.setStyle({ style: dark ? Style.Dark : Style.Light });
-    await StatusBar.setBackgroundColor({ color: dark ? "#14171e" : "#fafaf7" });
   } catch {
-    /* edge-to-edge devices ignore the colour */
+    /* status bar hidden or unavailable */
+  }
+}
+
+/** Reveal the WebView once the first paint is in. */
+export async function hideSplash() {
+  if (!isNative()) return;
+  try {
+    await SplashScreen.hide({ fadeOutDuration: 200 });
+  } catch {
+    /* already hidden by launchAutoHide */
   }
 }
 
@@ -79,7 +95,11 @@ export async function openExternal(url: string) {
 
 /** Exports land in Documents and open the Android share sheet, because a
     WebView cannot trigger a normal browser download. */
-export async function saveAndShare(filename: string, mime: string, content: string) {
+export async function saveAndShare(
+  filename: string,
+  mime: string,
+  content: string
+) {
   if (!isNative()) {
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
@@ -98,7 +118,11 @@ export async function saveAndShare(filename: string, mime: string, content: stri
     recursive: true,
   });
   try {
-    await Share.share({ title: filename, url: written.uri, dialogTitle: "Export teilen" });
+    await Share.share({
+      title: filename,
+      url: written.uri,
+      dialogTitle: "Export teilen",
+    });
   } catch {
     /* user dismissed the sheet — the file is written either way */
   }
@@ -107,14 +131,54 @@ export async function saveAndShare(filename: string, mime: string, content: stri
 
 /* ---------- navigation ---------- */
 
-/** Hardware back: leave the reader/settings first, only then close the app. */
-export async function wireBackButton() {
-  if (!isNative()) return;
-  await App.addListener("backButton", ({ canGoBack }) => {
-    if (window.location.pathname === "/" || !canGoBack) {
+/** True for anything that must not be loaded into the app's own WebView:
+    a different origin, or a scheme the shell has no business rendering. */
+function isExternalUrl(href: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(href, window.location.href);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+  return url.origin !== window.location.origin;
+}
+
+/** Any link pointing off-origin leaves for the system browser, wherever it
+    sits in the tree. The reader already routes its article links explicitly;
+    this is the net that catches everything else, so a stray tap can never
+    strand the user on a foreign page inside the app shell with no chrome. */
+export function wireExternalLinks(): () => void {
+  const onClick = (e: MouseEvent) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey) return;
+    const anchor = (e.target as HTMLElement | null)?.closest?.("a");
+    const href = anchor?.getAttribute("href");
+    if (!href || !isExternalUrl(href)) return;
+    e.preventDefault();
+    void openExternal(new URL(href, window.location.href).href);
+  };
+  document.addEventListener("click", onClick);
+  return () => document.removeEventListener("click", onClick);
+}
+
+/** Hardware back: leave the reader/settings first, only then close the app.
+    `canGoBack` counts the WebView's own history, which on a static export
+    also covers the Next.js client-side routes. */
+export async function wireBackButton(): Promise<() => void> {
+  if (!isNative()) return () => {};
+  const handle = await App.addListener("backButton", ({ canGoBack }) => {
+    if (isHome() || !canGoBack) {
       void App.exitApp();
     } else {
       window.history.back();
     }
   });
+  return () => void handle.remove();
+}
+
+/** `trailingSlash` is on, so the library route is "/" during dev and "/" or
+    "/index.html" once Capacitor serves the export from disk. */
+function isHome(): boolean {
+  const path = window.location.pathname;
+  return path === "/" || path === "/index.html";
 }

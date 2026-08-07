@@ -33,6 +33,13 @@ body {
   color: var(--ink);
   font-family: var(--sans);
   line-height: 1.55;
+  /* We target SDK 36, where Android draws the WebView behind the status and
+     navigation bars and refuses to be talked out of it. The page owns the
+     insets: this keeps the top bar out from under the clock, and the bottom
+     nav already pads itself against the gesture bar. */
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 ::selection {
   background: var(--highlight);
@@ -58,11 +65,24 @@ body {
   background: var(--highlight);
   color: #1a1e26;
 }
-.btn { transition: filter var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
-.btn:hover { filter: brightness(0.96); }
-.btn:active { transform: scale(0.97); }
-.btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.btn:disabled { opacity: 0.45; cursor: default; }
+.btn {
+  transition: filter var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.btn:hover {
+  filter: brightness(0.96);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
 
 .btn-quiet {
   background: transparent;
@@ -70,7 +90,9 @@ body {
   border: 1.5px solid var(--line);
   font-weight: 600;
 }
-.btn-quiet:hover { color: var(--ink); }
+.btn-quiet:hover {
+  color: var(--ink);
+}
 
 .input {
   font: inherit;
@@ -81,7 +103,11 @@ body {
   color: var(--ink);
   width: 100%;
 }
-.input:focus-visible { outline: 2px solid var(--highlight); outline-offset: 1px; border-color: transparent; }
+.input:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 1px;
+  border-color: transparent;
+}
 
 .tab {
   font-size: 0.85rem;
@@ -107,13 +133,20 @@ body {
   border: 1px solid var(--line);
   border-radius: 0.35rem;
   padding: 1.1rem 1.2rem;
-  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  transition: transform var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
 }
-.card:active { transform: scale(0.985); }
+.card:active {
+  transform: scale(0.985);
+}
 @media (hover: hover) {
-  .card:hover { border-color: color-mix(in srgb, var(--muted) 45%, var(--line)); }
+  .card:hover {
+    border-color: color-mix(in srgb, var(--muted) 45%, var(--line));
+  }
 }
-.card h3 { font-family: var(--serif); }
+.card h3 {
+  font-family: var(--serif);
+}
 .card.is-read::after {
   content: "";
   position: absolute;
@@ -134,15 +167,55 @@ body {
   max-width: 42rem;
   margin: 0 auto;
 }
-.reader h1, .reader h2, .reader h3 { line-height: 1.25; text-wrap: balance; }
-.reader img, .reader video { max-width: 100%; height: auto; border-radius: 0.25rem; }
-.reader figure { margin: 1.5rem 0; }
-.reader figcaption { font-family: var(--sans); font-size: 0.8rem; color: var(--muted); }
-.reader pre { overflow-x: auto; background: var(--card); border: 1px solid var(--line); padding: 1rem; border-radius: 0.3rem; font-size: 0.85em; }
-.reader blockquote { border-left: 3px solid var(--highlight); margin-left: 0; padding-left: 1rem; color: var(--muted); }
-.reader a { color: inherit; text-decoration-color: var(--highlight); text-decoration-thickness: 2px; }
-.reader table { display: block; overflow-x: auto; border-collapse: collapse; }
-.reader td, .reader th { border: 1px solid var(--line); padding: 0.4rem 0.6rem; }
+.reader h1,
+.reader h2,
+.reader h3 {
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.reader img,
+.reader video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+}
+.reader figure {
+  margin: 1.5rem 0;
+}
+.reader figcaption {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.reader pre {
+  overflow-x: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 1rem;
+  border-radius: 0.3rem;
+  font-size: 0.85em;
+}
+.reader blockquote {
+  border-left: 3px solid var(--highlight);
+  margin-left: 0;
+  padding-left: 1rem;
+  color: var(--muted);
+}
+.reader a {
+  color: inherit;
+  text-decoration-color: var(--highlight);
+  text-decoration-thickness: 2px;
+}
+.reader table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.reader td,
+.reader th {
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.6rem;
+}
 
 .progressbar {
   position: fixed;
@@ -170,7 +243,9 @@ body {
   border-color: var(--highlight);
   color: #1a1e26;
 }
-.chip-x { border-style: dashed; }
+.chip-x {
+  border-style: dashed;
+}
 
 /* Icon buttons — 44px touch targets */
 .iconbtn {
@@ -186,13 +261,29 @@ body {
   cursor: pointer;
   font-size: 1.15rem;
 }
-.iconbtn { transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
-.iconbtn:hover { color: var(--ink); background: color-mix(in srgb, var(--line) 40%, transparent); }
-.iconbtn:active { transform: scale(0.92); }
-.iconbtn:focus-visible { outline: 2px solid var(--highlight); outline-offset: 1px; }
-.iconbtn[aria-pressed="true"] { color: #b8940a; }
+.iconbtn {
+  transition: color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.iconbtn:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--line) 40%, transparent);
+}
+.iconbtn:active {
+  transform: scale(0.92);
+}
+.iconbtn:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 1px;
+}
+.iconbtn[aria-pressed="true"] {
+  color: #b8940a;
+}
 @media (prefers-color-scheme: dark) {
-  .iconbtn[aria-pressed="true"] { color: var(--highlight); }
+  .iconbtn[aria-pressed="true"] {
+    color: var(--highlight);
+  }
 }
 
 /* Bottom navigation (mobile) */
@@ -207,7 +298,8 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 40;
 }
-.bottomnav button, .bottomnav a {
+.bottomnav button,
+.bottomnav a {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -224,11 +316,17 @@ body {
   cursor: pointer;
   text-decoration: none;
 }
-.bottomnav .nav-ico { font-size: 1.25rem; line-height: 1; }
-.bottomnav [aria-selected="true"], .bottomnav [aria-current="page"] {
+.bottomnav .nav-ico {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.bottomnav [aria-selected="true"],
+.bottomnav [aria-current="page"] {
   color: var(--ink);
 }
-.bottomnav [aria-selected="true"] .nav-ico { filter: none; }
+.bottomnav [aria-selected="true"] .nav-ico {
+  filter: none;
+}
 .bottomnav [aria-selected="true"]::after {
   content: "";
   width: 1.5rem;
@@ -238,12 +336,20 @@ body {
   margin-top: 2px;
 }
 @media (min-width: 768px) {
-  .bottomnav { display: none; }
-  .content-pad { padding-bottom: 4rem; }
+  .bottomnav {
+    display: none;
+  }
+  .content-pad {
+    padding-bottom: 4rem;
+  }
 }
 @media (max-width: 767.98px) {
-  .desktop-tabs { display: none !important; }
-  .content-pad { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+  .desktop-tabs {
+    display: none !important;
+  }
+  .content-pad {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
 }
 
 /* Whole-card tap target */
@@ -252,7 +358,10 @@ body {
   position: absolute;
   inset: 0;
 }
-.card .actions { position: relative; z-index: 1; }
+.card .actions {
+  position: relative;
+  z-index: 1;
+}
 
 /* Reader bottom toolbar on mobile */
 .readerbar {
@@ -269,10 +378,14 @@ body {
   z-index: 40;
 }
 @media (min-width: 768px) {
-  .readerbar { display: none; }
+  .readerbar {
+    display: none;
+  }
 }
 @media (max-width: 767.98px) {
-  .reader-topbar-actions { display: none !important; }
+  .reader-topbar-actions {
+    display: none !important;
+  }
 }
 
 /* Back link — predictable navigation */
@@ -293,8 +406,13 @@ body {
   border-radius: 0.5rem;
   transition: color var(--dur-fast) var(--ease-out);
 }
-.backlink:hover { color: var(--ink); }
-.backlink:focus-visible { outline: 2px solid var(--highlight); outline-offset: 1px; }
+.backlink:hover {
+  color: var(--ink);
+}
+.backlink:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 1px;
+}
 
 /* Toast with action (replaces confirm dialogs) */
 .toast {
@@ -317,7 +435,9 @@ body {
   animation: toast-in var(--dur-med) var(--ease-out);
 }
 @media (min-width: 768px) {
-  .toast { bottom: 1.5rem; }
+  .toast {
+    bottom: 1.5rem;
+  }
 }
 .toast button {
   border: none;
@@ -331,8 +451,14 @@ body {
   white-space: nowrap;
 }
 @keyframes toast-in {
-  from { opacity: 0; transform: translate(-50%, 0.5rem); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 /* Settings sections as cards */
@@ -344,8 +470,12 @@ body {
 }
 
 /* Password field with visibility toggle */
-.pwfield { position: relative; }
-.pwfield .input { padding-right: 3rem; }
+.pwfield {
+  position: relative;
+}
+.pwfield .input {
+  padding-right: 3rem;
+}
 .pwfield .pwtoggle {
   position: absolute;
   right: 0.2rem;
@@ -362,9 +492,89 @@ body {
   cursor: pointer;
   border-radius: 0.4rem;
 }
-.pwfield .pwtoggle:hover { color: var(--ink); }
-.pwfield .pwtoggle:focus-visible { outline: 2px solid var(--highlight); }
+.pwfield .pwtoggle:hover {
+  color: var(--ink);
+}
+.pwfield .pwtoggle:focus-visible {
+  outline: 2px solid var(--highlight);
+}
+
+/* ---------- app motion ----------
+   Native-feeling feedback for a WebView: a press reacts instantly, new
+   screens fade up, cards stagger in, and a pending fetch shows a skeleton
+   instead of an empty screen. */
+
+.pressable {
+  transition: transform var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.pressable:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+@keyframes fp-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: fp-page-in var(--dur-med) var(--ease-out) both;
+}
+
+@keyframes fp-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.card-in {
+  animation: fp-card-in var(--dur-med) var(--ease-out) both;
+  /* stagger, capped so a long list never crawls in */
+  animation-delay: calc(min(var(--i, 0) * 40ms, 320ms));
+}
+
+.reader-in {
+  animation: fp-page-in var(--dur-med) var(--ease-out) both;
+  animation-delay: 40ms;
+}
+
+@keyframes fp-shimmer {
+  from {
+    background-position: -120% 0;
+  }
+  to {
+    background-position: 220% 0;
+  }
+}
+.skeleton-card {
+  height: 6.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--line);
+  background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--line) 60%, transparent) 50%,
+      transparent 100%
+    )
+    var(--card);
+  background-size: 220% 100%;
+  animation: fp-shimmer 1.4s linear infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

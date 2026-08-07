@@ -11,6 +11,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // node --test runs the .ts tests directly via type stripping, which does
+    // not rewrite extensions — so the test imports must spell out "./parse.ts".
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [

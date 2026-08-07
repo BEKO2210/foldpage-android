@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import PWARegister from "@/components/PWARegister";
+import NativeShell from "@/components/NativeShell";
 
 export const metadata: Metadata = {
   title: "FoldPage",
-  description: "Save any article in one click. Read it clean, offline, forever.",
-  manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "FoldPage", statusBarStyle: "default" },
+  description:
+    "Save any article in one click. Read it clean, offline, forever.",
 };
 
 export const viewport: Viewport = {
@@ -26,7 +25,7 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
         {children}
-        <PWARegister />
+        <NativeShell />
       </body>
     </html>
   );

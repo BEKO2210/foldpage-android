@@ -1,21 +1,46 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
-import AuthPanel from "@/components/AuthPanel";
-import { exportHtml, exportJson, exportMarkdown, parseImportFile, type ImportRow } from "@/lib/importExport";
+import {
+  exportHtml,
+  exportJson,
+  exportMarkdown,
+  parseImportFile,
+  type ImportRow,
+} from "@/lib/importExport";
 import { addArticleFromUrl } from "@/lib/articles";
-import { findByUrl, newId, saveArticle } from "@/lib/db";
+import { findByUrl, listArticles, newId, saveArticle } from "@/lib/db";
+import { buzzSuccess, tap } from "@/lib/native";
 
 type ImportStatus =
   | { phase: "idle" }
-  | { phase: "running"; done: number; total: number; failed: number; current: string }
+  | {
+      phase: "running";
+      done: number;
+      total: number;
+      failed: number;
+      current: string;
+    }
   | { phase: "finished"; done: number; total: number; failed: number };
 
 export default function SettingsPage() {
   const [status, setStatus] = useState<ImportStatus>({ phase: "idle" });
+  const [stats, setStats] = useState<{ count: number; words: number } | null>(
+    null
+  );
+  const [exported, setExported] = useState<string | null>(null);
   const cancelRef = useRef(false);
+
+  useEffect(() => {
+    listArticles().then((all) =>
+      setStats({
+        count: all.length,
+        words: all.reduce((n, a) => n + a.wordCount, 0),
+      })
+    );
+  }, [status]);
 
   async function runImport(rows: ImportRow[]) {
     cancelRef.current = false;
@@ -23,7 +48,13 @@ export default function SettingsPage() {
     let failed = 0;
     for (const row of rows) {
       if (cancelRef.current) break;
-      setStatus({ phase: "running", done, total: rows.length, failed, current: row.title });
+      setStatus({
+        phase: "running",
+        done,
+        total: rows.length,
+        failed,
+        current: row.title,
+      });
       try {
         const existing = await findByUrl(row.url);
         if (!existing) {
@@ -65,6 +96,7 @@ export default function SettingsPage() {
       done++;
     }
     setStatus({ phase: "finished", done, total: rows.length, failed });
+    void buzzSuccess();
   }
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -74,32 +106,60 @@ export default function SettingsPage() {
     const text = await file.text();
     const rows = parseImportFile(file.name, text);
     if (rows.length === 0) {
-      alert("No links found in that file. Expected a Pocket CSV or HTML export.");
+      alert(
+        "No links found in that file. Expected a Pocket CSV or a bookmarks HTML export."
+      );
       return;
     }
-    if (confirm(`Import ${rows.length} links? Articles are downloaded one by one — you can keep the tab open in the background.`)) {
+    if (
+      confirm(
+        `Import ${rows.length} links? Articles are downloaded one by one — keep FoldPage open while it runs.`
+      )
+    ) {
       void runImport(rows);
     }
   }
 
+  async function runExport(fn: () => Promise<string>) {
+    void tap();
+    setExported(null);
+    setExported(await fn());
+  }
+
   return (
-    <main className="w-full">
+    <main className="w-full page-enter">
       <TopBar back={{ href: "/", label: "Library" }} />
       <div className="max-w-2xl mx-auto px-4 sm:px-5 content-pad w-full">
-        <h1 className="text-2xl font-semibold mb-8" style={{ fontFamily: "var(--serif)" }}>
+        <h1
+          className="text-2xl font-semibold mb-8"
+          style={{ fontFamily: "var(--serif)" }}
+        >
           Settings
         </h1>
 
         <section className="section-card mb-5">
-          <h2 className="text-lg font-semibold mb-2">Sync between devices</h2>
-          <AuthPanel />
+          <h2 className="text-lg font-semibold mb-2">Your library</h2>
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            {stats
+              ? `${stats.count} article${
+                  stats.count === 1 ? "" : "s"
+                } · ${stats.words.toLocaleString(
+                  "de-DE"
+                )} words — stored on this phone only.`
+              : "…"}
+          </p>
+          <p className="text-sm mt-2" style={{ color: "var(--muted)" }}>
+            This build has no account and no cloud sync. Nothing leaves the
+            device except the requests that fetch the articles you save.
+          </p>
         </section>
 
         <section className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Import</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            Bring your library back: upload a Pocket export (CSV or HTML) or any bookmarks HTML file.
-            Unzip the Pocket ZIP first and pick the CSV inside.
+            Bring your library along: a Pocket export (CSV or HTML) or any
+            bookmarks HTML file. Unzip the Pocket ZIP first and pick the CSV
+            inside.
           </p>
           <input
             type="file"
@@ -111,17 +171,27 @@ export default function SettingsPage() {
           {status.phase === "running" && (
             <div className="mt-4 text-sm" role="status">
               <p>
-                Importing {status.done + 1} of {status.total} … ({status.failed} failed)
+                Importing {status.done + 1} of {status.total} … ({status.failed}{" "}
+                failed)
               </p>
-              <p className="truncate" style={{ color: "var(--muted)" }}>{status.current}</p>
-              <button className="btn btn-quiet mt-2" onClick={() => (cancelRef.current = true)}>
+              <p className="truncate" style={{ color: "var(--muted)" }}>
+                {status.current}
+              </p>
+              <button
+                className="btn btn-quiet pressable mt-2"
+                onClick={() => (cancelRef.current = true)}
+              >
                 Stop
               </button>
             </div>
           )}
           {status.phase === "finished" && (
             <p className="mt-4 text-sm" role="status">
-              Done: {status.done} imported{status.failed ? `, ${status.failed} saved as link-only (page unreachable)` : ""}.
+              Done: {status.done} imported
+              {status.failed
+                ? `, ${status.failed} saved as link-only (page unreachable)`
+                : ""}
+              .
             </p>
           )}
         </section>
@@ -129,35 +199,60 @@ export default function SettingsPage() {
         <section className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Export</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            Your library is yours — take it anywhere, anytime.
+            Your library is yours. Files land in <b>Documents</b> and the share
+            sheet opens right after, so you can send them anywhere.
           </p>
           <div className="flex gap-2 flex-wrap">
-            <button className="btn btn-quiet" onClick={() => void exportJson()}>JSON</button>
-            <button className="btn btn-quiet" onClick={() => void exportHtml()}>HTML</button>
-            <button className="btn btn-quiet" onClick={() => void exportMarkdown()}>Markdown</button>
+            <button
+              className="btn btn-quiet pressable"
+              onClick={() => void runExport(exportJson)}
+            >
+              JSON
+            </button>
+            <button
+              className="btn btn-quiet pressable"
+              onClick={() => void runExport(exportHtml)}
+            >
+              HTML
+            </button>
+            <button
+              className="btn btn-quiet pressable"
+              onClick={() => void runExport(exportMarkdown)}
+            >
+              Markdown
+            </button>
           </div>
+          {exported && (
+            <p
+              className="mt-3 text-sm break-all"
+              style={{ color: "var(--muted)" }}
+              role="status"
+            >
+              Saved to {exported}
+            </p>
+          )}
         </section>
 
         <section className="section-card">
           <h2 className="text-lg font-semibold mb-2">Save from anywhere</h2>
-          <ul className="text-sm grid gap-2 pl-5" style={{ color: "var(--muted)" }}>
+          <ul
+            className="text-sm grid gap-2 pl-5"
+            style={{ color: "var(--muted)" }}
+          >
             <li>
-              <b>Android:</b> install FoldPage (browser menu → “Add to Home screen”) — it appears in the
-              share sheet.
+              In any app, hit <b>Share</b> and pick <b>FoldPage</b> — the link
+              is fetched and filed away for you.
             </li>
-            <li>
-              <b>Desktop:</b> install the browser extension (chrome://extensions → Developer mode →
-              “Load unpacked” → the <code>extension/</code> folder from the repo) — one click saves the
-              current tab.
-            </li>
-            <li>
-              <b>iPhone:</b> use the bookmarklet — create any bookmark, then edit its address to:{" "}
-              <code style={{ wordBreak: "break-all" }}>
-                javascript:location.href=&apos;https://app-foldpage.it-handwerk-stuttgart.de/?add=&apos;+encodeURIComponent(location.href)
-              </code>
-            </li>
+            <li>Or paste a link into the field at the top of your library.</li>
           </ul>
         </section>
+
+        <p
+          className="text-xs text-center mt-8"
+          style={{ color: "var(--muted)" }}
+        >
+          FoldPage for Android · local-only build
+        </p>
       </div>
       <BottomNav active="settings" />
     </main>
