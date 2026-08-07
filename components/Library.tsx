@@ -47,6 +47,23 @@ const TAB_META: Record<
   favorites: { label: "Favorites", Icon: (p) => <StarIcon {...p} /> },
 };
 
+const EMPTY_META: Record<Tab, { title: string; description: string }> = {
+  inbox: {
+    title: "Your inbox is empty.",
+    description:
+      "Paste a link above — or share one into FoldPage from any app.",
+  },
+  archived: {
+    title: "No archived pages yet.",
+    description:
+      "Archive a page from your inbox when you want to keep it out of the way.",
+  },
+  favorites: {
+    title: "No favorites yet.",
+    description: "Tap the star on any page to keep it close.",
+  },
+};
+
 const URL_IN_TEXT = /https?:\/\/\S+/;
 
 export default function Library() {
@@ -200,6 +217,14 @@ export default function Library() {
     [articles]
   );
 
+  const emptyState =
+    query || tagFilter
+      ? {
+          title: "No matching pages.",
+          description: "Try a different search or clear the tag filter.",
+        }
+      : EMPTY_META[tab];
+
   /** `on` decides the haptic: setting a flag thumps, clearing it answers
       lighter, so favourite and archive are distinguishable by feel alone. */
   async function toggle(a: Article, patch: Partial<Article>, on: boolean) {
@@ -336,33 +361,30 @@ export default function Library() {
 
         {loaded && visible.length === 0 && (
           <div className="text-center py-16" style={{ color: "var(--muted)" }}>
-            {articles.length === 0 ? (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/empty-shelf.png"
-                  alt=""
-                  width={180}
-                  height={180}
-                  className="empty-state-image mx-auto mb-5"
-                  style={{
-                    borderRadius: "0.9rem",
-                    border: "1px solid var(--line)",
-                  }}
-                />
-                <p
-                  className="text-lg mb-1"
-                  style={{ fontFamily: "var(--serif)" }}
-                >
-                  Your shelf is empty.
-                </p>
-                <p className="text-sm">
-                  Paste a link above — or share one into FoldPage from any app.
-                </p>
-              </>
-            ) : (
-              <p className="text-sm">Nothing here.</p>
+            {articles.length === 0 && !query && !tagFilter && (
+              /* The shelf illustration is the first-run welcome, so it stays
+                 for a genuinely empty library — the per-section states below
+                 carry themselves typographically. */
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/empty-shelf.png"
+                alt=""
+                width={180}
+                height={180}
+                className="empty-state-image mx-auto mb-5"
+                style={{
+                  borderRadius: "0.9rem",
+                  border: "1px solid var(--line)",
+                }}
+              />
             )}
+            <p
+              className="text-lg mb-1"
+              style={{ fontFamily: "var(--serif)", color: "var(--ink)" }}
+            >
+              {emptyState.title}
+            </p>
+            <p className="text-sm max-w-md mx-auto">{emptyState.description}</p>
           </div>
         )}
 
