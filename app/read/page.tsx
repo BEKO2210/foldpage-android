@@ -14,6 +14,14 @@ import { buzzSuccess, commit, openExternal, tap, uncommit } from "@/lib/native";
     the query string: /read/?id=<uuid>. */
 const SIZES = ["1rem", "1.15rem", "1.3rem", "1.5rem"];
 
+function storedSizeIndex(value: string | null): number {
+  if (value === null) return 1;
+  const index = Number(value);
+  return Number.isInteger(index) && index >= 0 && index < SIZES.length
+    ? index
+    : 1;
+}
+
 export default function ReadPage() {
   const router = useRouter();
   const [id, setId] = useState<string | null>(null);
@@ -36,8 +44,7 @@ export default function ReadPage() {
       setArticle(a ?? null);
       if (a) setProgress(a.progress);
     });
-    const stored = localStorage.getItem("fp-reader-size");
-    if (stored) setSizeIdx(Number(stored));
+    setSizeIdx(storedSizeIndex(localStorage.getItem("fp-reader-size")));
   }, []);
 
   // restore scroll position once content is rendered
@@ -78,8 +85,20 @@ export default function ReadPage() {
   // would open every tapped link twice.
 
   function setSize(idx: number) {
+    if (idx < 0 || idx >= SIZES.length || idx === sizeIdx) return;
+    const el = document.documentElement;
+    const oldMax = el.scrollHeight - window.innerHeight;
+    const readingPosition = oldMax > 0 ? window.scrollY / oldMax : progress;
     setSizeIdx(idx);
     localStorage.setItem("fp-reader-size", String(idx));
+    // Font changes reflow the article. Keep the same relative reading point
+    // instead of leaving the reader several paragraphs away from it.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const newMax = el.scrollHeight - window.innerHeight;
+        window.scrollTo({ top: Math.max(0, readingPosition * newMax) });
+      });
+    });
     void tap();
   }
 
@@ -123,7 +142,7 @@ export default function ReadPage() {
     <>
       <button
         className="iconbtn pressable"
-        aria-label="Smaller text"
+        aria-label={`Smaller text, current size ${sizeIdx + 1} of ${SIZES.length}`}
         disabled={sizeIdx === 0}
         onClick={() => setSize(sizeIdx - 1)}
       >
@@ -131,7 +150,7 @@ export default function ReadPage() {
       </button>
       <button
         className="iconbtn pressable"
-        aria-label="Larger text"
+        aria-label={`Larger text, current size ${sizeIdx + 1} of ${SIZES.length}`}
         disabled={sizeIdx === SIZES.length - 1}
         onClick={() => setSize(sizeIdx + 1)}
       >
@@ -172,17 +191,14 @@ export default function ReadPage() {
         className="reader reader-in px-5 pb-28 w-full"
         style={{ ["--reader-size" as string]: SIZES[sizeIdx] }}
       >
-        <p
-          className="text-xs uppercase tracking-widest mb-2"
-          style={{ color: "var(--muted)", fontFamily: "var(--sans)" }}
-        >
-          {article.siteName} · {article.readingMin} min
-          {article.author ? ` · ${article.author}` : ""}
-        </p>
-        <h1 className="text-2xl sm:text-3xl font-semibold mb-2">
-          {article.title}
-        </h1>
-        <p className="text-sm mb-4" style={{ fontFamily: "var(--sans)" }}>
+        <header className="reader-header">
+          <h1>{article.title}</h1>
+          <p className="reader-meta">
+            {article.siteName} · {article.readingMin} min
+            {article.author ? ` · ${article.author}` : ""}
+          </p>
+        </header>
+        <p className="reader-source">
           <a
             href={article.url}
             onClick={(e) => {

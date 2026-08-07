@@ -204,9 +204,35 @@ body {
 .reader {
   font-family: var(--serif);
   font-size: var(--reader-size, 1.15rem);
-  line-height: 1.72;
-  max-width: 42rem;
+  line-height: 1.68;
+  /* Font-relative width keeps a comfortable measure at all four sizes. At
+     412px the side padding wins, producing roughly 40–46 characters/line. */
+  max-width: 39em;
   margin: 0 auto;
+}
+.reader-header {
+  margin-bottom: 0.65rem;
+}
+.reader-header h1 {
+  font-size: clamp(1.75rem, 7vw, 2.35rem);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  margin: 0 0 0.65rem;
+}
+.reader-meta {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+.reader-source {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  margin: 0 0 1rem;
 }
 .reader h1,
 .reader h2,
@@ -216,17 +242,28 @@ body {
 }
 .reader img,
 .reader video {
+  display: block;
+  width: auto;
   max-width: 100%;
   height: auto;
   border-radius: 0.25rem;
+  margin: 1.5rem auto;
+  object-fit: contain;
+  background: var(--card);
 }
 .reader figure {
-  margin: 1.5rem 0;
+  margin: 1.75rem 0;
+}
+.reader figure img,
+.reader figure video {
+  margin: 0 auto;
 }
 .reader figcaption {
   font-family: var(--sans);
   font-size: 0.8rem;
   color: var(--muted);
+  line-height: 1.45;
+  margin-top: 0.5rem;
 }
 .reader pre {
   overflow-x: auto;
@@ -260,11 +297,14 @@ body {
 
 .progressbar {
   position: fixed;
-  top: 0;
+  top: env(safe-area-inset-top);
   left: 0;
-  height: 3px;
+  min-width: 3px;
+  height: 4px;
   background: var(--highlight);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 18%, transparent);
   z-index: 50;
+  transition: width 80ms linear;
 }
 
 /* Tag chips */
@@ -439,15 +479,24 @@ body {
 .readerbar {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
+  /* 8px minimum between adjacent touch targets (BEL-38). */
   gap: 0.5rem;
   background: var(--card);
-  border-top: 1px solid var(--line);
-  padding: 0.4rem 0.75rem calc(0.4rem + env(safe-area-inset-bottom));
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: 0.75rem 0.75rem 0 0;
+  padding: 0.25rem 0.4rem calc(0.25rem + env(safe-area-inset-bottom));
+  box-shadow: 0 -6px 24px -18px rgba(10, 14, 25, 0.7);
   z-index: 40;
+}
+.readerbar .iconbtn {
+  min-width: 48px;
+  min-height: 48px;
 }
 @media (min-width: 768px) {
   .readerbar {
