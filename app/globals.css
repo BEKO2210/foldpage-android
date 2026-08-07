@@ -44,9 +44,13 @@ body {
      navigation bars and refuses to be talked out of it. The page owns the
      insets: this keeps the top bar out from under the clock, and the bottom
      nav already pads itself against the gesture bar. */
-  padding-top: env(safe-area-inset-top);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  /* MainActivity publishes the real window insets as --fp-inset-*, because
+     env(safe-area-inset-top) arrives as 0 in this WebView and the article
+     text then ran underneath the status bar. env() stays as the fallback for
+     the browser build, and the floor keeps a sane gap if neither reports. */
+  padding-top: max(0.5rem, var(--fp-inset-top, env(safe-area-inset-top)));
+  padding-left: var(--fp-inset-left, env(safe-area-inset-left));
+  padding-right: var(--fp-inset-right, env(safe-area-inset-right));
 }
 ::selection {
   background: var(--highlight);
@@ -297,7 +301,7 @@ body {
 
 .progressbar {
   position: fixed;
-  top: env(safe-area-inset-top);
+  top: var(--fp-inset-top, env(safe-area-inset-top));
   left: 0;
   min-width: 3px;
   height: 4px;
@@ -457,7 +461,7 @@ body {
   display: flex;
   background: var(--card);
   border-top: 1px solid var(--line);
-  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  padding-bottom: max(0.5rem, var(--fp-inset-bottom, env(safe-area-inset-bottom)));
   padding-inline: 4px;
   gap: 8px;
   z-index: 40;
@@ -514,7 +518,7 @@ body {
     display: none !important;
   }
   .content-pad {
-    padding-bottom: calc(5.5rem + max(0.5rem, env(safe-area-inset-bottom)));
+    padding-bottom: calc(5.5rem + max(0.5rem, var(--fp-inset-bottom, env(safe-area-inset-bottom))));
   }
 }
 

@@ -95,16 +95,26 @@ export const discard = () => buzzWarning();
 
 /* ---------- chrome ---------- */
 
-/** Keep the status bar icons legible against the current theme.
+/** Paint the status bar in the app's own colour and keep its icons legible.
 
-    We target SDK 36, where Android enforces edge-to-edge: the WebView draws
-    behind the status and navigation bars and `setBackgroundColor` /
-    `setOverlaysWebView` are no-ops. Only the icon style is still ours to set,
-    and the page itself pads around the bars via `env(safe-area-inset-*)`.
-    Dark theme means light icons, hence the inverted-looking mapping. */
+    Letting the WebView draw behind the bar left a foreign strip above the app.
+    So the bar is not overlaid: it gets the page background, which makes it
+    read as part of FoldPage instead of as a bar. Dark theme means light icons,
+    hence the inverted-looking mapping. */
 export async function applyStatusBar() {
   if (!isNative()) return;
   const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const paper = dark ? "#14171e" : "#fafaf7";
+  try {
+    await StatusBar.setOverlaysWebView({ overlay: false });
+  } catch {
+    /* platform refuses to give the strip back — the CSS inset covers it */
+  }
+  try {
+    await StatusBar.setBackgroundColor({ color: paper });
+  } catch {
+    /* no-op on platforms that own the colour */
+  }
   try {
     await StatusBar.setStyle({ style: dark ? Style.Dark : Style.Light });
   } catch {
