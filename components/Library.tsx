@@ -18,6 +18,7 @@ import {
   ArchiveIcon,
   CheckIcon,
   InboxIcon,
+  SearchIcon,
   StarIcon,
   TrashIcon,
   UndoIcon,
@@ -291,14 +292,16 @@ export default function Library() {
           ))}
         </div>
 
-        <input
-          className="input mb-3"
-          type="search"
-          placeholder="Search your library…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search"
-        />
+        <div className="library-search mb-3">
+          <SearchIcon size={19} />
+          <input
+            type="search"
+            placeholder="Search your library…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search"
+          />
+        </div>
 
         {tags.length > 0 && (
           <div
