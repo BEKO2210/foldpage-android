@@ -39,6 +39,12 @@ public class ShareTargetPlugin extends Plugin {
         if (shared == null) {
             return;
         }
+        // Neutralise the intent once it is taken. It otherwise stays attached
+        // to the activity, so a process that gets killed and restored would
+        // replay the same share and save the article a second time.
+        if (getActivity() != null) {
+            getActivity().setIntent(new Intent(Intent.ACTION_MAIN));
+        }
         if (hasListeners("shared")) {
             JSObject payload = new JSObject();
             payload.put("value", shared);
