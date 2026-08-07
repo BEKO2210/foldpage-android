@@ -1,35 +1,62 @@
 import Link from "next/link";
 import { ArchiveIcon, InboxIcon, SettingsIcon, StarIcon } from "./icons";
 
-/** Link-based bottom navigation for pages outside the library (e.g. Settings).
-    The library itself renders its own button-based variant with live counts. */
-export default function BottomNav({ active }: { active?: "settings" }) {
+export type NavSection = "inbox" | "archived" | "favorites" | "settings";
+
+const ITEMS = [
+  { section: "inbox", label: "Inbox", Icon: InboxIcon },
+  { section: "archived", label: "Archive", Icon: ArchiveIcon },
+  { section: "favorites", label: "Favorites", Icon: StarIcon },
+  { section: "settings", label: "Settings", Icon: SettingsIcon },
+] as const;
+
+export default function BottomNav({
+  active,
+  onNavigate,
+  onLeave,
+}: {
+  active: NavSection;
+  onNavigate?: (section: Exclude<NavSection, "settings">) => void;
+  onLeave?: () => void;
+}) {
   return (
     <nav className="bottomnav" aria-label="Main navigation">
-      <Link href="/?tab=inbox">
-        <span className="nav-ico" aria-hidden="true">
-          <InboxIcon size={22} />
-        </span>
-        Inbox
-      </Link>
-      <Link href="/?tab=archived">
-        <span className="nav-ico" aria-hidden="true">
-          <ArchiveIcon size={22} />
-        </span>
-        Archive
-      </Link>
-      <Link href="/?tab=favorites">
-        <span className="nav-ico" aria-hidden="true">
-          <StarIcon size={22} />
-        </span>
-        Favorites
-      </Link>
-      <Link href="/settings" aria-current={active === "settings" ? "page" : undefined}>
-        <span className="nav-ico" aria-hidden="true">
-          <SettingsIcon size={22} />
-        </span>
-        Settings
-      </Link>
+      {ITEMS.map(({ section, label, Icon }) => {
+        const content = (
+          <>
+            <span className="nav-ico" aria-hidden="true">
+              <Icon size={22} />
+            </span>
+            {label}
+          </>
+        );
+        const current = active === section ? "page" : undefined;
+
+        if (section !== "settings" && onNavigate) {
+          return (
+            <button
+              key={section}
+              type="button"
+              aria-current={current}
+              onClick={() => onNavigate(section)}
+            >
+              {content}
+            </button>
+          );
+        }
+
+        const href = section === "settings" ? "/settings" : `/?tab=${section}`;
+        return (
+          <Link
+            key={section}
+            href={href}
+            aria-current={current}
+            onClick={onLeave}
+          >
+            {content}
+          </Link>
+        );
+      })}
     </nav>
   );
 }

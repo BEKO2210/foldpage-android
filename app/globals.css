@@ -320,14 +320,12 @@ body {
   font-size: 1.25rem;
   line-height: 1;
 }
-.bottomnav [aria-selected="true"],
 .bottomnav [aria-current="page"] {
   color: var(--ink);
 }
-.bottomnav [aria-selected="true"] .nav-ico {
+.bottomnav [aria-current="page"] .nav-ico {
   filter: none;
 }
-.bottomnav [aria-selected="true"]::after,
 .bottomnav [aria-current="page"]::after {
   content: "";
   width: 1.5rem;
@@ -585,7 +583,6 @@ body {
     transform: none;
   }
 }
-.bottomnav [aria-selected="true"]::after,
 .bottomnav [aria-current="page"]::after {
   animation: fp-nav-underline var(--dur-fast) var(--ease-out) both;
 }

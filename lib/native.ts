@@ -181,7 +181,9 @@ export function wireExternalLinks(): () => void {
 export async function wireBackButton(): Promise<() => void> {
   if (!isNative()) return () => {};
   const handle = await App.addListener("backButton", ({ canGoBack }) => {
-    if (isHome() || !canGoBack) {
+    const atInitialLibraryEntry =
+      isHome() && !window.history.state?.foldPageSection;
+    if (!canGoBack || atInitialLibraryEntry) {
       void App.exitApp();
     } else {
       window.history.back();
