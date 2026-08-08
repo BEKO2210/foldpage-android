@@ -16,6 +16,7 @@ const CORPUS = path.join(ROOT, "corpus");
 const SCREENSHOTS = path.join(CORPUS, "screenshots");
 const VIEWPORT = { width: 412, height: 915 };
 const THEMES = ["light", "dark"];
+const WORST_BASELINE_SITES = new Set(["welt.de", "golem.de", "the-decoder.de"]);
 
 const slug = (url) =>
   url
@@ -120,8 +121,17 @@ async function measurePage(page, hasTable) {
     await settle();
     window.scrollTo(0, startY);
     await settle();
-    const column = document.querySelector("article.reader")?.clientWidth ?? innerWidth;
+    const reader = document.querySelector("article.reader");
+    const body = reader?.querySelector(":scope > div:last-child");
+    const column = reader?.clientWidth ?? innerWidth;
     const imgs = [...document.querySelectorAll("article.reader img")];
+    const firstText = body?.querySelector("p, li, blockquote, pre, h2, h3");
+    const links = [...(body?.querySelectorAll("a[href]") ?? [])];
+    const prose = body?.querySelector("p");
+    const proseStyle = prose ? getComputedStyle(prose) : null;
+    const charsPerLine = prose && proseStyle
+      ? Math.round(prose.textContent.length / Math.max(1, prose.getBoundingClientRect().height / parseFloat(proseStyle.lineHeight)))
+      : 0;
     return {
       // Der Korpus liegt offline. Entfernte Bilder werden deshalb nie geladen,
       // und alles, was erst nach dem Laden bekannt ist - kaputt, zu breit,
@@ -134,6 +144,17 @@ async function measurePage(page, hasTable) {
         broken: imgs.filter((i) => i.complete && i.naturalWidth === 0).length,
         decorative: imgs.filter((i) => i.naturalWidth > 0 && i.naturalWidth < 100).length,
         tooWide: imgs.filter((i) => i.getBoundingClientRect().width > column + 1).length,
+      },
+      leadingForeignBlocks: [...(body?.children ?? [])].findIndex((element) => {
+        const text = (element.textContent || "").replace(/\s+/g, " ").trim();
+        const links = element.querySelectorAll("a").length;
+        return text.length > 120 || (text.length > 30 && links < 4);
+      }),
+      leadPx: firstText && body ? Math.round(firstText.getBoundingClientRect().top - body.getBoundingClientRect().top) : 0,
+      charsPerLine,
+      textLinks: {
+        total: links.length,
+        allUnderlined: links.every((link) => getComputedStyle(link).textDecorationLine.includes("underline")),
       },
       pageOverflow: document.documentElement.scrollWidth !== innerWidth,
       viewportWidth: innerWidth,
@@ -148,6 +169,9 @@ async function measurePage(page, hasTable) {
           scrollWidth: element.scrollWidth,
         })),
       tables: wrappers.map((wrapper, index) => ({
+        columns: wrapper.querySelector("tr")?.children.length ?? 0,
+        rows: wrapper.querySelectorAll("tr").length,
+        scrollbar: wrapper.scrollWidth > wrapper.clientWidth,
         before: before[index],
         after: wrapper.scrollLeft,
         stable: wrapper.scrollLeft === before[index],
@@ -172,8 +196,7 @@ const articles = entries.flatMap((entry, index) => {
   const parsed = extractArticle(html, entry.finalUrl || entry.url);
   const hasTable = parsed.contentHtml.includes("<table");
   const hasImage = parsed.contentHtml.includes("<img");
-  if (!hasTable && !hasImage) return [];
-  return [{ entry, hasTable, article: storedArticle(parsed, entry, `render-${index}`) }];
+  return [{ entry, hasTable, hasImage, article: storedArticle(parsed, entry, `render-${index}`) }];
 });
 
 fs.rmSync(SCREENSHOTS, { recursive: true, force: true });
@@ -197,9 +220,9 @@ try {
       await seed(page, article);
       await page.goto(`/read/?id=${article.id}`);
       const measurement = await measurePage(page, hasTable);
-      // Screenshots nur fuer Tabellenartikel - sonst waechst das Repo um 70 PNG je Lauf.
+      // Tabellenfaelle plus die drei schwersten Ausgangsbefunde dokumentieren.
       let screenshot = null;
-      if (hasTable) {
+      if (hasTable || WORST_BASELINE_SITES.has(entry.site)) {
         screenshot = path.join("screenshots", theme, `${slug(entry.url)}.png`);
         fs.mkdirSync(path.dirname(path.join(CORPUS, screenshot)), { recursive: true });
         await page.screenshot({ path: path.join(CORPUS, screenshot) });

@@ -296,8 +296,13 @@ body {
 }
 .reader a {
   color: inherit;
+  /* The line itself has to be stated. Setting only colour and thickness left
+     the decoration to inherit, so article links were not reliably underlined
+     — the reader-lab run flagged exactly that. */
+  text-decoration-line: underline;
   text-decoration-color: var(--highlight);
   text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
 }
 .reader .tablewrap {
   width: 100%;
