@@ -85,11 +85,7 @@ function prepareMedia(container: HTMLElement, doc: Document) {
 
     // Reserving the box up front keeps the text from jumping once the image
     // arrives. Without intrinsic dimensions a neutral ratio still beats none.
-    if (w && h) {
-      img.style.aspectRatio = `${w} / ${h}`;
-    } else if (!img.style.aspectRatio) {
-      img.classList.add("img-unsized");
-    }
+    if (w && h) img.style.aspectRatio = `${w} / ${h}`;
     img.setAttribute("loading", "lazy");
     img.setAttribute("decoding", "async");
 
@@ -123,11 +119,34 @@ function prepareTables(container: HTMLElement, doc: Document) {
       wrapper.append(table);
     }
 
-    table.querySelectorAll("th, td").forEach((cell) => {
+    const cells = [...table.querySelectorAll("th, td")];
+    cells.forEach((cell) => {
       if (NUMERIC_CELL.test(cell.textContent?.trim() ?? "")) {
         cell.classList.add("numeric");
       }
     });
+
+    // A table whose cells hold paragraphs is not a table on a phone — it is a
+    // wall of text in four-word columns. Those get stacked into labelled
+    // blocks instead; real data tables keep their grid and scroll.
+    const longest = cells.reduce(
+      (max, cell) => Math.max(max, (cell.textContent ?? "").trim().length),
+      0
+    );
+    if (longest > 80) {
+      table.parentElement?.classList.add("prose");
+      const headRow = table.querySelector("thead tr") ?? table.querySelector("tr");
+      const labels = [...(headRow?.children ?? [])].map((cell) =>
+        (cell.textContent ?? "").trim()
+      );
+      table.querySelectorAll("tbody tr, tr").forEach((row) => {
+        if (row === headRow) return;
+        [...row.children].forEach((cell, index) => {
+          const label = labels[index];
+          if (label) cell.setAttribute("data-label", label);
+        });
+      });
+    }
   });
 }
 
@@ -152,6 +171,21 @@ function compactText(el: Element): string {
   return (el.textContent || "").replace(/\s+/g, " ").trim();
 }
 
+/** A block only survives on the strength of its media if that media is worth
+    keeping. Breadcrumbs carry an icon each, and that icon was enough to make
+    them look like content — the welt.de trail rendered as three links with a
+    reserved image box between them. */
+function onlyDecorativeMedia(el: Element): boolean {
+  const media = [...el.querySelectorAll(EDGE_MEDIA)];
+  if (!media.length) return false;
+  return media.every((node) => {
+    if (node.tagName !== "IMG") return false;
+    const w = Number(node.getAttribute("width"));
+    const h = Number(node.getAttribute("height"));
+    return (!w && !h) || (w && w < 200) || (h && h < 200);
+  });
+}
+
 function isLinkList(el: Element, value: string): boolean {
   const links = [...el.querySelectorAll("a")];
   if (links.length < 3 || !value) return false;
@@ -172,7 +206,10 @@ function isEdgeFurniture(el: Element, broad: boolean): boolean {
     (el.tagName.includes("-") && !value && !hasMedia) ||
     (broad && EDGE_CHROME_TAGS.has(el.tagName)) ||
     (broad && isLinkList(el, value)) ||
-    (broad && value.length > 0 && value.length < 40 && !hasMedia)
+    (broad &&
+      value.length > 0 &&
+      value.length < 40 &&
+      (!hasMedia || onlyDecorativeMedia(el)))
   );
 }
 

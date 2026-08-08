@@ -225,5 +225,17 @@
     "why": "long reference tables, code blocks, dense internal links",
     "finalUrl": "https://docs.python.org/3/library/datetime.html",
     "bytes": 423713
+  },
+  {
+    "site": "welt.de",
+    "url": "https://www.welt.de/politik/ausland/article6a7611e70e3689919ec7450e/leipzig-es-liegt-auf-der-hand-russland-veroeffentlicht-erklaerung-nach-drohnenvorfall.html",
+    "finalUrl": "https://www.welt.de/politik/ausland/article6a7611e70e3689919ec7450e/leipzig-es-liegt-auf-der-hand-russland-veroeffentlicht-erklaerung-nach-drohnenvorfall.html",
+    "bytes": 672760
+  },
+  {
+    "site": "github.com",
+    "url": "https://github.com/Jin-Aladdin/aladdin-spec",
+    "finalUrl": "https://github.com/Jin-Aladdin/aladdin-spec",
+    "bytes": 472122
   }
 ]
