@@ -7,6 +7,8 @@
     "build": "next build",
     "lint": "eslint",
     "test": "node --test lib/*.test.ts",
+    "corpus": "node scripts/corpus.mjs measure",
+    "corpus:fetch": "node scripts/corpus.mjs fetch",
     "sync": "npm run build && npx cap sync android",
     "apk:debug": "npm run sync && cd android && ./gradlew assembleDebug",
     "apk:release": "npm run sync && cd android && ./gradlew assembleRelease",
