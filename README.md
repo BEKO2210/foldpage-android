@@ -155,9 +155,15 @@ scripts/        icon/splash generation and the signed release build
 
 ## Status
 
-Version 1.3 — the local-only MVP after a full UI/UX pass and two rounds of
+Version 1.4 — the local-only MVP after a full UI/UX pass and two rounds of
 fixes that only showed up on a real device. Sync between devices
 exists in the web version of FoldPage and is deliberately absent here.
+
+The reader is measured against a frozen corpus of 39 real articles from 22
+sites — `npm run corpus` for extraction, `npm run reader-render` for the
+rendered page, both offline and deterministic. Current: 78 renders, 42 table
+checks, no failures. What the corpus cannot see is written down in
+[`docs/READER-LAB.md`](docs/READER-LAB.md) rather than left implied.
 
 Verified on a 412×915 viewport: no interactive element under 44 px, no
 horizontal overflow, every text role above 4.5:1 in both themes, and the bottom
