@@ -1,20 +1,19 @@
 ## Reader-Korpus
 
-37/37 Artikel extrahiert, 14 davon ohne Befund. Median 587 Woerter. 4 mit Tabelle, 20 mit Bild.
+39/39 Artikel extrahiert, 15 davon ohne Befund. Median 587 Woerter. 5 mit Tabelle, 22 mit Bild.
 
 ### Befunde nach Haeufigkeit
 
 | Flag | Artikel |
 | --- | --- |
-| `empty-paragraphs` | 14 |
+| `empty-paragraphs` | 15 |
+| `no-author` | 6 |
+| `last-empty` | 5 |
+| `table-wrapped` | 5 |
 | `suspiciously-short` | 5 |
-| `no-author` | 5 |
-| `last-empty` | 4 |
-| `table-wrapped` | 4 |
-| `long-cell` | 3 |
+| `long-cell` | 4 |
 | `image-flood` | 2 |
 | `wide-table` | 2 |
-| `first-stub` | 1 |
 | `href-relative` | 1 |
 | `tables-lost` | 1 |
 
@@ -26,7 +25,7 @@
 | welt.de | 617 | DIV: Rente„Dann werden die Reformpläne wie Do | 1 | 0 | 2 | last-empty, empty-paragraphs |
 | the-decoder.de | 731 | DIV: Interne Tests des neuen KI-Modells Astra | 0 | 1 | 9 | empty-paragraphs, long-cell, table-wrapped |
 | the-decoder.de | 424 | DIV: Der KI-Musikgenerator Suno steht in der  | 0 | 0 | 7 | empty-paragraphs |
-| the-decoder.de | 207 | DIV: 7. August 2026 | 1 | 0 | 6 | first-stub, empty-paragraphs |
+| the-decoder.de | 204 | DIV: AMD übernimmt das kanadische KI-Startup  | 1 | 0 | 5 | — |
 | heise.de | 19498 | P: Ein Smart Ring ist die diskrete Alternat | 307 | 0 | 370 | empty-paragraphs, image-flood |
 | heise.de | 658 | P: RCS, kurz für Rich Communication Service | 1 | 0 | 5 | — |
 | golem.de | 29 | SECTION: Zu Golem pur Bereits Pur-Leser? Hier anm | 0 | 0 | 2 | suspiciously-short, no-author |
@@ -59,3 +58,5 @@
 | developer.mozilla.org | 2364 | SECTION: Try it display: block; display: inline f | 0 | 1 | 183 | long-cell, table-wrapped, no-author |
 | web.dev | 3091 | ARTICLE: Interaction to Next Paint (INP) Veröffen | 3 | 0 | 22 | empty-paragraphs, no-author |
 | docs.python.org | 13246 | P: The datetime module supplies classes for | 1 | 6 | 581 | wide-table, long-cell, table-wrapped, no-author |
+| welt.de | 550 | DIV: „Welle antirussischer Hysterie“„Es liegt | 1 | 0 | 3 | last-empty, empty-paragraphs |
+| github.com | 2336 | DIV: Portable knowledge. Verifiable sources.  | 8 | 8 | 131 | empty-paragraphs, long-cell, table-wrapped, no-author |

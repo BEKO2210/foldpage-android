@@ -266,7 +266,10 @@ export default function ReadPage() {
             }}
             style={{ color: "var(--muted)" }}
           >
-            View original ↗
+            View original{" "}
+            <span aria-hidden="true" style={{ textDecoration: "none" }}>
+              ↗
+            </span>
           </a>
         </p>
         <div className="mb-8" style={{ fontFamily: "var(--sans)" }}>

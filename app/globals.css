@@ -247,11 +247,18 @@ body {
   line-height: 1.25;
   text-wrap: balance;
 }
-/* Without intrinsic dimensions the box is unknown until the bytes arrive.
-   A neutral ratio reserves something sensible so the text below does not
-   jump when it does. */
-.reader img.img-unsized {
-  aspect-ratio: 3 / 2;
+/* Deliberately no reserved ratio for images of unknown size. Reserving 3/2
+   turned every breadcrumb icon into half a screen of emptiness — a permanent
+   hole is worse than a brief shift when the image lands. */
+/* An image sitting in a line of text — a badge, a shield, an inline icon —
+   stays in that line. Only images that own their block get centred. */
+.reader p > img:not(:only-child),
+.reader p > a > img,
+.reader li img {
+  display: inline-block;
+  margin: 0 0.25rem;
+  vertical-align: middle;
+  border-radius: 0.2rem;
 }
 .reader img,
 .reader video {
@@ -303,6 +310,54 @@ body {
   text-decoration-color: var(--highlight);
   text-decoration-thickness: 2px;
   text-underline-offset: 0.15em;
+}
+/* Prose tables stack on a phone: each row becomes a block, each cell keeps
+   its column name as a label. Scrolling a four-word column sideways through
+   three screens of text is not reading. */
+@media (max-width: 767.98px) {
+  .reader .tablewrap.prose,
+  .reader .tablewrap.prose table,
+  .reader .tablewrap.prose tbody,
+  .reader .tablewrap.prose tr,
+  .reader .tablewrap.prose td,
+  .reader .tablewrap.prose th {
+    display: block;
+    width: auto;
+    min-width: 0;
+    overflow: visible;
+  }
+  .reader .tablewrap.prose thead {
+    display: none;
+  }
+  .reader .tablewrap.prose tr {
+    border: 1px solid var(--line);
+    border-radius: 0.35rem;
+    padding: 0.9rem 1rem;
+    margin: 0 0 0.75rem;
+    background: var(--card);
+  }
+  .reader .tablewrap.prose td,
+  .reader .tablewrap.prose th {
+    border: 0;
+    padding: 0 0 0.75rem;
+  }
+  .reader .tablewrap.prose tr > :last-child {
+    padding-bottom: 0;
+  }
+  .reader .tablewrap.prose td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.15rem;
+  }
+  .reader .tablewrap.prose::after {
+    display: none;
+  }
 }
 .reader .tablewrap {
   width: 100%;
