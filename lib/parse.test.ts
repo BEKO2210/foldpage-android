@@ -110,6 +110,32 @@ test("extractArticle strips everything executable", async () => {
   assert.match(contentHtml, /Boeser Link/);
 });
 
+test("extractArticle removes chrome only from article edges", async () => {
+  const { extractArticle } = await load();
+  const result = extractArticle(
+    `<html lang="de"><head><title>Randprobe</title></head><body><article>
+      <nav><a href="/">Home</a><a href="/thema">Thema</a><a href="/rubrik">Rubrik</a></nav>
+      <div>
+        <p>Als bevorzugte Quelle auf Google hinzufügen</p>
+        <p>Der eigentliche Artikel beginnt hier und enthält genug Text, damit
+        Readability ihn sicher als Inhalt erkennt. Das Seitenmöbel im selben
+        Wrapper darf nicht dazu führen, dass dieser Absatz verloren geht.</p>
+        <p>Auch ein zweiter, ausreichend langer Absatz bleibt vollständig
+        erhalten. Er erwähnt eine Navigation mitten im Inhalt, die keinesfalls
+        anhand eines bloßen Stichworts entfernt werden darf.</p>
+        <p>Startseite</p>
+      </div>
+      <reader-gift></reader-gift>
+    </article></body></html>`,
+    "https://example.test/randprobe"
+  );
+
+  assert.doesNotMatch(result.contentHtml, /<nav|reader-gift|bevorzugte Quelle|Startseite/i);
+  assert.match(result.contentHtml, /eigentliche Artikel beginnt hier/);
+  assert.match(result.contentHtml, /Navigation mitten im Inhalt/);
+  assert.equal(result.wordCount, 55);
+});
+
 test("extractArticle reports the failures the UI shows", async () => {
   const { extractArticle } = await load();
 

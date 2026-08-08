@@ -52,6 +52,116 @@ function sanitize(html: string, doc: Document): string {
   return container.innerHTML;
 }
 
+const EDGE_CHROME_TAGS = new Set([
+  "NAV",
+  "ASIDE",
+  "HEADER",
+  "FOOTER",
+  "MENU",
+  "BUTTON",
+  "SELECT",
+  "SVG",
+]);
+
+const EDGE_FURNITURE =
+  /^(pfadnavigation|benachrichtigungpfeil nach links|ki-news ohne hype|als bevorzugte quelle auf google hinzufügen|zum hauptinhalt springen$|source code:|startseite$|anzeige$|top-artikel$|cookies? (zustimmen|akzeptieren)|besuchen sie golem\.de|um der nutzung von golem\.de|die zustimmung in einem iframe|der zustimmungs-dialog konnte nicht|die möglichkeit zum widerruf|… oder golem pur bestellen|mit golem pur ab|informationen auf einem gerät speichern|personalisierte anzeigen und inhalte|diesen artikel weiterlesen mit)/i;
+
+const EDGE_WRAPPERS = new Set(["DIV", "SECTION", "ARTICLE", "MAIN"]);
+const EDGE_MEDIA = "img, picture, video, audio, canvas";
+
+function compactText(el: Element): string {
+  return (el.textContent || "").replace(/\s+/g, " ").trim();
+}
+
+function isLinkList(el: Element, value: string): boolean {
+  const links = [...el.querySelectorAll("a")];
+  if (links.length < 3 || !value) return false;
+  const linked = links.reduce((sum, link) => sum + compactText(link).length, 0);
+  return linked / value.length > 0.6;
+}
+
+/** Only classify an element after looking inside generic wrappers. A wrapper
+    may start with furniture while still containing the whole article (t3n is
+    exactly that shape), so removing it based on its combined text loses prose. */
+function isEdgeFurniture(el: Element, broad: boolean): boolean {
+  const value = compactText(el);
+  const hasMedia = !!el.querySelector(EDGE_MEDIA);
+  return (
+    (!value && !hasMedia) ||
+    EDGE_FURNITURE.test(value) ||
+    ((el.tagName === "A-COLLAPSE" || el.tagName === "A-GIFT") && !hasMedia) ||
+    (el.tagName.includes("-") && !value && !hasMedia) ||
+    (broad && EDGE_CHROME_TAGS.has(el.tagName)) ||
+    (broad && isLinkList(el, value)) ||
+    (broad && value.length > 0 && value.length < 40 && !hasMedia)
+  );
+}
+
+function trimNestedEdges(el: Element): void {
+  if (!EDGE_WRAPPERS.has(el.tagName)) return;
+
+  // A boundary wrapper can contain chrome at either end even when the wrapper
+  // itself is only on one edge of the Readability result.
+  trimEdge(el, "first", false);
+  trimEdge(el, "last", false);
+}
+
+function trimEdge(
+  container: Element,
+  side: "first" | "last",
+  broad = true
+): void {
+  while (container.children.length) {
+    const candidate =
+      side === "first"
+        ? container.firstElementChild
+        : container.lastElementChild;
+    if (!candidate) return;
+
+    // Generic wrappers need their own edges cleaned before their aggregate
+    // text is judged. This preserves mixed furniture/article wrappers.
+    trimNestedEdges(candidate);
+    if (
+      candidate.tagName.includes("-") &&
+      candidate.tagName !== "A-COLLAPSE" &&
+      candidate.tagName !== "A-GIFT" &&
+      compactText(candidate)
+    ) {
+      candidate.replaceWith(...candidate.childNodes);
+      continue;
+    }
+    if (isEdgeFurniture(candidate, broad)) {
+      candidate.remove();
+      continue;
+    }
+    return;
+  }
+}
+
+/** Remove page chrome that Readability retained immediately before or after
+    the article. This deliberately runs after extraction: only the two edges
+    are considered, never matching furniture-like words in the article body. */
+function cleanArticleEdges(html: string, doc: Document): {
+  html: string;
+  text: string;
+} {
+  const container = doc.createElement("div");
+  container.innerHTML = html;
+  let root: Element = container;
+  while (true) {
+    trimEdge(root, "first");
+    trimEdge(root, "last");
+    if (
+      root.children.length !== 1 ||
+      !EDGE_WRAPPERS.has(root.firstElementChild?.tagName || "")
+    ) {
+      break;
+    }
+    root = root.firstElementChild as Element;
+  }
+  return { html: container.innerHTML, text: compactText(container) };
+}
+
 /** Rewrite relative img/a targets against the page URL. Readability relies on
     document.baseURI for this, which a DOMParser document does not have. */
 function absolutize(doc: Document, baseUrl: string) {
@@ -121,7 +231,8 @@ export function extractArticle(html: string, finalUrl: string): ParseResult {
     throw new Error("Could not extract a readable article from that page");
   }
 
-  const text = article.textContent ?? "";
+  const cleaned = cleanArticleEdges(article.content, doc);
+  const text = cleaned.text;
   const wordCount = text.split(/\s+/).filter(Boolean).length;
   const canonicalRaw = doc
     .querySelector('link[rel="canonical"]')
@@ -140,7 +251,7 @@ export function extractArticle(html: string, finalUrl: string): ParseResult {
     author: article.byline || null,
     siteName: article.siteName || fallbackHost.replace(/^www\./, ""),
     excerpt: (article.excerpt || text.slice(0, 300)).trim().slice(0, 500),
-    contentHtml: sanitize(article.content, doc),
+    contentHtml: sanitize(cleaned.html, doc),
     wordCount,
     lang: doc.documentElement.getAttribute("lang") || null,
     canonicalUrl,
