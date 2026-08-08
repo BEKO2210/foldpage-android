@@ -8,8 +8,8 @@
     "light",
     "dark"
   ],
-  "articles": 22,
-  "renders": 44,
+  "articles": 37,
+  "renders": 74,
   "tablesChecked": 26,
   "imagesTotal": 748,
   "imagesUnloaded": 682,
@@ -20,13 +20,20 @@
       "site": "welt.de",
       "url": "https://www.welt.de/politik/deutschland/article6a7665b70e3689919ec747b6/nach-landtagswahl-ansage-an-landespartei-cdu-spitze-duldet-keine-koalition-mit-afd-in-sachsen-anhalt.html",
       "theme": "light",
-      "screenshot": null,
+      "screenshot": "screenshots/light/www-welt-de-politik-deutschland-article6a7665b70e3689919ec747b6-nach-landtagswahl-ansage-a.png",
       "images": {
         "total": 1,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 17,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -38,13 +45,20 @@
       "site": "welt.de",
       "url": "https://www.welt.de/wirtschaft/article6a7660bc35268e50270222a9/rente-dann-werden-die-reformplaene-wie-dominosteine-fallen-wirtschaftsweise-warnt-merz.html",
       "theme": "light",
-      "screenshot": null,
+      "screenshot": "screenshots/light/www-welt-de-wirtschaft-article6a7660bc35268e50270222a9-rente-dann-werden-die-reformplaene-.png",
       "images": {
         "total": 1,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 5,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -63,6 +77,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 31,
+      "textLinks": {
+        "total": 9,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -101,6 +122,9 @@
       ],
       "tables": [
         {
+          "columns": 3,
+          "rows": 2,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
@@ -109,15 +133,47 @@
     },
     {
       "site": "the-decoder.de",
+      "url": "https://the-decoder.de/musikgenerator-suno-will-den-ki-musik-spam-eindaemmen-und-copyright-schutz-verbessern/",
+      "theme": "light",
+      "screenshot": "screenshots/light/the-decoder-de-musikgenerator-suno-will-den-ki-musik-spam-eindaemmen-und-copyright-schutz-.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 30,
+      "textLinks": {
+        "total": 7,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "the-decoder.de",
       "url": "https://the-decoder.de/amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-inferenz/",
       "theme": "light",
-      "screenshot": null,
+      "screenshot": "screenshots/light/the-decoder-de-amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-.png",
       "images": {
         "total": 1,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 8,
+      "textLinks": {
+        "total": 6,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -137,6 +193,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 37,
+      "textLinks": {
+        "total": 370,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -154,6 +217,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 5,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
+      "theme": "light",
+      "screenshot": "screenshots/light/www-golem-de-news-anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 31,
+      "charsPerLine": 53,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
+      "theme": "light",
+      "screenshot": "screenshots/light/www-golem-de-news-business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 31,
+      "charsPerLine": 53,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -173,6 +293,38 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 536,
+      "charsPerLine": 39,
+      "textLinks": {
+        "total": 0,
+        "allUnderlined": true
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/ausland/ceuta-krise-spanien-fuehrt-grenzkontrollen-fuer-italien-ein-a-02c12f82-cfc9-4dd6-b40e-32da4c497602",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 33,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -190,6 +342,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 42,
+      "textLinks": {
+        "total": 14,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/news/2026-08/08/loeschhubschrauber-stuerzt-bei-waldbrand-in-utah-ab",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 32,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "sueddeutsche.de",
+      "url": "https://www.sueddeutsche.de/politik/ukraine-krieg-newsblog-leipzig-drohne-russland-statement-li.3524928",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 4,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -209,6 +418,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 272,
+      "charsPerLine": 29,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -226,6 +442,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 272,
+      "charsPerLine": 29,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/landtagswahl-in-sachsen-anhalt-so-wollen-die-parteien-die-autoritaere-wende-aufhalten/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 31,
+      "textLinks": {
+        "total": 17,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/verwaltungsdigitalisierung-digitalminister-wildberger-wiederholt-alte-fehler/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 32,
+      "textLinks": {
+        "total": 13,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -245,6 +518,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 40,
+      "textLinks": {
+        "total": 3,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -262,6 +542,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 42,
+      "textLinks": {
+        "total": 3,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/gadgets/2026/08/europes-free-satellite-service-just-made-it-easier-to-track-wildfires/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 7,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/health/2026/08/flesh-eating-screwworms-feast-on-humans-in-mexico-human-cases-top-500/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 5,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -281,6 +618,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 39,
+      "textLinks": {
+        "total": 11,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -298,6 +642,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 12,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -317,6 +668,113 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 321,
+      "charsPerLine": 28,
+      "textLinks": {
+        "total": 7,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/after-rippling-blew-millions-on-ai-in-months-it-built-an-employee-roi-tool/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 6,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c70g18vpwxvo",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 37,
+      "textLinks": {
+        "total": 0,
+        "allUnderlined": true
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c8jnrk4xlvdo",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 26,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/wellness/2026/aug/07/biggest-wellness-trends-2026",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 25,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -334,6 +792,38 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 35,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/openai-timeline/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 35,
+      "textLinks": {
+        "total": 5,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -353,6 +843,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 33,
+      "textLinks": {
+        "total": 11,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -370,6 +867,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 886,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -402,6 +906,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 31,
+      "textLinks": {
+        "total": 1610,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -439,26 +950,41 @@
       ],
       "tables": [
         {
+          "columns": 4,
+          "rows": 6,
+          "scrollbar": true,
           "before": 131,
           "after": 131,
           "stable": true
         },
         {
+          "columns": 6,
+          "rows": 18,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 6,
+          "rows": 17,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 5,
+          "rows": 17,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 5,
+          "rows": 12,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
@@ -476,6 +1002,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 3,
+      "textLinks": {
+        "total": 183,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -514,6 +1047,9 @@
       ],
       "tables": [
         {
+          "columns": 2,
+          "rows": 5,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
@@ -531,6 +1067,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 0,
+      "textLinks": {
+        "total": 22,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -562,6 +1105,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 35,
+      "textLinks": {
+        "total": 581,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -600,31 +1150,49 @@
       ],
       "tables": [
         {
+          "columns": 2,
+          "rows": 16,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 2,
+          "rows": 6,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 2,
+          "rows": 6,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 3,
+          "rows": 4,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 4,
+          "rows": 25,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 4,
+          "rows": 5,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
@@ -635,13 +1203,20 @@
       "site": "welt.de",
       "url": "https://www.welt.de/politik/deutschland/article6a7665b70e3689919ec747b6/nach-landtagswahl-ansage-an-landespartei-cdu-spitze-duldet-keine-koalition-mit-afd-in-sachsen-anhalt.html",
       "theme": "dark",
-      "screenshot": null,
+      "screenshot": "screenshots/dark/www-welt-de-politik-deutschland-article6a7665b70e3689919ec747b6-nach-landtagswahl-ansage-a.png",
       "images": {
         "total": 1,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 17,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -653,13 +1228,20 @@
       "site": "welt.de",
       "url": "https://www.welt.de/wirtschaft/article6a7660bc35268e50270222a9/rente-dann-werden-die-reformplaene-wie-dominosteine-fallen-wirtschaftsweise-warnt-merz.html",
       "theme": "dark",
-      "screenshot": null,
+      "screenshot": "screenshots/dark/www-welt-de-wirtschaft-article6a7660bc35268e50270222a9-rente-dann-werden-die-reformplaene-.png",
       "images": {
         "total": 1,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 5,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -678,6 +1260,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 31,
+      "textLinks": {
+        "total": 9,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -716,6 +1305,9 @@
       ],
       "tables": [
         {
+          "columns": 3,
+          "rows": 2,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
@@ -724,15 +1316,47 @@
     },
     {
       "site": "the-decoder.de",
+      "url": "https://the-decoder.de/musikgenerator-suno-will-den-ki-musik-spam-eindaemmen-und-copyright-schutz-verbessern/",
+      "theme": "dark",
+      "screenshot": "screenshots/dark/the-decoder-de-musikgenerator-suno-will-den-ki-musik-spam-eindaemmen-und-copyright-schutz-.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 30,
+      "textLinks": {
+        "total": 7,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "the-decoder.de",
       "url": "https://the-decoder.de/amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-inferenz/",
       "theme": "dark",
-      "screenshot": null,
+      "screenshot": "screenshots/dark/the-decoder-de-amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-.png",
       "images": {
         "total": 1,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 8,
+      "textLinks": {
+        "total": 6,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -752,6 +1376,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 37,
+      "textLinks": {
+        "total": 370,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -769,6 +1400,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 5,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
+      "theme": "dark",
+      "screenshot": "screenshots/dark/www-golem-de-news-anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 31,
+      "charsPerLine": 53,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
+      "theme": "dark",
+      "screenshot": "screenshots/dark/www-golem-de-news-business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 31,
+      "charsPerLine": 53,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -788,6 +1476,38 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 536,
+      "charsPerLine": 39,
+      "textLinks": {
+        "total": 0,
+        "allUnderlined": true
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/ausland/ceuta-krise-spanien-fuehrt-grenzkontrollen-fuer-italien-ein-a-02c12f82-cfc9-4dd6-b40e-32da4c497602",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 33,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -805,6 +1525,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 42,
+      "textLinks": {
+        "total": 14,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/news/2026-08/08/loeschhubschrauber-stuerzt-bei-waldbrand-in-utah-ab",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 32,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "sueddeutsche.de",
+      "url": "https://www.sueddeutsche.de/politik/ukraine-krieg-newsblog-leipzig-drohne-russland-statement-li.3524928",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 4,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -824,6 +1601,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 272,
+      "charsPerLine": 29,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -841,6 +1625,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 272,
+      "charsPerLine": 29,
+      "textLinks": {
+        "total": 1,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/landtagswahl-in-sachsen-anhalt-so-wollen-die-parteien-die-autoritaere-wende-aufhalten/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 31,
+      "textLinks": {
+        "total": 17,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/verwaltungsdigitalisierung-digitalminister-wildberger-wiederholt-alte-fehler/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 32,
+      "textLinks": {
+        "total": 13,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -860,6 +1701,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 40,
+      "textLinks": {
+        "total": 3,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -877,6 +1725,63 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 42,
+      "textLinks": {
+        "total": 3,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/gadgets/2026/08/europes-free-satellite-service-just-made-it-easier-to-track-wildfires/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 7,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/health/2026/08/flesh-eating-screwworms-feast-on-humans-in-mexico-human-cases-top-500/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 5,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -896,6 +1801,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 39,
+      "textLinks": {
+        "total": 11,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -913,6 +1825,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 12,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -932,6 +1851,113 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 321,
+      "charsPerLine": 28,
+      "textLinks": {
+        "total": 7,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/after-rippling-blew-millions-on-ai-in-months-it-built-an-employee-roi-tool/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 34,
+      "textLinks": {
+        "total": 6,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c70g18vpwxvo",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 37,
+      "textLinks": {
+        "total": 0,
+        "allUnderlined": true
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c8jnrk4xlvdo",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 26,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/wellness/2026/aug/07/biggest-wellness-trends-2026",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 25,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -949,6 +1975,38 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 35,
+      "textLinks": {
+        "total": 2,
+        "allUnderlined": false
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/openai-timeline/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 35,
+      "textLinks": {
+        "total": 5,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -968,6 +2026,13 @@
         "decorative": 0,
         "tooWide": 0
       },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 33,
+      "textLinks": {
+        "total": 11,
+        "allUnderlined": false
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -985,6 +2050,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 36,
+      "textLinks": {
+        "total": 886,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -1016,6 +2088,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 31,
+      "textLinks": {
+        "total": 1610,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -1054,26 +2133,41 @@
       ],
       "tables": [
         {
+          "columns": 4,
+          "rows": 6,
+          "scrollbar": true,
           "before": 131,
           "after": 131,
           "stable": true
         },
         {
+          "columns": 6,
+          "rows": 18,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 6,
+          "rows": 17,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 5,
+          "rows": 17,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 5,
+          "rows": 12,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
@@ -1091,6 +2185,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 3,
+      "textLinks": {
+        "total": 183,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -1129,6 +2230,9 @@
       ],
       "tables": [
         {
+          "columns": 2,
+          "rows": 5,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
@@ -1146,6 +2250,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 0,
+      "textLinks": {
+        "total": 22,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -1177,6 +2288,13 @@
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
+      },
+      "leadingForeignBlocks": 0,
+      "leadPx": 0,
+      "charsPerLine": 35,
+      "textLinks": {
+        "total": 581,
+        "allUnderlined": false
       },
       "pageOverflow": false,
       "viewportWidth": 412,
@@ -1215,31 +2333,49 @@
       ],
       "tables": [
         {
+          "columns": 2,
+          "rows": 16,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 2,
+          "rows": 6,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 2,
+          "rows": 6,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 3,
+          "rows": 4,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 4,
+          "rows": 25,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
         },
         {
+          "columns": 4,
+          "rows": 5,
+          "scrollbar": true,
           "before": 200,
           "after": 200,
           "stable": true
