@@ -33,6 +33,29 @@ const ArticleContent = memo(function ArticleContent({
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // An image that never arrives leaves its reserved box behind as a hole in
+    // the text. Only the browser knows, so it is cleared here rather than
+    // during extraction.
+    const images = [
+      ...(contentRef.current?.querySelectorAll<HTMLImageElement>("img") ?? []),
+    ];
+    const dropBroken = (img: HTMLImageElement) => {
+      // naturalWidth 0 means it never loaded; anything under 100px of real
+      // pixels is an icon, a logo or a counting pixel. Neither is worth the
+      // hole it leaves in the text. Only the browser knows either number,
+      // which is why this cannot happen during extraction.
+      if (img.naturalWidth === 0 || img.naturalWidth < 100) {
+        (img.closest("figure") ?? img).remove();
+      }
+    };
+    images.forEach((img) => {
+      if (img.complete) dropBroken(img);
+      else {
+        img.addEventListener("error", () => dropBroken(img), { once: true });
+        img.addEventListener("load", () => dropBroken(img), { once: true });
+      }
+    });
+
     const wrappers = [...(contentRef.current?.querySelectorAll<HTMLElement>(
       ".tablewrap"
     ) ?? [])];
