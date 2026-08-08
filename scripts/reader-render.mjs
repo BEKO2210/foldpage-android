@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Render the table-bearing corpus articles in the production export.
+/** Render the complete corpus in the production export.
  *  This complements corpus.mjs: extraction is measured in jsdom, while this
  *  script measures the real reader layout in Chromium. */
 
@@ -103,10 +103,32 @@ async function seed(page, article) {
 }
 
 async function measurePage(page) {
-  await page.waitForSelector(".tablewrap");
+  await page.waitForSelector(".reader-content");
+  await page.waitForSelector('html[data-external-links-wired="true"]');
   return page.evaluate(async () => {
     const settle = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     const wrappers = [...document.querySelectorAll(".tablewrap")];
+    const readerBody = document.querySelector(".reader-content");
+    const firstText = readerBody?.querySelector("p, h1, h2, h3, li, blockquote");
+    const images = [...readerBody.querySelectorAll("img")];
+    for (const image of images) {
+      image.scrollIntoView({ block: "center" });
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    await Promise.race([
+      Promise.all(images.map((image) => image.complete
+        ? undefined
+        : new Promise((resolve) => {
+            image.addEventListener("load", resolve, { once: true });
+            image.addEventListener("error", resolve, { once: true });
+          }))),
+      new Promise((resolve) => setTimeout(resolve, 5000)),
+    ]);
+    window.scrollTo(0, 0);
+    await settle();
+    const firstTextBefore = firstText?.getBoundingClientRect().top ?? 0;
+    await settle();
+    const firstTextAfter = firstText?.getBoundingClientRect().top ?? 0;
     wrappers[0]?.scrollIntoView({ block: "center" });
     await settle();
     const before = wrappers.map((wrapper) => {
@@ -119,10 +141,39 @@ async function measurePage(page) {
     await settle();
     window.scrollTo(0, startY);
     await settle();
+    window.open = () => null;
+    const links = [...readerBody.querySelectorAll("a[href]")].map((anchor) => {
+      const href = anchor.getAttribute("href");
+      const external = /^https?:/i.test(href);
+      window.addEventListener("click", (event) => {
+        event.preventDefault();
+      }, { once: true });
+      const click = new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 });
+      anchor.dispatchEvent(click);
+      const handledExternal = click.foldPageExternal === true;
+      return {
+        href,
+        external,
+        passed: (external ? handledExternal : !handledExternal) &&
+          getComputedStyle(anchor).textDecorationLine.includes("underline"),
+      };
+    });
     return {
       pageOverflow: document.documentElement.scrollWidth !== innerWidth,
       viewportWidth: innerWidth,
       documentWidth: document.documentElement.scrollWidth,
+      firstTextShift: Math.abs(firstTextAfter - firstTextBefore),
+      images: {
+        total: images.length,
+        broken: images.filter((image) => image.naturalWidth === 0 && getComputedStyle(image).display !== "none").length,
+        widerThanColumn: images.filter((image) => image.getBoundingClientRect().width > readerBody.clientWidth + 1).length,
+      },
+      links: {
+        total: links.length,
+        external: links.filter((link) => link.external).length,
+        internal: links.filter((link) => !link.external).length,
+        failures: links.filter((link) => !link.passed).map((link) => link.href),
+      },
       overflowElements: [...document.querySelectorAll("body *")]
         .filter((element) => element.getBoundingClientRect().right > innerWidth + 1)
         .slice(0, 5)
@@ -155,9 +206,7 @@ const articles = entries.flatMap((entry, index) => {
   if (!fs.existsSync(file)) return [];
   const html = gunzipSync(fs.readFileSync(file)).toString("utf8");
   const parsed = extractArticle(html, entry.finalUrl || entry.url);
-  return parsed.contentHtml.includes("<table")
-    ? [{ entry, article: storedArticle(parsed, entry, `render-${index}`) }]
-    : [];
+  return [{ entry, article: storedArticle(parsed, entry, `render-${index}`) }];
 });
 
 fs.rmSync(SCREENSHOTS, { recursive: true, force: true });
@@ -181,9 +230,13 @@ try {
       await seed(page, article);
       await page.goto(`/read/?id=${article.id}`);
       const measurement = await measurePage(page);
-      const screenshot = path.join("screenshots", theme, `${slug(entry.url)}.png`);
-      fs.mkdirSync(path.dirname(path.join(CORPUS, screenshot)), { recursive: true });
-      await page.screenshot({ path: path.join(CORPUS, screenshot) });
+      const screenshot = measurement.tables.length
+        ? path.join("screenshots", theme, `${slug(entry.url)}.png`)
+        : null;
+      if (screenshot) {
+        fs.mkdirSync(path.dirname(path.join(CORPUS, screenshot)), { recursive: true });
+        await page.screenshot({ path: path.join(CORPUS, screenshot) });
+      }
       results.push({ site: entry.site, url: entry.url, theme, screenshot, ...measurement });
       await context.close();
     }
@@ -195,6 +248,10 @@ try {
 
 const failures = results.flatMap((result) => [
   ...(result.pageOverflow ? [`${result.site}/${result.theme}: page overflow`] : []),
+  ...(result.images.broken ? [`${result.site}/${result.theme}: ${result.images.broken} broken images visible`] : []),
+  ...(result.images.widerThanColumn ? [`${result.site}/${result.theme}: ${result.images.widerThanColumn} images wider than column`] : []),
+  ...(result.firstTextShift >= 4 ? [`${result.site}/${result.theme}: first text shifted ${result.firstTextShift}px`] : []),
+  ...result.links.failures.map((href) => `${result.site}/${result.theme}: link routing/style failed ${href}`),
   ...result.tables.flatMap((table, index) =>
     table.stable ? [] : [`${result.site}/${result.theme}/table-${index + 1}: ${table.before} -> ${table.after}`]
   ),
@@ -205,6 +262,8 @@ const report = {
   articles: articles.length,
   renders: results.length,
   tablesChecked: results.reduce((sum, result) => sum + result.tables.length, 0),
+  imagesChecked: results.reduce((sum, result) => sum + result.images.total, 0),
+  linksChecked: results.reduce((sum, result) => sum + result.links.total, 0),
   failures,
   results,
 };

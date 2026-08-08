@@ -257,6 +257,14 @@ body {
   margin: 1.5rem auto;
   object-fit: contain;
   background: var(--card);
+  border: 1px solid var(--line);
+  box-sizing: border-box;
+}
+.reader img.reader-image-fluid {
+  width: 100%;
+}
+.reader img.is-broken {
+  display: none;
 }
 .reader figure {
   margin: 1.75rem 0;
@@ -270,7 +278,7 @@ body {
   font-size: 0.8rem;
   color: var(--muted);
   line-height: 1.45;
-  margin-top: 0.5rem;
+  margin: 0.5rem 0 1.25rem;
 }
 .reader pre {
   overflow-x: auto;
@@ -288,8 +296,10 @@ body {
 }
 .reader a {
   color: inherit;
+  text-decoration-line: underline;
   text-decoration-color: var(--highlight);
   text-decoration-thickness: 2px;
+  text-underline-offset: 0.16em;
 }
 .reader .tablewrap {
   width: 100%;

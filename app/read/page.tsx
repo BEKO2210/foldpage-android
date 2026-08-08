@@ -33,6 +33,14 @@ const ArticleContent = memo(function ArticleContent({
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const images = [...(contentRef.current?.querySelectorAll<HTMLImageElement>("img") ?? [])];
+    const hideBroken = (image: HTMLImageElement) => image.classList.add("is-broken");
+    const imageCleanups = images.map((image) => {
+      const onError = () => hideBroken(image);
+      image.addEventListener("error", onError);
+      if (image.complete && image.naturalWidth === 0) hideBroken(image);
+      return () => image.removeEventListener("error", onError);
+    });
     const wrappers = [...(contentRef.current?.querySelectorAll<HTMLElement>(
       ".tablewrap"
     ) ?? [])];
@@ -50,12 +58,13 @@ const ArticleContent = memo(function ArticleContent({
     const observer = new ResizeObserver(() => wrappers.forEach(update));
     wrappers.forEach((wrapper) => observer.observe(wrapper));
     return () => {
+      imageCleanups.forEach((cleanup) => cleanup());
       cleanups.forEach((cleanup) => cleanup());
       observer.disconnect();
     };
   }, [contentHtml]);
 
-  return <div ref={contentRef} dangerouslySetInnerHTML={{ __html: contentHtml }} />;
+  return <div className="reader-content" ref={contentRef} dangerouslySetInnerHTML={{ __html: contentHtml }} />;
 });
 
 export default function ReadPage() {

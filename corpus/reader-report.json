@@ -8,11 +8,59 @@
     "light",
     "dark"
   ],
-  "articles": 4,
-  "renders": 8,
+  "articles": 37,
+  "renders": 74,
   "tablesChecked": 26,
+  "imagesChecked": 748,
+  "linksChecked": 7676,
   "failures": [],
   "results": [
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/politik/deutschland/article6a7665b70e3689919ec747b6/nach-landtagswahl-ansage-an-landespartei-cdu-spitze-duldet-keine-koalition-mit-afd-in-sachsen-anhalt.html",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.5902099609375,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/wirtschaft/article6a7660bc35268e50270222a9/rente-dann-werden-die-reformplaene-wie-dominosteine-fallen-wirtschaftsweise-warnt-merz.html",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.900848388671875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
     {
       "site": "the-decoder.de",
       "url": "https://the-decoder.de/openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cybersecurity-risikostufe-ein/",
@@ -21,6 +69,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 1.352935791015625,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 9,
+        "external": 9,
+        "internal": 0,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "TABLE",
@@ -62,6 +122,709 @@
       ]
     },
     {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/musikgenerator-suno-will-den-ki-musik-spam-eindaemmen-und-copyright-schutz-verbessern/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.356475830078125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 7,
+        "external": 7,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-inferenz/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.9022216796875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 6,
+        "external": 6,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/bestenlisten/testsieger/top-10-der-beste-smart-ring-im-test-oura-ring-5-ist-testsieger/rgglr38",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 307,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 370,
+        "external": 364,
+        "internal": 6,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/news/RCS-Google-will-mit-dem-Chatprotokoll-Business-machen-11394662.html",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.90643310546875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 5,
+        "external": 5,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.90435791015625,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.9486083984375,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/politik/deutschland/berlin-wahl-2026-wird-die-hauptstadt-bald-unregierbar-a-5ea258c9-23e9-4d35-a548-45c2a28d32c1",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.38336181640625,
+      "images": {
+        "total": 2,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 0,
+        "external": 0,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/ausland/ceuta-krise-spanien-fuehrt-grenzkontrollen-fuer-italien-ein-a-02c12f82-cfc9-4dd6-b40e-32da4c497602",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.906219482421875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/politik/ausland/2026-08/donald-trump-lisa-cook-federal-reserve-entlassung-usa",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.59393310546875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 14,
+        "external": 14,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/news/2026-08/08/loeschhubschrauber-stuerzt-bei-waldbrand-in-utah-ab",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.94903564453125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "sueddeutsche.de",
+      "url": "https://www.sueddeutsche.de/politik/ukraine-krieg-newsblog-leipzig-drohne-russland-statement-li.3524928",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 4,
+        "external": 3,
+        "internal": 1,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/europa/spanien-italien-grenzkontrollen-102.html",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.9049072265625,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/afrika/ceuta-spanien-minderjaehrige-100.html",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.9073486328125,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/landtagswahl-in-sachsen-anhalt-so-wollen-die-parteien-die-autoritaere-wende-aufhalten/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.907257080078125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 17,
+        "external": 6,
+        "internal": 11,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/verwaltungsdigitalisierung-digitalminister-wildberger-wiederholt-alte-fehler/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.351837158203125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 13,
+        "external": 13,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/adobe-plugin-chatgpt-1757158/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.384124755859375,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 3,
+        "external": 3,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/windows-apps-microsoft-store-speicherplatz-1757152/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.35394287109375,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 3,
+        "external": 3,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/gadgets/2026/08/europes-free-satellite-service-just-made-it-easier-to-track-wildfires/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.954437255859375,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 7,
+        "external": 7,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/health/2026/08/flesh-eating-screwworms-feast-on-humans-in-mexico-human-cases-top-500/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.950408935546875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 5,
+        "external": 5,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/games/977056/restart-gaming-site-walmart-moonrock-layoffs",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.742523193359375,
+      "images": {
+        "total": 2,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 11,
+        "external": 11,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/976801/fenix-flexin-rubberz-ai-song-treblo",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.58990478515625,
+      "images": {
+        "total": 3,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 12,
+        "external": 12,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/openai-says-it-slowed-astra-model-development-over-security-concerns/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.35809326171875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 7,
+        "external": 6,
+        "internal": 1,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/after-rippling-blew-millions-on-ai-in-months-it-built-an-employee-roi-tool/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.90570068359375,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 6,
+        "external": 6,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c70g18vpwxvo",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.357452392578125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 0,
+        "external": 0,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c8jnrk4xlvdo",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.35107421875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/wellness/2026/aug/07/biggest-wellness-trends-2026",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.352264404296875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 25,
+        "external": 24,
+        "internal": 1,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/music/2026/aug/07/william-orbit-greatest-recordings-prince-madonna-blur-beth-orton",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.092803955078125,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/openai-timeline/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.352569580078125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 5,
+        "external": 5,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/moonlight-mayhem/",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.24456787109375,
+      "images": {
+        "total": 2,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 11,
+        "external": 11,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "en.wikipedia.org",
+      "url": "https://en.wikipedia.org/wiki/Comparison_of_web_browsers",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.5933837890625,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 886,
+        "external": 409,
+        "internal": 477,
+        "failures": []
+      },
+      "overflowElements": [
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "A",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "de.wikipedia.org",
       "url": "https://de.wikipedia.org/wiki/Elektroauto",
       "theme": "light",
@@ -69,6 +832,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 42,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1610,
+        "external": 1029,
+        "internal": 581,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "TABLE",
@@ -137,6 +912,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 0.053131103515625,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 183,
+        "external": 130,
+        "internal": 53,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "CODE",
@@ -178,6 +965,42 @@
       ]
     },
     {
+      "site": "web.dev",
+      "url": "https://web.dev/articles/inp",
+      "theme": "light",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 3,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 22,
+        "external": 22,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [
+        {
+          "tag": "CODE",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "docs.python.org",
       "url": "https://docs.python.org/3/library/datetime.html",
       "theme": "light",
@@ -185,6 +1008,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 581,
+        "external": 99,
+        "internal": 482,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "SPAN",
@@ -251,6 +1086,52 @@
       ]
     },
     {
+      "site": "welt.de",
+      "url": "https://www.welt.de/politik/deutschland/article6a7665b70e3689919ec747b6/nach-landtagswahl-ansage-an-landespartei-cdu-spitze-duldet-keine-koalition-mit-afd-in-sachsen-anhalt.html",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.594635009765625,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/wirtschaft/article6a7660bc35268e50270222a9/rente-dann-werden-die-reformplaene-wie-dominosteine-fallen-wirtschaftsweise-warnt-merz.html",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.34930419921875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
       "site": "the-decoder.de",
       "url": "https://the-decoder.de/openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cybersecurity-risikostufe-ein/",
       "theme": "dark",
@@ -258,6 +1139,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 1.948638916015625,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 9,
+        "external": 9,
+        "internal": 0,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "TABLE",
@@ -299,6 +1192,709 @@
       ]
     },
     {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/musikgenerator-suno-will-den-ki-musik-spam-eindaemmen-und-copyright-schutz-verbessern/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.356719970703125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 7,
+        "external": 7,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-inferenz/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.3482666015625,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 6,
+        "external": 6,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/bestenlisten/testsieger/top-10-der-beste-smart-ring-im-test-oura-ring-5-ist-testsieger/rgglr38",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 307,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 370,
+        "external": 364,
+        "internal": 6,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/news/RCS-Google-will-mit-dem-Chatprotokoll-Business-machen-11394662.html",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.90472412109375,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 5,
+        "external": 5,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.9046630859375,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.907257080078125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/politik/deutschland/berlin-wahl-2026-wird-die-hauptstadt-bald-unregierbar-a-5ea258c9-23e9-4d35-a548-45c2a28d32c1",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.90350341796875,
+      "images": {
+        "total": 2,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 0,
+        "external": 0,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/ausland/ceuta-krise-spanien-fuehrt-grenzkontrollen-fuer-italien-ein-a-02c12f82-cfc9-4dd6-b40e-32da4c497602",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.950103759765625,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/politik/ausland/2026-08/donald-trump-lisa-cook-federal-reserve-entlassung-usa",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.904266357421875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 14,
+        "external": 14,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/news/2026-08/08/loeschhubschrauber-stuerzt-bei-waldbrand-in-utah-ab",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.95745849609375,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "sueddeutsche.de",
+      "url": "https://www.sueddeutsche.de/politik/ukraine-krieg-newsblog-leipzig-drohne-russland-statement-li.3524928",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 2.645263671875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 4,
+        "external": 3,
+        "internal": 1,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/europa/spanien-italien-grenzkontrollen-102.html",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.59429931640625,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/afrika/ceuta-spanien-minderjaehrige-100.html",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.904296875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1,
+        "external": 1,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/landtagswahl-in-sachsen-anhalt-so-wollen-die-parteien-die-autoritaere-wende-aufhalten/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.3526611328125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 17,
+        "external": 6,
+        "internal": 11,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/verwaltungsdigitalisierung-digitalminister-wildberger-wiederholt-alte-fehler/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.356170654296875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 13,
+        "external": 13,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/adobe-plugin-chatgpt-1757158/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.352294921875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 3,
+        "external": 3,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/windows-apps-microsoft-store-speicherplatz-1757152/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.903045654296875,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 3,
+        "external": 3,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/gadgets/2026/08/europes-free-satellite-service-just-made-it-easier-to-track-wildfires/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.353546142578125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 7,
+        "external": 7,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/health/2026/08/flesh-eating-screwworms-feast-on-humans-in-mexico-human-cases-top-500/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.9522705078125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 5,
+        "external": 5,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/games/977056/restart-gaming-site-walmart-moonrock-layoffs",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.893524169921875,
+      "images": {
+        "total": 2,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 11,
+        "external": 11,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/976801/fenix-flexin-rubberz-ai-song-treblo",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.092437744140625,
+      "images": {
+        "total": 3,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 12,
+        "external": 12,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/openai-says-it-slowed-astra-model-development-over-security-concerns/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.9056396484375,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 7,
+        "external": 6,
+        "internal": 1,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/after-rippling-blew-millions-on-ai-in-months-it-built-an-employee-roi-tool/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.955841064453125,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 6,
+        "external": 6,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c70g18vpwxvo",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.354217529296875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 0,
+        "external": 0,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c8jnrk4xlvdo",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.957244873046875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/wellness/2026/aug/07/biggest-wellness-trends-2026",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.956146240234375,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 25,
+        "external": 24,
+        "internal": 1,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/music/2026/aug/07/william-orbit-greatest-recordings-prince-madonna-blur-beth-orton",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.3831787109375,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 2,
+        "external": 2,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/openai-timeline/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 1.952972412109375,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 5,
+        "external": 5,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/moonlight-mayhem/",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.3831787109375,
+      "images": {
+        "total": 2,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 11,
+        "external": 11,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "en.wikipedia.org",
+      "url": "https://en.wikipedia.org/wiki/Comparison_of_web_browsers",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0.592193603515625,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 886,
+        "external": 409,
+        "internal": 477,
+        "failures": []
+      },
+      "overflowElements": [
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "A",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "de.wikipedia.org",
       "url": "https://de.wikipedia.org/wiki/Elektroauto",
       "theme": "dark",
@@ -306,6 +1902,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 42,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 1610,
+        "external": 1029,
+        "internal": 581,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "TABLE",
@@ -374,6 +1982,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 0.09246826171875,
+      "images": {
+        "total": 0,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 183,
+        "external": 130,
+        "internal": 53,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "CODE",
@@ -415,6 +2035,42 @@
       ]
     },
     {
+      "site": "web.dev",
+      "url": "https://web.dev/articles/inp",
+      "theme": "dark",
+      "screenshot": null,
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 3,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 22,
+        "external": 22,
+        "internal": 0,
+        "failures": []
+      },
+      "overflowElements": [
+        {
+          "tag": "CODE",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "docs.python.org",
       "url": "https://docs.python.org/3/library/datetime.html",
       "theme": "dark",
@@ -422,6 +2078,18 @@
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
+      "firstTextShift": 0,
+      "images": {
+        "total": 1,
+        "broken": 0,
+        "widerThanColumn": 0
+      },
+      "links": {
+        "total": 581,
+        "external": 99,
+        "internal": 482,
+        "failures": []
+      },
       "overflowElements": [
         {
           "tag": "SPAN",

@@ -92,6 +92,8 @@ test("extractArticle produces a stored article from a real page", async () => {
     /https:\/\/example\.test\/bilder\/hobel\.png/
   );
   assert.doesNotMatch(result.contentHtml, /src="\.\.\//);
+  assert.match(result.contentHtml, /reader-image-fluid/);
+  assert.match(result.contentHtml, /aspect-ratio: 16 \/ 9/);
 });
 
 test("extractArticle strips everything executable", async () => {
@@ -108,6 +110,30 @@ test("extractArticle strips everything executable", async () => {
   // the text around the stripped attributes survives
   assert.match(contentHtml, /Inline-Handler/);
   assert.match(contentHtml, /Boeser Link/);
+});
+
+test("extractArticle prepares images and promotes likely captions", async () => {
+  const { extractArticle } = await load();
+  const result = extractArticle(
+    `<html><head><title>Bilderprobe</title></head><body><article>
+      <p>Dieser längere Einleitungstext sorgt dafür, dass Readability den Inhalt sicher als Artikel erkennt und die folgenden Bilder bei der Extraktion erhält.</p>
+      <p><img src="hero.jpg" width="1200" height="800" alt="Aufmacher"></p>
+      <p>Foto: Beispielredaktion</p>
+      <p><img src="tracking.gif" width="1" height="1" alt=""></p>
+      <p>Dieser normale Folgeabsatz endet mit einem Punkt und darf deshalb nicht versehentlich als Bildunterschrift umgebaut werden.</p>
+    </article></body></html>`,
+    "https://example.test/story"
+  );
+
+  const dom = new JSDOM(`<body>${result.contentHtml}</body>`);
+  const images = [...dom.window.document.querySelectorAll("img")];
+  assert.equal(images.length, 1);
+  assert.equal(images[0].getAttribute("loading"), "lazy");
+  assert.equal(images[0].getAttribute("decoding"), "async");
+  assert.equal(images[0].style.aspectRatio, "1200 / 800");
+  assert.ok(images[0].closest("figure"));
+  assert.equal(images[0].closest("figure")?.querySelector("figcaption")?.textContent, "Foto: Beispielredaktion");
+  assert.match(result.contentHtml, /normale Folgeabsatz/);
 });
 
 test("extractArticle removes chrome only from article edges", async () => {

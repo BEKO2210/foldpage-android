@@ -17,14 +17,13 @@ import {
     Mounted once from the root layout, renders nothing. */
 export default function NativeShell() {
   useEffect(() => {
-    if (!isNative()) return;
+    const unwireLinks = wireExternalLinks();
+    if (!isNative()) return unwireLinks;
 
     void applyStatusBar();
     const scheme = window.matchMedia("(prefers-color-scheme: dark)");
     const onScheme = () => void applyStatusBar();
     scheme.addEventListener("change", onScheme);
-
-    const unwireLinks = wireExternalLinks();
 
     // addListener is async, so unmount may beat it — park the unsubscribe.
     let unwireBack: (() => void) | undefined;

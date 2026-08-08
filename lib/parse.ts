@@ -50,7 +50,79 @@ function sanitize(html: string, doc: Document): string {
     }
   });
   prepareTables(container, doc);
+  prepareImages(container, doc);
   return container.innerHTML;
+}
+
+function positiveDimension(image: HTMLImageElement, name: "width" | "height") {
+  const value = Number.parseFloat(image.getAttribute(name) ?? "");
+  return Number.isFinite(value) && value > 0 ? value : null;
+}
+
+function captionCandidate(image: HTMLImageElement): HTMLParagraphElement | null {
+  const block =
+    image.parentElement?.tagName === "P" &&
+    !compactText(image.parentElement) &&
+    image.parentElement.querySelectorAll("img").length === 1
+      ? image.parentElement
+      : image;
+  const next = block.nextElementSibling;
+  if (next?.tagName !== "P") return null;
+  const value = compactText(next);
+  if (!value || value.length >= 200) return null;
+  return /^(foto|bild|quelle):/i.test(value) || !/[.!?]$/.test(value)
+    ? (next as HTMLParagraphElement)
+    : null;
+}
+
+/** Normalize article media before it is stored. Declared dimensions reserve
+    the correct box; dimensionless images get a stable neutral ratio. */
+function prepareImages(container: HTMLElement, doc: Document) {
+  container.querySelectorAll<HTMLImageElement>("img").forEach((image) => {
+    const source = [...doc.querySelectorAll<HTMLImageElement>("img")].find(
+      (candidate) => candidate.getAttribute("src") === image.getAttribute("src")
+    );
+    const width =
+      positiveDimension(image, "width") ??
+      (source ? positiveDimension(source, "width") : null);
+    const height =
+      positiveDimension(image, "height") ??
+      (source ? positiveDimension(source, "height") : null);
+    if ((width !== null && width < 100) || (height !== null && height < 100)) {
+      const emptyParent = image.parentElement;
+      image.remove();
+      if (emptyParent?.tagName === "P" && !compactText(emptyParent)) {
+        emptyParent.remove();
+      }
+      return;
+    }
+
+    image.setAttribute("loading", "lazy");
+    image.setAttribute("decoding", "async");
+    image.classList.add("reader-image");
+    if (width !== null && height !== null) {
+      image.style.aspectRatio = `${width} / ${height}`;
+    } else {
+      image.style.aspectRatio = "16 / 9";
+      image.classList.add("reader-image-fluid");
+    }
+
+    if (image.closest("figure")) return;
+    const caption = captionCandidate(image);
+    if (!caption) return;
+    const imageBlock =
+      image.parentElement?.tagName === "P" && !compactText(image.parentElement)
+        ? image.parentElement
+        : image;
+    const figure = doc.createElement("figure");
+    imageBlock.before(figure);
+    figure.append(image);
+    imageBlock.remove();
+    const figcaption = doc.createElement("figcaption");
+    figcaption.innerHTML = caption.innerHTML;
+    figure.append(figcaption);
+    caption.remove();
+  });
 }
 
 const NUMERIC_CELL =

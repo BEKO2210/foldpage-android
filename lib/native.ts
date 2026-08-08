@@ -183,7 +183,7 @@ export async function saveAndShare(
 
 /** True for anything that must not be loaded into the app's own WebView:
     a different origin, or a scheme the shell has no business rendering. */
-function isExternalUrl(href: string): boolean {
+export function isExternalUrl(href: string): boolean {
   let url: URL;
   try {
     url = new URL(href, window.location.href);
@@ -205,10 +205,15 @@ export function wireExternalLinks(): () => void {
     const href = anchor?.getAttribute("href");
     if (!href || !isExternalUrl(href)) return;
     e.preventDefault();
+    (e as MouseEvent & { foldPageExternal?: boolean }).foldPageExternal = true;
     void openExternal(new URL(href, window.location.href).href);
   };
   document.addEventListener("click", onClick);
-  return () => document.removeEventListener("click", onClick);
+  document.documentElement.dataset.externalLinksWired = "true";
+  return () => {
+    document.removeEventListener("click", onClick);
+    delete document.documentElement.dataset.externalLinksWired;
+  };
 }
 
 /** Hardware back: leave the reader/settings first, only then close the app.
