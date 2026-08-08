@@ -1,0 +1,491 @@
+{
+  "viewport": {
+    "width": 412,
+    "height": 915,
+    "deviceScaleFactor": 2
+  },
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "articles": 4,
+  "renders": 8,
+  "tablesChecked": 26,
+  "failures": [],
+  "results": [
+    {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cybersecurity-risikostufe-ein/",
+      "theme": "light",
+      "screenshot": "screenshots/light/the-decoder-de-openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cyberse.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 9119,
+          "scrollWidth": 9299
+        },
+        {
+          "tag": "THEAD",
+          "className": "",
+          "right": 9119,
+          "scrollWidth": 9299
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "right": 9119,
+          "scrollWidth": 9299
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "right": 3473,
+          "scrollWidth": 3653
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "right": 7550,
+          "scrollWidth": 4076
+        }
+      ],
+      "tables": [
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    },
+    {
+      "site": "de.wikipedia.org",
+      "url": "https://de.wikipedia.org/wiki/Elektroauto",
+      "theme": "light",
+      "screenshot": "screenshots/light/de-wikipedia-org-wiki-elektroauto.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 866,
+          "scrollWidth": 1046
+        },
+        {
+          "tag": "TBODY",
+          "className": "",
+          "right": 866,
+          "scrollWidth": 1046
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "right": 866,
+          "scrollWidth": 1046
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "right": 502,
+          "scrollWidth": 215
+        },
+        {
+          "tag": "SMALL",
+          "className": "",
+          "right": 489,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": [
+        {
+          "before": 131,
+          "after": 131,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    },
+    {
+      "site": "developer.mozilla.org",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/display",
+      "theme": "light",
+      "screenshot": "screenshots/light/developer-mozilla-org-en-us-docs-web-css-display.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "CODE",
+          "className": "",
+          "right": 743,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1813
+        },
+        {
+          "tag": "TBODY",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1813
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1813
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1621
+        }
+      ],
+      "tables": [
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    },
+    {
+      "site": "docs.python.org",
+      "url": "https://docs.python.org/3/library/datetime.html",
+      "theme": "light",
+      "screenshot": "screenshots/light/docs-python-org-3-library-datetime-html.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 498,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 592,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 451,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 460,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 1370,
+          "scrollWidth": 1550
+        }
+      ],
+      "tables": [
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    },
+    {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cybersecurity-risikostufe-ein/",
+      "theme": "dark",
+      "screenshot": "screenshots/dark/the-decoder-de-openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cyberse.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 9119,
+          "scrollWidth": 9299
+        },
+        {
+          "tag": "THEAD",
+          "className": "",
+          "right": 9119,
+          "scrollWidth": 9299
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "right": 9119,
+          "scrollWidth": 9299
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "right": 3473,
+          "scrollWidth": 3653
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "right": 7550,
+          "scrollWidth": 4076
+        }
+      ],
+      "tables": [
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    },
+    {
+      "site": "de.wikipedia.org",
+      "url": "https://de.wikipedia.org/wiki/Elektroauto",
+      "theme": "dark",
+      "screenshot": "screenshots/dark/de-wikipedia-org-wiki-elektroauto.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 866,
+          "scrollWidth": 1046
+        },
+        {
+          "tag": "TBODY",
+          "className": "",
+          "right": 866,
+          "scrollWidth": 1046
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "right": 866,
+          "scrollWidth": 1046
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "right": 502,
+          "scrollWidth": 215
+        },
+        {
+          "tag": "SMALL",
+          "className": "",
+          "right": 489,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": [
+        {
+          "before": 131,
+          "after": 131,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    },
+    {
+      "site": "developer.mozilla.org",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/display",
+      "theme": "dark",
+      "screenshot": "screenshots/dark/developer-mozilla-org-en-us-docs-web-css-display.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "CODE",
+          "className": "",
+          "right": 743,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1813
+        },
+        {
+          "tag": "TBODY",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1813
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1813
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "right": 1633,
+          "scrollWidth": 1621
+        }
+      ],
+      "tables": [
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    },
+    {
+      "site": "docs.python.org",
+      "url": "https://docs.python.org/3/library/datetime.html",
+      "theme": "dark",
+      "screenshot": "screenshots/dark/docs-python-org-3-library-datetime-html.png",
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 498,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 592,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 451,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 460,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "TABLE",
+          "className": "",
+          "right": 1370,
+          "scrollWidth": 1550
+        }
+      ],
+      "tables": [
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        },
+        {
+          "before": 200,
+          "after": 200,
+          "stable": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Article } from "@/lib/types";
@@ -21,6 +21,42 @@ function storedSizeIndex(value: string | null): number {
     ? index
     : 1;
 }
+
+/** Reading progress updates on every vertical scroll. Keep the injected HTML
+    behind a memo boundary so those parent renders cannot recreate its table
+    wrappers and reset their native scrollLeft. */
+const ArticleContent = memo(function ArticleContent({
+  contentHtml,
+}: {
+  contentHtml: string;
+}) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wrappers = [...(contentRef.current?.querySelectorAll<HTMLElement>(
+      ".tablewrap"
+    ) ?? [])];
+    const update = (wrapper: HTMLElement) => {
+      const hasOverflow = wrapper.scrollWidth > wrapper.clientWidth + 1;
+      const hasMore = wrapper.scrollLeft + wrapper.clientWidth < wrapper.scrollWidth - 1;
+      wrapper.classList.toggle("has-more", hasOverflow && hasMore);
+    };
+    const cleanups = wrappers.map((wrapper) => {
+      const onScroll = () => update(wrapper);
+      wrapper.addEventListener("scroll", onScroll, { passive: true });
+      update(wrapper);
+      return () => wrapper.removeEventListener("scroll", onScroll);
+    });
+    const observer = new ResizeObserver(() => wrappers.forEach(update));
+    wrappers.forEach((wrapper) => observer.observe(wrapper));
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+      observer.disconnect();
+    };
+  }, [contentHtml]);
+
+  return <div ref={contentRef} dangerouslySetInnerHTML={{ __html: contentHtml }} />;
+});
 
 export default function ReadPage() {
   const router = useRouter();
@@ -214,7 +250,7 @@ export default function ReadPage() {
           <TagEditor tags={article.tags} onChange={(t) => void setTags(t)} />
         </div>
         {article.contentHtml ? (
-          <div dangerouslySetInnerHTML={{ __html: article.contentHtml }} />
+          <ArticleContent contentHtml={article.contentHtml} />
         ) : (
           <p style={{ color: "var(--muted)" }}>
             The content of this article wasn&apos;t downloaded (imported link).{" "}

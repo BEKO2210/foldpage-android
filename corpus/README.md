@@ -16,6 +16,7 @@ deterministisch und zwischen zwei Branches vergleichbar.
 
 ```bash
 npm run corpus            # messen (offline, braucht nur die Snapshots)
+npm run reader-render     # gebauten Reader in Chromium messen + Screenshots
 npm run corpus:fetch      # fehlende Snapshots nachladen
 node scripts/corpus.mjs pick   # URL-Liste neu ziehen — aendert die Messlatte!
 ```
@@ -23,6 +24,14 @@ node scripts/corpus.mjs pick   # URL-Liste neu ziehen — aendert die Messlatte!
 `measure` schreibt `corpus/report.json` (alle Zahlen) und `corpus/report.md`
 (Tabelle zum Draufschauen). Beide sind eingecheckt, damit ein PR die
 Verbesserung im Diff zeigt.
+
+`reader-render` baut den statischen Export und prueft ihn mit Playwright bei
+412 × 915 CSS-Pixeln und DPR 2 in hellem und dunklem Modus. Alle Artikel mit
+Tabellen werden ueber IndexedDB genau wie gespeicherte Artikel in `/read/`
+geladen. Fuer jede Tabelle wird der horizontale Zustand vor und nach einem
+vertikalen Seitenscroll verglichen; Seitenueberlauf ist ebenfalls ein Fehler.
+Der deterministische Messbericht landet in `corpus/reader-report.json`, die
+Screenshots in `corpus/screenshots/`.
 
 `pick` ist absichtlich nichts, was man nebenbei laufen laesst: eine neue
 URL-Liste macht alle frueheren Reports unvergleichbar.

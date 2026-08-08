@@ -94,7 +94,7 @@
       "author": "Matthias Bastian",
       "lang": "de",
       "wordCount": 731,
-      "htmlBytes": 8027,
+      "htmlBytes": 8056,
       "blocks": 2,
       "firstTag": "DIV",
       "firstText": "Interne Tests des neuen KI-Modells Astra zeigen laut OpenAI so starke Cybersecurity-Fähigk",
@@ -1153,7 +1153,7 @@
       "author": "Autoren der Wikimedia-Projekte",
       "lang": "de",
       "wordCount": 18085,
-      "htmlBytes": 722718,
+      "htmlBytes": 725935,
       "blocks": 17,
       "firstTag": "SECTION",
       "firstText": "Als Elektroauto (auch E-Auto, elektrisches Auto, elektrisch betriebenes Auto) wird im weit",
@@ -1231,7 +1231,7 @@
       "author": null,
       "lang": "en-US",
       "wordCount": 2364,
-      "htmlBytes": 47459,
+      "htmlBytes": 47488,
       "blocks": 24,
       "firstTag": "SECTION",
       "firstText": "Try it display: block; display: inline flow-root; display: none; display: flex; display: g",
@@ -1254,7 +1254,7 @@
           "cols": 2,
           "rows": 5,
           "hasThead": false,
-          "wrappedIn": "FIGURE",
+          "wrappedIn": "DIV",
           "maxCellChars": 169,
           "nested": false
         }
@@ -1312,7 +1312,7 @@
       "author": null,
       "lang": "en",
       "wordCount": 13246,
-      "htmlBytes": 247689,
+      "htmlBytes": 247863,
       "blocks": 14,
       "firstTag": "P",
       "firstText": "The datetime module supplies classes for manipulating dates and times.",
@@ -1335,7 +1335,7 @@
           "cols": 2,
           "rows": 16,
           "hasThead": true,
-          "wrappedIn": "SECTION",
+          "wrappedIn": "DIV",
           "maxCellChars": 131,
           "nested": false
         },
@@ -1343,7 +1343,7 @@
           "cols": 2,
           "rows": 6,
           "hasThead": true,
-          "wrappedIn": "SECTION",
+          "wrappedIn": "DIV",
           "maxCellChars": 57,
           "nested": false
         },
@@ -1351,7 +1351,7 @@
           "cols": 2,
           "rows": 6,
           "hasThead": true,
-          "wrappedIn": "SECTION",
+          "wrappedIn": "DIV",
           "maxCellChars": 89,
           "nested": false
         },
@@ -1359,7 +1359,7 @@
           "cols": 3,
           "rows": 4,
           "hasThead": true,
-          "wrappedIn": "SECTION",
+          "wrappedIn": "DIV",
           "maxCellChars": 58,
           "nested": false
         },
@@ -1367,7 +1367,7 @@
           "cols": 4,
           "rows": 25,
           "hasThead": true,
-          "wrappedIn": "SECTION",
+          "wrappedIn": "DIV",
           "maxCellChars": 176,
           "nested": false
         },
@@ -1375,7 +1375,7 @@
           "cols": 4,
           "rows": 5,
           "hasThead": true,
-          "wrappedIn": "SECTION",
+          "wrappedIn": "DIV",
           "maxCellChars": 113,
           "nested": false
         }
