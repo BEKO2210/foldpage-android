@@ -49,7 +49,31 @@ function sanitize(html: string, doc: Document): string {
       }
     }
   });
+  prepareTables(container, doc);
   return container.innerHTML;
+}
+
+const NUMERIC_CELL =
+  /^[+\-−]?\s*\d[\d\s.,'’]*(?:\s*(?:%|‰|°|[kmcµnp]?m|[km]?g|[km]?l|[km]?w|[km]?wh|hz|[km]?bit|[kmgt]?b|[km]?bps|[a-z]{1,4}\/h|[€$£¥]))?$/i;
+
+/** Give tables a stable scrolling parent while keeping their native layout.
+    The class on numeric cells lets CSS align values without guessing from
+    column position. */
+function prepareTables(container: HTMLElement, doc: Document) {
+  container.querySelectorAll("table").forEach((table) => {
+    if (!table.parentElement?.classList.contains("tablewrap")) {
+      const wrapper = doc.createElement("div");
+      wrapper.className = "tablewrap";
+      table.before(wrapper);
+      wrapper.append(table);
+    }
+
+    table.querySelectorAll("th, td").forEach((cell) => {
+      if (NUMERIC_CELL.test(cell.textContent?.trim() ?? "")) {
+        cell.classList.add("numeric");
+      }
+    });
+  });
 }
 
 const EDGE_CHROME_TAGS = new Set([

@@ -213,6 +213,9 @@ body {
      412px the side padding wins, producing roughly 40–46 characters/line. */
   max-width: 39em;
   margin: 0 auto;
+  /* Extracted pages can contain intrinsic-width descendants. Tables keep
+     their own scrollport below; none of that width may escape to the page. */
+  overflow-x: clip;
 }
 .reader-header {
   margin-bottom: 0.65rem;
@@ -288,15 +291,53 @@ body {
   text-decoration-color: var(--highlight);
   text-decoration-thickness: 2px;
 }
-.reader table {
-  display: block;
+.reader .tablewrap {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-anchor: none;
+  margin: 1.5rem 0;
+  transition: box-shadow var(--dur-fast) var(--ease-out);
+}
+.reader .tablewrap.has-more {
+  box-shadow: inset -1.25rem 0 1rem -1rem color-mix(in srgb, var(--ink) 35%, transparent);
+}
+.reader .tablewrap table {
+  display: table;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
+  margin: 0;
 }
 .reader td,
 .reader th {
-  border: 1px solid var(--line);
-  padding: 0.4rem 0.6rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+  vertical-align: top;
+}
+.reader thead th {
+  background: var(--card);
+  font-family: var(--sans);
+  font-weight: 700;
+}
+.reader td.numeric,
+.reader th.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.reader .tablewrap table:has(tr > :nth-child(4)) tr > :first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--paper);
+  box-shadow: 1px 0 var(--line);
+}
+.reader .tablewrap table:has(tr > :nth-child(4)) thead tr > :first-child {
+  z-index: 2;
+  background: var(--card);
 }
 
 .progressbar {

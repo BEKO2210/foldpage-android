@@ -9,6 +9,7 @@
     "test": "node --test lib/*.test.ts",
     "corpus": "node scripts/corpus.mjs measure",
     "corpus:fetch": "node scripts/corpus.mjs fetch",
+    "reader-render": "npm run build && node scripts/reader-render.mjs",
     "sync": "npm run build && npx cap sync android",
     "apk:debug": "npm run sync && cd android && ./gradlew assembleDebug",
     "apk:release": "npm run sync && cd android && ./gradlew assembleRelease",
@@ -41,6 +42,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "jsdom": "^29.1.1",
+    "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
