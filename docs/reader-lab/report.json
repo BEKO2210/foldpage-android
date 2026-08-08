@@ -1,0 +1,1942 @@
+[
+  {
+    "url": "https://www.welt.de/wissenschaft/article256270958/James-Webb-Weltraumteleskop-entdeckt-einen-Planeten-mit-ganz-besonderen-Eigenschaften.html",
+    "finalUrl": "https://www.welt.de/regionales/mecklenburg-vorpommern/article256270958/Gruene-fordern-mehr-Landesgeld-fuer-Selbsthilfe-Organisation.html",
+    "quelle": "welt.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 2,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 1
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 39,
+    "linksImText": {
+      "anzahl": 3,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.welt.de/wissenschaft/article256270958/James-Webb-Weltraumteleskop-entdeckt-einen-Planeten-mit-ganz-besonderen-Eigenschaften.html",
+    "finalUrl": "https://www.welt.de/regionales/mecklenburg-vorpommern/article256270958/Gruene-fordern-mehr-Landesgeld-fuer-Selbsthilfe-Organisation.html",
+    "quelle": "welt.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 2,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 1
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 39,
+    "linksImText": {
+      "anzahl": 3,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://the-decoder.de/openai-stellt-gpt-4-5-vor/",
+    "finalUrl": "https://the-decoder.de/",
+    "quelle": "the-decoder.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 151,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 2,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 2
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 29,
+    "linksImText": {
+      "anzahl": 33,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://the-decoder.de/openai-stellt-gpt-4-5-vor/",
+    "finalUrl": "https://the-decoder.de/",
+    "quelle": "the-decoder.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 151,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 2,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 2
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 29,
+    "linksImText": {
+      "anzahl": 33,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.spiegel.de/wissenschaft/weltall/sonnensystem-wie-die-planeten-entstanden-sind-a-1124951.html",
+    "finalUrl": "https://www.spiegel.de/wissenschaft/natur/giraffen-sind-vom-aussterben-bedroht-a-1124951.html",
+    "quelle": "spiegel.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 1,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.spiegel.de/wissenschaft/weltall/sonnensystem-wie-die-planeten-entstanden-sind-a-1124951.html",
+    "finalUrl": "https://www.spiegel.de/wissenschaft/natur/giraffen-sind-vom-aussterben-bedroht-a-1124951.html",
+    "quelle": "spiegel.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 1,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.zeit.de/wissen/index",
+    "finalUrl": "https://www.zeit.de/wissenschaft/index",
+    "quelle": "zeit.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 693,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 5,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 5
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 43,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.zeit.de/wissen/index",
+    "finalUrl": "https://www.zeit.de/wissenschaft/index",
+    "quelle": "zeit.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 693,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 5,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 5
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 43,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.faz.net/aktuell/wissen/weltraum/",
+    "finalUrl": "https://www.faz.net/aktuell/wissen/weltraum/",
+    "quelle": "faz.net",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 32,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 5,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.faz.net/aktuell/wissen/weltraum/",
+    "finalUrl": "https://www.faz.net/aktuell/wissen/weltraum/",
+    "quelle": "faz.net",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 32,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 5,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.sueddeutsche.de/wissen/weltraum-astronomie-forschung-1.5736464",
+    "finalUrl": "https://www.sueddeutsche.de/sport/comic-schroeter-fussballgoetter-schalke-1.5736464",
+    "quelle": "sueddeutsche.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": null,
+    "linksImText": {
+      "anzahl": 4,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.sueddeutsche.de/wissen/weltraum-astronomie-forschung-1.5736464",
+    "finalUrl": "https://www.sueddeutsche.de/sport/comic-schroeter-fussballgoetter-schalke-1.5736464",
+    "quelle": "sueddeutsche.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": null,
+    "linksImText": {
+      "anzahl": 4,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://taz.de/Klimawandel-und-Meere/!5977468/",
+    "finalUrl": "https://taz.de/Stadtgespraech-aus-Istanbul/!5977468/",
+    "quelle": "taz.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 224,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 7,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 7
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 9,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://taz.de/Klimawandel-und-Meere/!5977468/",
+    "finalUrl": "https://taz.de/Stadtgespraech-aus-Istanbul/!5977468/",
+    "quelle": "taz.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 224,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 7,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 7
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 9,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.tagesschau.de/wissen/",
+    "finalUrl": "https://www.tagesschau.de/wissen",
+    "quelle": "tagesschau.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 42,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 39,
+    "linksImText": {
+      "anzahl": 58,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.tagesschau.de/wissen/",
+    "finalUrl": "https://www.tagesschau.de/wissen",
+    "quelle": "tagesschau.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 42,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 39,
+    "linksImText": {
+      "anzahl": 58,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.heise.de/thema/Internet",
+    "finalUrl": "https://www.heise.de/thema/internet",
+    "quelle": "heise.de",
+    "merkmale": [
+      "bilder",
+      "code",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 28,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 20
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 33,
+    "linksImText": {
+      "anzahl": 20,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.heise.de/thema/Internet",
+    "finalUrl": "https://www.heise.de/thema/internet",
+    "quelle": "heise.de",
+    "merkmale": [
+      "bilder",
+      "code",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 28,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 20
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 33,
+    "linksImText": {
+      "anzahl": 20,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.golem.de/news/kuenstliche-intelligenz-wie-transformer-funktionieren-2402-182031.html",
+    "finalUrl": "https://www.golem.de/sonstiges/zustimmung/auswahl.html?from=https%3A%2F%2Fwww.golem.de%2Fnews%2Fkuenstliche-intelligenz-wie-transformer-funktionieren-2402-182031.html",
+    "quelle": "golem.de",
+    "merkmale": [
+      "bilder",
+      "code",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 6,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.golem.de/news/kuenstliche-intelligenz-wie-transformer-funktionieren-2402-182031.html",
+    "finalUrl": "https://www.golem.de/sonstiges/zustimmung/auswahl.html?from=https%3A%2F%2Fwww.golem.de%2Fnews%2Fkuenstliche-intelligenz-wie-transformer-funktionieren-2402-182031.html",
+    "quelle": "golem.de",
+    "merkmale": [
+      "bilder",
+      "code",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 6,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://netzpolitik.org/",
+    "finalUrl": "https://netzpolitik.org/",
+    "quelle": "netzpolitik.org",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 31,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 31
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 30,
+    "linksImText": {
+      "anzahl": 105,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://netzpolitik.org/",
+    "finalUrl": "https://netzpolitik.org/",
+    "quelle": "netzpolitik.org",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 31,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 31
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 30,
+    "linksImText": {
+      "anzahl": 105,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.br.de/nachrichten/wissen/",
+    "finalUrl": "https://www.br.de/nachrichten/wissen,QXAPyRp",
+    "quelle": "br24.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 35,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 35
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 70,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.br.de/nachrichten/wissen/",
+    "finalUrl": "https://www.br.de/nachrichten/wissen,QXAPyRp",
+    "quelle": "br24.de",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 35,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 35
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 70,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://t3n.de/tag/kuenstliche-intelligenz",
+    "finalUrl": "https://t3n.de/tag/kuenstliche-intelligenz/",
+    "quelle": "t3n.de",
+    "merkmale": [
+      "bilder",
+      "listen",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 3,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://t3n.de/tag/kuenstliche-intelligenz",
+    "finalUrl": "https://t3n.de/tag/kuenstliche-intelligenz/",
+    "quelle": "t3n.de",
+    "merkmale": [
+      "bilder",
+      "listen",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 3,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.computerbase.de/thema/wlan/",
+    "finalUrl": "https://www.computerbase.de/news/wlan/",
+    "quelle": "computerbase.de",
+    "merkmale": [
+      "bilder",
+      "tabellen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 28,
+    "linksImText": {
+      "anzahl": 100,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.computerbase.de/thema/wlan/",
+    "finalUrl": "https://www.computerbase.de/news/wlan/",
+    "quelle": "computerbase.de",
+    "merkmale": [
+      "bilder",
+      "tabellen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 28,
+    "linksImText": {
+      "anzahl": 100,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://de.wikipedia.org/wiki/Sonnensystem",
+    "finalUrl": "https://de.wikipedia.org/wiki/Sonnensystem",
+    "quelle": "wikipedia.org",
+    "merkmale": [
+      "bilder",
+      "tabellen",
+      "listen",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [
+      {
+        "spalten": 3,
+        "zeilen": 25,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 69,
+        "springt": true
+      },
+      {
+        "spalten": 6,
+        "zeilen": 8,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 24,
+      "kaputt": 0,
+      "breiterAlsSpalte": 1,
+      "ohneAbstand": 8
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 33,
+    "linksImText": {
+      "anzahl": 423,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://de.wikipedia.org/wiki/Sonnensystem",
+    "finalUrl": "https://de.wikipedia.org/wiki/Sonnensystem",
+    "quelle": "wikipedia.org",
+    "merkmale": [
+      "bilder",
+      "tabellen",
+      "listen",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [
+      {
+        "spalten": 3,
+        "zeilen": 25,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 69,
+        "springt": true
+      },
+      {
+        "spalten": 6,
+        "zeilen": 8,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 24,
+      "kaputt": 0,
+      "breiterAlsSpalte": 1,
+      "ohneAbstand": 8
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 33,
+    "linksImText": {
+      "anzahl": 423,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://developer.mozilla.org/de/docs/Web/HTML/Element/table",
+    "finalUrl": "https://developer.mozilla.org/de/docs/Web/HTML/Reference/Elements/table",
+    "quelle": "developer.mozilla.org",
+    "merkmale": [
+      "tabellen",
+      "code",
+      "listen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 200,
+        "springt": true
+      },
+      {
+        "spalten": 1,
+        "zeilen": 2,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 1,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 33,
+    "linksImText": {
+      "anzahl": 189,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://developer.mozilla.org/de/docs/Web/HTML/Element/table",
+    "finalUrl": "https://developer.mozilla.org/de/docs/Web/HTML/Reference/Elements/table",
+    "quelle": "developer.mozilla.org",
+    "merkmale": [
+      "tabellen",
+      "code",
+      "listen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 200,
+        "springt": true
+      },
+      {
+        "spalten": 1,
+        "zeilen": 2,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 1,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 33,
+    "linksImText": {
+      "anzahl": 189,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.chefkoch.de/rezepte/",
+    "finalUrl": "https://www.chefkoch.de/rezepte/",
+    "quelle": "chefkoch.de",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 38,
+    "linksImText": {
+      "anzahl": 1,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.chefkoch.de/rezepte/",
+    "finalUrl": "https://www.chefkoch.de/rezepte/",
+    "quelle": "chefkoch.de",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 38,
+    "linksImText": {
+      "anzahl": 1,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.dwd.de/DE/wetter/thema_des_tages/2024/4/12.html",
+    "finalUrl": "https://www.dwd.de/DE/wetter/thema_des_tages/2024/4/12.html",
+    "quelle": "dwd.de",
+    "merkmale": [
+      "bilder",
+      "tabellen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 3,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 3
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 3,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.dwd.de/DE/wetter/thema_des_tages/2024/4/12.html",
+    "finalUrl": "https://www.dwd.de/DE/wetter/thema_des_tages/2024/4/12.html",
+    "quelle": "dwd.de",
+    "merkmale": [
+      "bilder",
+      "tabellen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 3,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 3
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 3,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.bbc.com/future",
+    "finalUrl": "https://www.bbc.com/future-planet",
+    "quelle": "bbc.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 56,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 53,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.bbc.com/future",
+    "finalUrl": "https://www.bbc.com/future-planet",
+    "quelle": "bbc.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 56,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 53,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.theguardian.com/science",
+    "finalUrl": "https://www.theguardian.com/science",
+    "quelle": "theguardian.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 346,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 29,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": null,
+    "linksImText": {
+      "anzahl": 22,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.theguardian.com/science",
+    "finalUrl": "https://www.theguardian.com/science",
+    "quelle": "theguardian.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 346,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 29,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": null,
+    "linksImText": {
+      "anzahl": 22,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Reuters",
+    "finalUrl": "https://en.wikipedia.org/wiki/Reuters",
+    "quelle": "wikipedia-reuters",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 11,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 5,
+        "zeilen": 16,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 5,
+        "zeilen": 9,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 7,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 3
+    },
+    "seitenUeberlauf": true,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 708,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Reuters",
+    "finalUrl": "https://en.wikipedia.org/wiki/Reuters",
+    "quelle": "wikipedia-reuters",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 11,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 5,
+        "zeilen": 16,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 5,
+        "zeilen": 9,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 7,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 3
+    },
+    "seitenUeberlauf": true,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 708,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://apnews.com/hub/artificial-intelligence",
+    "finalUrl": "https://apnews.com/hub/artificial-intelligence",
+    "quelle": "apnews.com",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 236,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 8,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 634,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://apnews.com/hub/artificial-intelligence",
+    "finalUrl": "https://apnews.com/hub/artificial-intelligence",
+    "quelle": "apnews.com",
+    "merkmale": [
+      "bilder",
+      "listen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 236,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 8,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 634,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://arstechnica.com/",
+    "finalUrl": "https://arstechnica.com/",
+    "quelle": "arstechnica.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 127,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 39,
+    "linksImText": {
+      "anzahl": 17,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://arstechnica.com/",
+    "finalUrl": "https://arstechnica.com/",
+    "quelle": "arstechnica.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 127,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 39,
+    "linksImText": {
+      "anzahl": 17,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.theverge.com/",
+    "finalUrl": "https://www.theverge.com/",
+    "quelle": "theverge.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 676,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 59,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 42,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://www.theverge.com/",
+    "finalUrl": "https://www.theverge.com/",
+    "quelle": "theverge.com",
+    "merkmale": [
+      "bilder",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 676,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 59,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 42,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://github.blog/",
+    "finalUrl": "https://github.blog/",
+    "quelle": "github.blog",
+    "merkmale": [
+      "bilder",
+      "code",
+      "listen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 4,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 5,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://github.blog/",
+    "finalUrl": "https://github.blog/",
+    "quelle": "github.blog",
+    "merkmale": [
+      "bilder",
+      "code",
+      "listen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 4,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 5,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://stackoverflow.blog/2024/01/08/the-hardest-part-of-building-software-is-not-coding-its-requirements/",
+    "finalUrl": "https://stackoverflow.blog/2023/12/29/the-hardest-part-of-building-software-is-not-coding-its-requirements/",
+    "quelle": "stackoverflow.blog",
+    "merkmale": [
+      "bilder",
+      "code",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 1,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 1
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 7,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://stackoverflow.blog/2024/01/08/the-hardest-part-of-building-software-is-not-coding-its-requirements/",
+    "finalUrl": "https://stackoverflow.blog/2023/12/29/the-hardest-part-of-building-software-is-not-coding-its-requirements/",
+    "quelle": "stackoverflow.blog",
+    "merkmale": [
+      "bilder",
+      "code",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 1,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 1
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 7,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://simonwillison.net/",
+    "finalUrl": "https://simonwillison.net/",
+    "quelle": "simonwillison.net",
+    "merkmale": [
+      "code",
+      "listen",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 11,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 265,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://simonwillison.net/",
+    "finalUrl": "https://simonwillison.net/",
+    "quelle": "simonwillison.net",
+    "merkmale": [
+      "code",
+      "listen",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 1,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 11,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 35,
+    "linksImText": {
+      "anzahl": 265,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://danluu.com/input-lag/",
+    "finalUrl": "https://danluu.com/input-lag/",
+    "quelle": "danluu.com",
+    "merkmale": [
+      "tabellen",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 5,
+        "zeilen": 23,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 69,
+        "springt": true
+      },
+      {
+        "spalten": 3,
+        "zeilen": 37,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 89,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://danluu.com/input-lag/",
+    "finalUrl": "https://danluu.com/input-lag/",
+    "quelle": "danluu.com",
+    "merkmale": [
+      "tabellen",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 5,
+        "zeilen": 23,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 69,
+        "springt": true
+      },
+      {
+        "spalten": 3,
+        "zeilen": 37,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 34,
+    "linksImText": {
+      "anzahl": 89,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://science.nasa.gov/solar-system/",
+    "finalUrl": "https://science.nasa.gov/solar-system/",
+    "quelle": "nasa.gov",
+    "merkmale": [
+      "bilder",
+      "tabellen",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 9,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 9
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 20,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://science.nasa.gov/solar-system/",
+    "finalUrl": "https://science.nasa.gov/solar-system/",
+    "quelle": "nasa.gov",
+    "merkmale": [
+      "bilder",
+      "tabellen",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 9,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 9
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 20,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://arxiv.org/abs/1706.03762",
+    "finalUrl": "https://arxiv.org/abs/1706.03762",
+    "quelle": "arxiv.org",
+    "merkmale": [
+      "tabellen",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 172,
+        "springt": true
+      }
+    ],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 12,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://arxiv.org/abs/1706.03762",
+    "finalUrl": "https://arxiv.org/abs/1706.03762",
+    "quelle": "arxiv.org",
+    "merkmale": [
+      "tabellen",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 4,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 172,
+        "springt": true
+      }
+    ],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 32,
+    "linksImText": {
+      "anzahl": 12,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://html.spec.whatwg.org/multipage/tables.html",
+    "finalUrl": "https://html.spec.whatwg.org/multipage/tables.html",
+    "quelle": "whatwg.org",
+    "merkmale": [
+      "tabellen",
+      "code",
+      "listen",
+      "langtext"
+    ],
+    "theme": "light",
+    "vorlaufPx": 400,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 9,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 3,
+        "zeilen": 3,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 7,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 7,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 3,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 4,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 6,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 4,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 4,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 2,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 31,
+    "linksImText": {
+      "anzahl": 1033,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://html.spec.whatwg.org/multipage/tables.html",
+    "finalUrl": "https://html.spec.whatwg.org/multipage/tables.html",
+    "quelle": "whatwg.org",
+    "merkmale": [
+      "tabellen",
+      "code",
+      "listen",
+      "langtext"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 400,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [
+      {
+        "spalten": 2,
+        "zeilen": 9,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 3,
+        "zeilen": 3,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 7,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 7,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 3,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 4,
+        "zeilen": 7,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 6,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 4,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      },
+      {
+        "spalten": 4,
+        "zeilen": 5,
+        "scrollbar": false,
+        "scrollLeftNachVertikalemScrollen": 0,
+        "scrollLeftVorVertikalemScrollen": 0,
+        "springt": false
+      }
+    ],
+    "bilder": {
+      "gesamt": 2,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": false,
+    "zeichenProZeile": 31,
+    "linksImText": {
+      "anzahl": 1033,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://ourworldindata.org/grapher/population",
+    "finalUrl": "https://ourworldindata.org/grapher/population",
+    "quelle": "ourworldindata.org",
+    "merkmale": [
+      "bilder",
+      "tabellen"
+    ],
+    "theme": "light",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": true,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 34,
+      "alleMitAkzentUnterstreichung": false
+    }
+  },
+  {
+    "url": "https://ourworldindata.org/grapher/population",
+    "finalUrl": "https://ourworldindata.org/grapher/population",
+    "quelle": "ourworldindata.org",
+    "merkmale": [
+      "bilder",
+      "tabellen"
+    ],
+    "theme": "dark",
+    "vorlaufPx": 1,
+    "fuehrendeFremdbloecke": 0,
+    "tabellen": [],
+    "bilder": {
+      "gesamt": 0,
+      "kaputt": 0,
+      "breiterAlsSpalte": 0,
+      "ohneAbstand": 0
+    },
+    "seitenUeberlauf": true,
+    "zeichenProZeile": 36,
+    "linksImText": {
+      "anzahl": 34,
+      "alleMitAkzentUnterstreichung": false
+    }
+  }
+]
