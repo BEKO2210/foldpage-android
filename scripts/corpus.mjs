@@ -298,14 +298,12 @@ function blockFlags(el, where) {
 
 function measureOne(entry, html, extractArticle) {
   const finalUrl = entry.finalUrl || entry.url;
-  const started = process.hrtime.bigint();
   let article;
   try {
     article = extractArticle(html, finalUrl);
   } catch (err) {
     return { site: entry.site, url: entry.url, ok: false, error: err.message };
   }
-  const ms = Number(process.hrtime.bigint() - started) / 1e6;
 
   const dom = new JSDOM(`<body>${article.contentHtml}</body>`, {
     url: finalUrl,
@@ -406,7 +404,8 @@ function measureOne(entry, html, extractArticle) {
     site: entry.site,
     url: entry.url,
     ok: true,
-    ms: Math.round(ms),
+    // Deliberately no timing here: the report is committed, and a number that
+    // changes on every run buries the finding it is supposed to prove.
     title: article.title,
     author: article.author,
     lang: article.lang,
