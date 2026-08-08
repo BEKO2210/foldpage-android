@@ -102,8 +102,9 @@ async function seed(page, article) {
   }, article);
 }
 
-async function measurePage(page) {
-  await page.waitForSelector(".tablewrap");
+async function measurePage(page, hasTable) {
+  if (hasTable) await page.waitForSelector(".tablewrap");
+  await page.waitForLoadState("networkidle").catch(() => {});
   return page.evaluate(async () => {
     const settle = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     const wrappers = [...document.querySelectorAll(".tablewrap")];
@@ -119,7 +120,21 @@ async function measurePage(page) {
     await settle();
     window.scrollTo(0, startY);
     await settle();
+    const column = document.querySelector("article.reader")?.clientWidth ?? innerWidth;
+    const imgs = [...document.querySelectorAll("article.reader img")];
     return {
+      // Der Korpus liegt offline. Entfernte Bilder werden deshalb nie geladen,
+      // und alles, was erst nach dem Laden bekannt ist - kaputt, zu breit,
+      // Zaehlpixel - ist hier NICHT messbar. `unloaded` haelt fest, wie viele
+      // Bilder aus diesem Grund ungeprueft blieben, damit ein leeres
+      // Fehlerprotokoll nicht mit "geprueft und in Ordnung" verwechselt wird.
+      images: {
+        total: imgs.length,
+        unloaded: imgs.filter((i) => !i.complete).length,
+        broken: imgs.filter((i) => i.complete && i.naturalWidth === 0).length,
+        decorative: imgs.filter((i) => i.naturalWidth > 0 && i.naturalWidth < 100).length,
+        tooWide: imgs.filter((i) => i.getBoundingClientRect().width > column + 1).length,
+      },
       pageOverflow: document.documentElement.scrollWidth !== innerWidth,
       viewportWidth: innerWidth,
       documentWidth: document.documentElement.scrollWidth,
@@ -155,9 +170,10 @@ const articles = entries.flatMap((entry, index) => {
   if (!fs.existsSync(file)) return [];
   const html = gunzipSync(fs.readFileSync(file)).toString("utf8");
   const parsed = extractArticle(html, entry.finalUrl || entry.url);
-  return parsed.contentHtml.includes("<table")
-    ? [{ entry, article: storedArticle(parsed, entry, `render-${index}`) }]
-    : [];
+  const hasTable = parsed.contentHtml.includes("<table");
+  const hasImage = parsed.contentHtml.includes("<img");
+  if (!hasTable && !hasImage) return [];
+  return [{ entry, hasTable, article: storedArticle(parsed, entry, `render-${index}`) }];
 });
 
 fs.rmSync(SCREENSHOTS, { recursive: true, force: true });
@@ -170,7 +186,7 @@ const results = [];
 
 try {
   for (const theme of THEMES) {
-    for (const { entry, article } of articles) {
+    for (const { entry, article, hasTable } of articles) {
       const context = await browser.newContext({
         baseURL: origin,
         colorScheme: theme,
@@ -180,10 +196,14 @@ try {
       const page = await context.newPage();
       await seed(page, article);
       await page.goto(`/read/?id=${article.id}`);
-      const measurement = await measurePage(page);
-      const screenshot = path.join("screenshots", theme, `${slug(entry.url)}.png`);
-      fs.mkdirSync(path.dirname(path.join(CORPUS, screenshot)), { recursive: true });
-      await page.screenshot({ path: path.join(CORPUS, screenshot) });
+      const measurement = await measurePage(page, hasTable);
+      // Screenshots nur fuer Tabellenartikel - sonst waechst das Repo um 70 PNG je Lauf.
+      let screenshot = null;
+      if (hasTable) {
+        screenshot = path.join("screenshots", theme, `${slug(entry.url)}.png`);
+        fs.mkdirSync(path.dirname(path.join(CORPUS, screenshot)), { recursive: true });
+        await page.screenshot({ path: path.join(CORPUS, screenshot) });
+      }
       results.push({ site: entry.site, url: entry.url, theme, screenshot, ...measurement });
       await context.close();
     }
@@ -195,6 +215,9 @@ try {
 
 const failures = results.flatMap((result) => [
   ...(result.pageOverflow ? [`${result.site}/${result.theme}: page overflow`] : []),
+  ...(result.images?.broken ? [`${result.site}/${result.theme}: ${result.images.broken} broken images`] : []),
+  ...(result.images?.tooWide ? [`${result.site}/${result.theme}: ${result.images.tooWide} images wider than the column`] : []),
+  ...(result.images?.decorative ? [`${result.site}/${result.theme}: ${result.images.decorative} decorative images left`] : []),
   ...result.tables.flatMap((table, index) =>
     table.stable ? [] : [`${result.site}/${result.theme}/table-${index + 1}: ${table.before} -> ${table.after}`]
   ),
@@ -205,6 +228,10 @@ const report = {
   articles: articles.length,
   renders: results.length,
   tablesChecked: results.reduce((sum, result) => sum + result.tables.length, 0),
+  imagesTotal: results.reduce((sum, r) => sum + (r.images?.total ?? 0), 0),
+  imagesUnloaded: results.reduce((sum, r) => sum + (r.images?.unloaded ?? 0), 0),
+  hinweis:
+    "Bildpruefungen (kaputt, zu breit, Zaehlpixel) greifen nur bei geladenen Bildern. Der Korpus ist offline, imagesUnloaded nennt die ungeprueften.",
   failures,
   results,
 };

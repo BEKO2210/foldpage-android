@@ -8,16 +8,62 @@
     "light",
     "dark"
   ],
-  "articles": 4,
-  "renders": 8,
+  "articles": 22,
+  "renders": 44,
   "tablesChecked": 26,
+  "imagesTotal": 748,
+  "imagesUnloaded": 682,
+  "hinweis": "Bildpruefungen (kaputt, zu breit, Zaehlpixel) greifen nur bei geladenen Bildern. Der Korpus ist offline, imagesUnloaded nennt die ungeprueften.",
   "failures": [],
   "results": [
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/politik/deutschland/article6a7665b70e3689919ec747b6/nach-landtagswahl-ansage-an-landespartei-cdu-spitze-duldet-keine-koalition-mit-afd-in-sachsen-anhalt.html",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/wirtschaft/article6a7660bc35268e50270222a9/rente-dann-werden-die-reformplaene-wie-dominosteine-fallen-wirtschaftsweise-warnt-merz.html",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
     {
       "site": "the-decoder.de",
       "url": "https://the-decoder.de/openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cybersecurity-risikostufe-ein/",
       "theme": "light",
       "screenshot": "screenshots/light/the-decoder-de-openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cyberse.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -62,10 +108,300 @@
       ]
     },
     {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-inferenz/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/bestenlisten/testsieger/top-10-der-beste-smart-ring-im-test-oura-ring-5-ist-testsieger/rgglr38",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 307,
+        "unloaded": 304,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/news/RCS-Google-will-mit-dem-Chatprotokoll-Business-machen-11394662.html",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/politik/deutschland/berlin-wahl-2026-wird-die-hauptstadt-bald-unregierbar-a-5ea258c9-23e9-4d35-a548-45c2a28d32c1",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 2,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/politik/ausland/2026-08/donald-trump-lisa-cook-federal-reserve-entlassung-usa",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/europa/spanien-italien-grenzkontrollen-102.html",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/afrika/ceuta-spanien-minderjaehrige-100.html",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/adobe-plugin-chatgpt-1757158/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/windows-apps-microsoft-store-speicherplatz-1757152/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/games/977056/restart-gaming-site-walmart-moonrock-layoffs",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 2,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/976801/fenix-flexin-rubberz-ai-song-treblo",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 3,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/openai-says-it-slowed-astra-model-development-over-security-concerns/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/music/2026/aug/07/william-orbit-greatest-recordings-prince-madonna-blur-beth-orton",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 1,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/moonlight-mayhem/",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 2,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "en.wikipedia.org",
+      "url": "https://en.wikipedia.org/wiki/Comparison_of_web_browsers",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "A",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "de.wikipedia.org",
       "url": "https://de.wikipedia.org/wiki/Elektroauto",
       "theme": "light",
       "screenshot": "screenshots/light/de-wikipedia-org-wiki-elektroauto.png",
+      "images": {
+        "total": 42,
+        "unloaded": 32,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -134,6 +470,13 @@
       "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/display",
       "theme": "light",
       "screenshot": "screenshots/light/developer-mozilla-org-en-us-docs-web-css-display.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -178,10 +521,48 @@
       ]
     },
     {
+      "site": "web.dev",
+      "url": "https://web.dev/articles/inp",
+      "theme": "light",
+      "screenshot": null,
+      "images": {
+        "total": 3,
+        "unloaded": 3,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "CODE",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "docs.python.org",
       "url": "https://docs.python.org/3/library/datetime.html",
       "theme": "light",
       "screenshot": "screenshots/light/docs-python-org-3-library-datetime-html.png",
+      "images": {
+        "total": 1,
+        "unloaded": 1,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -251,10 +632,53 @@
       ]
     },
     {
+      "site": "welt.de",
+      "url": "https://www.welt.de/politik/deutschland/article6a7665b70e3689919ec747b6/nach-landtagswahl-ansage-an-landespartei-cdu-spitze-duldet-keine-koalition-mit-afd-in-sachsen-anhalt.html",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/wirtschaft/article6a7660bc35268e50270222a9/rente-dann-werden-die-reformplaene-wie-dominosteine-fallen-wirtschaftsweise-warnt-merz.html",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
       "site": "the-decoder.de",
       "url": "https://the-decoder.de/openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cybersecurity-risikostufe-ein/",
       "theme": "dark",
       "screenshot": "screenshots/dark/the-decoder-de-openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cyberse.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -299,10 +723,300 @@
       ]
     },
     {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-inferenz/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/bestenlisten/testsieger/top-10-der-beste-smart-ring-im-test-oura-ring-5-ist-testsieger/rgglr38",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 307,
+        "unloaded": 304,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/news/RCS-Google-will-mit-dem-Chatprotokoll-Business-machen-11394662.html",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/politik/deutschland/berlin-wahl-2026-wird-die-hauptstadt-bald-unregierbar-a-5ea258c9-23e9-4d35-a548-45c2a28d32c1",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 2,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/politik/ausland/2026-08/donald-trump-lisa-cook-federal-reserve-entlassung-usa",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/europa/spanien-italien-grenzkontrollen-102.html",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/afrika/ceuta-spanien-minderjaehrige-100.html",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/adobe-plugin-chatgpt-1757158/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "t3n.de",
+      "url": "https://t3n.de/news/windows-apps-microsoft-store-speicherplatz-1757152/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/games/977056/restart-gaming-site-walmart-moonrock-layoffs",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 2,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/976801/fenix-flexin-rubberz-ai-song-treblo",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 3,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/openai-says-it-slowed-astra-model-development-over-security-concerns/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/music/2026/aug/07/william-orbit-greatest-recordings-prince-madonna-blur-beth-orton",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 1,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "simonwillison.net",
+      "url": "https://simonwillison.net/2026/Aug/7/moonlight-mayhem/",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 2,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [],
+      "tables": []
+    },
+    {
+      "site": "en.wikipedia.org",
+      "url": "https://en.wikipedia.org/wiki/Comparison_of_web_browsers",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 1,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "A",
+          "className": "",
+          "right": 462,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "de.wikipedia.org",
       "url": "https://de.wikipedia.org/wiki/Elektroauto",
       "theme": "dark",
       "screenshot": "screenshots/dark/de-wikipedia-org-wiki-elektroauto.png",
+      "images": {
+        "total": 42,
+        "unloaded": 32,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -371,6 +1085,13 @@
       "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/display",
       "theme": "dark",
       "screenshot": "screenshots/dark/developer-mozilla-org-en-us-docs-web-css-display.png",
+      "images": {
+        "total": 0,
+        "unloaded": 0,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,
@@ -415,10 +1136,48 @@
       ]
     },
     {
+      "site": "web.dev",
+      "url": "https://web.dev/articles/inp",
+      "theme": "dark",
+      "screenshot": null,
+      "images": {
+        "total": 3,
+        "unloaded": 3,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
+      "pageOverflow": false,
+      "viewportWidth": 412,
+      "documentWidth": 412,
+      "overflowElements": [
+        {
+          "tag": "CODE",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        },
+        {
+          "tag": "SPAN",
+          "className": "",
+          "right": 413,
+          "scrollWidth": 0
+        }
+      ],
+      "tables": []
+    },
+    {
       "site": "docs.python.org",
       "url": "https://docs.python.org/3/library/datetime.html",
       "theme": "dark",
       "screenshot": "screenshots/dark/docs-python-org-3-library-datetime-html.png",
+      "images": {
+        "total": 1,
+        "unloaded": 1,
+        "broken": 0,
+        "decorative": 0,
+        "tooWide": 0
+      },
       "pageOverflow": false,
       "viewportWidth": 412,
       "documentWidth": 412,

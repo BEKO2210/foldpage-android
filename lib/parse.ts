@@ -50,6 +50,7 @@ function sanitize(html: string, doc: Document): string {
     }
   });
   prepareTables(container, doc);
+  prepareMedia(container, doc);
   return container.innerHTML;
 }
 
@@ -59,6 +60,60 @@ const NUMERIC_CELL =
 /** Give tables a stable scrolling parent while keeping their native layout.
     The class on numeric cells lets CSS align values without guessing from
     column position. */
+/** Anything this small is a counting pixel, a share icon or a logo — never
+    part of what someone came to read. */
+const DECORATIVE_PX = 100;
+
+/** Looks like a photo credit rather than a sentence of the article. */
+const CAPTION_HINT = /^(foto|bild|quelle|abbildung|grafik|image|photo|credit|source)\s*[:：]/i;
+
+/** Prepare images so they neither shift the layout nor leave holes in it.
+
+    Two failure modes were visible in the corpus: pages that ship 300 icons
+    inside the article body, and images that never load and leave a reserved
+    gap behind. The first is filtered here; the second cannot be known until
+    runtime, so the reader clears it after load. */
+function prepareMedia(container: HTMLElement, doc: Document) {
+  container.querySelectorAll("img").forEach((img) => {
+    const w = Number(img.getAttribute("width"));
+    const h = Number(img.getAttribute("height"));
+
+    if ((w && w < DECORATIVE_PX) || (h && h < DECORATIVE_PX)) {
+      img.remove();
+      return;
+    }
+
+    // Reserving the box up front keeps the text from jumping once the image
+    // arrives. Without intrinsic dimensions a neutral ratio still beats none.
+    if (w && h) {
+      img.style.aspectRatio = `${w} / ${h}`;
+    } else if (!img.style.aspectRatio) {
+      img.classList.add("img-unsized");
+    }
+    img.setAttribute("loading", "lazy");
+    img.setAttribute("decoding", "async");
+
+    // A caption that follows a bare image belongs to it. Pairing them means
+    // the caption can be styled as one, and stays with its image.
+    const parentIsFigure = img.parentElement?.tagName === "FIGURE";
+    const next = img.nextElementSibling;
+    if (
+      !parentIsFigure &&
+      next &&
+      next.tagName === "P" &&
+      (next.textContent ?? "").trim().length < 200 &&
+      CAPTION_HINT.test((next.textContent ?? "").trim())
+    ) {
+      const figure = doc.createElement("figure");
+      const caption = doc.createElement("figcaption");
+      caption.innerHTML = next.innerHTML;
+      img.before(figure);
+      figure.append(img, caption);
+      next.remove();
+    }
+  });
+}
+
 function prepareTables(container: HTMLElement, doc: Document) {
   container.querySelectorAll("table").forEach((table) => {
     if (!table.parentElement?.classList.contains("tablewrap")) {

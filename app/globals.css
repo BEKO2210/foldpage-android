@@ -247,6 +247,12 @@ body {
   line-height: 1.25;
   text-wrap: balance;
 }
+/* Without intrinsic dimensions the box is unknown until the bytes arrive.
+   A neutral ratio reserves something sensible so the text below does not
+   jump when it does. */
+.reader img.img-unsized {
+  aspect-ratio: 3 / 2;
+}
 .reader img,
 .reader video {
   display: block;
@@ -271,6 +277,8 @@ body {
   color: var(--muted);
   line-height: 1.45;
   margin-top: 0.5rem;
+  padding-left: 0.6rem;
+  border-left: 2px solid var(--line);
 }
 .reader pre {
   overflow-x: auto;
