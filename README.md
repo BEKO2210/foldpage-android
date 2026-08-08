@@ -11,11 +11,11 @@ no tracking.
 
 <br>
 
+<img src="docs/screenshots/welcome-light.png" alt="The first-launch welcome: the folded page mark, a headline and three lines explaining the app" width="30%">
 <img src="docs/screenshots/library-light.png" alt="The library in the light theme: saved articles as cards with site, reading time and tags" width="30%">
-<img src="docs/screenshots/reader-light.png" alt="The reader in the light theme: serif body text with a progress bar" width="30%">
 <img src="docs/screenshots/library-dark.png" alt="The same library in the dark theme" width="30%">
 
-<sub>Library and reader, light and dark — the theme follows the system.</sub>
+<sub>First launch, the library, and the same library in dark — the theme follows the system.</sub>
 
 </div>
 
@@ -41,6 +41,8 @@ text rather than for engagement.
   file; export to JSON, HTML or Markdown at any time.
 - **Offline by construction** — after saving, nothing needs a network. The
   entire app ships inside the APK.
+- **Says what it is** — a one-time welcome on first launch explains how a link
+  gets in, what comes back, and where it stays.
 - **Stays where you left it** — switching sections keeps each one's scroll
   position, and the hardware back button walks back through them instead of
   dropping you out of the app.
@@ -153,7 +155,7 @@ scripts/        icon/splash generation and the signed release build
 
 ## Status
 
-Version 1.2.1 — the local-only MVP after a full UI/UX pass and two rounds of
+Version 1.3 — the local-only MVP after a full UI/UX pass and two rounds of
 fixes that only showed up on a real device. Sync between devices
 exists in the web version of FoldPage and is deliberately absent here.
 
