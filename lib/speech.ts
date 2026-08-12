@@ -1,9 +1,9 @@
 "use client";
 
 import { isNative } from "./native";
-import { speechLanguage, spokenBlocks, type SpokenBlock } from "./readAloud";
+import { speechLanguage, spokenBlocks, wrapEngine, type SpokenBlock } from "./readAloud";
 
-export { spokenBlocks, spokenMinutes, speechLanguage } from "./readAloud";
+export { spokenBlocks, spokenMinutes, speechLanguage, wrapEngine } from "./readAloud";
 export { openSpeechSettings } from "./native";
 export type { SpokenBlock } from "./readAloud";
 
@@ -13,8 +13,8 @@ export type { SpokenBlock } from "./readAloud";
  *  pre-rendered at build time where there is no window — importing it at the
  *  top of this file breaks `npm run build` outright. */
 async function engine() {
-  const { TextToSpeech } = await import("@capacitor-community/text-to-speech");
-  return TextToSpeech;
+  const module = await import("@capacitor-community/text-to-speech");
+  return wrapEngine(module);
 }
 
 /** Reading an article out loud, one block at a time.
@@ -129,7 +129,7 @@ class Player {
       // no way out but leaving the article. Sixty seconds is longer than any
       // paragraph takes and shorter than a user's patience.
       await withTimeout(
-        (await engine()).speak({
+        (await engine()).tts.speak({
           text,
           ...(this.lang ? { lang: this.lang } : {}),
           rate: 1,
@@ -159,7 +159,7 @@ class Player {
   stop() {
     this.token += 1;
     this.playing = false;
-    if (isNative()) void engine().then((tts) => tts.stop()).catch(() => {});
+    if (isNative()) void engine().then(({ tts }) => tts.stop()).catch(() => {});
     else globalThis.speechSynthesis?.cancel();
     this.emit();
   }
@@ -182,7 +182,7 @@ export async function languageAvailable(lang: string | null): Promise<boolean> {
   const tag = speechLanguage(lang);
   if (!tag || !isNative()) return true;
   try {
-    const { supported } = await (await engine()).isLanguageSupported({ lang: tag });
+    const { supported } = await (await engine()).tts.isLanguageSupported({ lang: tag });
     return supported;
   } catch {
     return true;
@@ -220,9 +220,9 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
 
   note("Running in the app", isNative(), isNative() ? "native" : "browser build");
 
-  let tts: Awaited<ReturnType<typeof engine>> | null = null;
+  let tts: Awaited<ReturnType<typeof engine>>["tts"] | null = null;
   try {
-    tts = await withTimeout(engine(), 5000, "Loading the plugin");
+    tts = (await withTimeout(engine(), 5000, "Loading the plugin")).tts;
     note("Speech plugin loaded", true, "");
   } catch (e) {
     note("Speech plugin loaded", false, e instanceof Error ? e.message : String(e));
@@ -284,7 +284,7 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
 export async function installVoices(): Promise<void> {
   if (!isNative()) return;
   try {
-    await (await engine()).openInstall();
+    await (await engine()).tts.openInstall();
   } catch {
     /* no engine that offers the screen */
   }

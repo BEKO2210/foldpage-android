@@ -93,3 +93,20 @@ export function spokenMinutes(blocks: SpokenBlock[]): number {
   );
   return Math.max(1, Math.round(words / 150));
 }
+
+/** What `registerPlugin()` returns is a Proxy: every property access becomes a
+ *  call across the bridge. That includes `.then`.
+ *
+ *  Returning it from an `async` function is therefore a trap with no bottom.
+ *  Resolving a promise with a value makes the runtime ask that value for
+ *  `.then`; the proxy answers with a *plugin method* of that name, the call
+ *  goes to the native side, nothing answers it — and the `await` never
+ *  returns. On the device this showed up as a check that said "Checking…" for
+ *  ever and a reader that stayed silent with no error anywhere.
+ *
+ *  Handing it over inside a plain object costs one property access and makes
+ *  the whole class of mistake impossible. Exported so a test can hold the
+ *  behaviour still. */
+export async function wrapEngine<T>(module: { TextToSpeech: T }): Promise<{ tts: T }> {
+  return { tts: module.TextToSpeech };
+}
