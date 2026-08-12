@@ -13,6 +13,7 @@ import {
 import { addArticleFromUrl } from "@/lib/articles";
 import { findByUrl, imageBytes, listArticles, newId, saveArticle } from "@/lib/db";
 import { articlesMissingImages, backfillImages, pruneImages } from "@/lib/images";
+import { buildIndex } from "@/lib/search";
 import { buzzSuccess, tap } from "@/lib/native";
 
 type ImportStatus =
@@ -39,6 +40,9 @@ export default function SettingsPage() {
     { phase: "idle" } | { phase: "running"; done: number; total: number } | { phase: "done"; text: string }
   >({ phase: "idle" });
   const stopBackfill = useRef(false);
+  const [indexing, setIndexing] = useState<
+    { phase: "idle" } | { phase: "running"; done: number; total: number } | { phase: "done"; text: string }
+  >({ phase: "idle" });
   const [exported, setExported] = useState<string | null>(null);
   const cancelRef = useRef(false);
 
@@ -174,6 +178,23 @@ export default function SettingsPage() {
     setPruned(null);
   }
 
+  /** Articles saved before there was a word index. Search still finds them
+      without this — it reads them the old way — but each one it has to read is
+      one it cannot answer from the index. */
+  async function runIndex() {
+    void tap();
+    setIndexing({ phase: "running", done: 0, total: 0 });
+    const result = await buildIndex((done, total) =>
+      setIndexing({ phase: "running", done, total })
+    );
+    setIndexing({
+      phase: "done",
+      text: result.articles
+        ? `${result.articles} article${result.articles === 1 ? "" : "s"} indexed, ${result.terms.toLocaleString()} terms.`
+        : "Every article is already in the index.",
+    });
+  }
+
   async function runExport(fn: () => Promise<string>) {
     void tap();
     setExported(null);
@@ -232,7 +253,24 @@ export default function SettingsPage() {
             >
               Free up space
             </button>
+            <button
+              className="btn btn-quiet pressable"
+              onClick={() => void runIndex()}
+              disabled={indexing.phase === "running"}
+            >
+              {indexing.phase === "running" ? "Indexing…" : "Index for search"}
+            </button>
           </div>
+          {indexing.phase === "running" && indexing.total > 0 && (
+            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+              Indexing article {indexing.done} of {indexing.total} …
+            </p>
+          )}
+          {indexing.phase === "done" && (
+            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+              {indexing.text}
+            </p>
+          )}
           {backfill.phase === "running" && (
             <div className="mt-3 text-sm" role="status">
               <p>

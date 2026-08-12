@@ -1,0 +1,25 @@
+import http from "node:http"; import fs from "node:fs"; import path from "node:path"; import {chromium} from "playwright";
+const OUT=path.resolve("out");
+const MIME={".css":"text/css",".html":"text/html",".js":"text/javascript",".png":"image/png",".json":"application/json"};
+const server=http.createServer((q,r)=>{const rel=decodeURIComponent(new URL(q.url,"http://l").pathname).replace(/^\/+/,"");
+ const f=[path.join(OUT,rel),path.join(OUT,rel,"index.html"),path.join(OUT,rel+".html")].find(c=>fs.statSync(c,{throwIfNoEntry:false})?.isFile());
+ if(!f){r.writeHead(404).end();return;} r.setHeader("Content-Type",MIME[path.extname(f)]||"text/plain"); fs.createReadStream(f).pipe(r);});
+await new Promise(r=>server.listen(0,"127.0.0.1",r));
+const b=await chromium.launch({headless:true});
+const p=await (await b.newContext({baseURL:`http://127.0.0.1:${server.address().port}`,viewport:{width:412,height:915}})).newPage();
+await p.addInitScript(()=>localStorage.setItem("fp-welcomed","1"));
+await p.goto("/");
+console.log(await p.evaluate(async ()=>{
+  const open=()=>new Promise((res,rej)=>{const rq=indexedDB.open("foldpage");rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error)});
+  const db=await open();
+  const t=(label,fn)=>new Promise(res=>{const s=performance.now();const rq=fn();rq.onsuccess=()=>res([label,Math.round(performance.now()-s),Array.isArray(rq.result)?rq.result.length:1]);rq.onerror=()=>res([label,-1,0])});
+  const out=[];
+  out.push(await t("articles keys", ()=>db.transaction("articles").objectStore("articles").getAllKeys()));
+  out.push(await t("postings term range", ()=>db.transaction("postings").objectStore("postings").getAllKeys(IDBKeyRange.bound(["zwischenschicht",""],["zwischenschicht","￿"]))));
+  const s=performance.now();
+  await new Promise(res=>{const rq=db.transaction("postings").objectStore("postings").index("by-id").openKeyCursor();const ids=new Set();rq.onsuccess=e=>{const c=e.target.result;if(!c){res();return;}ids.add(c.key);c.continue(c.key+"￿");};});
+  out.push(["indexedIds scan", Math.round(performance.now()-s), 0]);
+  db.close();
+  return out;
+}));
+await b.close(); server.close();

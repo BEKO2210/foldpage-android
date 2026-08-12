@@ -31,7 +31,7 @@ der Export ist reines HTML/JS/CSS im APK.
 | minSdk / target / compileSdk | 24 / 36 / 36 |
 | Berechtigungen | `INTERNET` (Manifest), `VIBRATE` (vom Haptics-Plugin gemerged) |
 | Origin in der WebView | `https://localhost` (fest in `capacitor.config.ts`) |
-| Speicher | IndexedDB `foldpage`, **Version 2**, Stores `articles` + `images` |
+| Speicher | IndexedDB `foldpage`, **Version 3**, Stores `articles` + `images` + `postings` |
 | Auslieferung | Play Store (AAB), zusätzlich signierte APK auf GitHub Releases |
 
 **Der Origin ist heilig.** `server.androidScheme: "https"` + `hostname:
@@ -69,6 +69,8 @@ lib/
   articles.ts           `addArticleFromUrl`, `refetchArticle` — Abruf, Dublette, Speichern
   refetch.ts            reine Zusammenführung beim Neuladen (ohne DB/Capacitor)
   display.ts            Anzeige-Einstellungen (siehe 6a.)
+  searchIndex.ts        Tokenizer und Abfrageplan (rein, testbar)
+  search.ts             Suche über den Index, mit Rückfall aufs Lesen
   imagePlan.ts          welche Bilder behalten werden (rein, testbar)
   images.ts             Bilder holen, ablegen, anzeigen, aufräumen
   parse.ts              409+ Z. — Abruf, Extraktion, Möbelentfernung, Sanitizer
@@ -131,6 +133,11 @@ docs/                   diese Datei + ROADMAP/FUTURE-PROOFING/RELEASE/READER-LAB
   Änderung an den Stores braucht den nächsten Bump samt Migrationspfad; ohne
   Bump greift `upgrade` nie. Die Migration auf 2 ist additiv und fasst keinen
   Artikel an — `oldVersion` entscheidet, was angelegt wird.
+- **Wortindex** im Store `postings`, Schlüssel `[term, id]`, Index `by-id`.
+  Ein Datensatz je Wort und Artikel — Hinzufügen ist eine Reihe von `put`,
+  Entfernen ein Bereichslöschen über `by-id`; kein Array, das gelesen,
+  umgeschrieben und dabei überholt werden kann. Suche und Grenzen:
+  `lib/search.ts`, Zahlen in `docs/ROADMAP.md` (B2).
 - **Bilder** liegen im Store `images`, Schlüssel ist der SHA-256 der Bild-URL;
   zwei Artikel mit demselben Bild teilen sich die Kopie. Details, Grenzen und
   die Messung dahinter: `docs/IMAGE-STORAGE.md`.

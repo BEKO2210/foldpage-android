@@ -6,11 +6,12 @@ import type { Article } from "@/lib/types";
 import {
   allTags,
   deleteArticle,
+  getArticle,
   listArticles,
   restoreArticle,
-  searchArticlesDetailed,
   updateArticle,
 } from "@/lib/db";
+import { indexArticle, search } from "@/lib/search";
 import { Abandoned, addArticleFromUrl } from "@/lib/articles";
 import { storeImagesForArticle } from "@/lib/images";
 import TopBar from "./TopBar";
@@ -69,6 +70,10 @@ const EMPTY_META: Record<Tab, { title: string; description: string }> = {
 
 const URL_IN_TEXT = /https?:\/\/\S+/;
 
+/** Cards added per step. Enough to fill a tablet in landscape twice over, so
+    the next batch is always ready before the edge of the list is reached. */
+const PAGE = 40;
+
 export default function Library() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [tab, setTab] = useState<Tab>("inbox");
@@ -83,6 +88,12 @@ export default function Library() {
   /** Articles the term only appears *inside* — the card shows nothing of the
       match, so it says where it is instead of looking like a wrong result. */
   const [bodyOnly, setBodyOnly] = useState<Set<string>>(new Set());
+  /** How many cards are in the DOM. A thousand articles is a thousand cards
+      with a swipe handler and three buttons each, and the browser pays for all
+      of them on every render — while a phone shows about four. The list grows
+      as it is scrolled instead. */
+  const [window_, setWindow] = useState(PAGE);
+  const sentinel = useRef<HTMLLIElement | null>(null);
   const [toast, setToast] = useState<{ text: string; undoId: string } | null>(
     null
   );
@@ -118,7 +129,7 @@ export default function Library() {
 
   const refresh = useCallback(async () => {
     if (query) {
-      const hits = await searchArticlesDetailed(query);
+      const hits = await search(query);
       setArticles(hits.map((hit) => hit.article));
       setBodyOnly(
         new Set(hits.filter((hit) => hit.where === "body").map((hit) => hit.article.id))
@@ -127,7 +138,10 @@ export default function Library() {
       setArticles(await listArticles());
       setBodyOnly(new Set());
     }
-    setTags(await allTags());
+    // Not while searching. `allTags()` reads every article — bodies included —
+    // and the tag list cannot change because somebody typed a letter. On a
+    // thousand articles this alone was most of the time a search took.
+    if (!query) setTags(await allTags());
     setLoaded(true);
   }, [query]);
 
@@ -173,8 +187,16 @@ export default function Library() {
           // background. Waiting for them would hold the "Saved" line hostage to
           // a dozen downloads, and an article whose images fail is still an
           // article — their original URLs stay in place.
+          void indexArticle(article);
           void storeImagesForArticle(article.id).then((stored) => {
-            if (stored.changed) void refresh();
+            // Re-index after the pictures land: the article's HTML changed, and
+            // an index that describes the previous text is worse than none.
+            if (stored.changed) {
+              void getArticle(article.id).then((fresh) => {
+                if (fresh) void indexArticle(fresh);
+              });
+              void refresh();
+            }
           });
         }
       } catch (e) {
@@ -263,6 +285,36 @@ export default function Library() {
     if (tagFilter) list = list.filter((a) => a.tags.includes(tagFilter));
     return list;
   }, [articles, tab, query, tagFilter]);
+
+  // A new list — different tab, different search, different tag — starts at the
+  // top again. Derived during render rather than reset in an effect: an effect
+  // would paint the old window once and then correct it, which is a visible
+  // flash of a thousand cards.
+  const listKey = `${tab}|${query}|${tagFilter ?? ""}`;
+  const [windowKey, setWindowKey] = useState(listKey);
+  if (windowKey !== listKey) {
+    setWindowKey(listKey);
+    setWindow(PAGE);
+  }
+
+  const shown = useMemo(() => visible.slice(0, window_), [visible, window_]);
+
+  useEffect(() => {
+    const node = sentinel.current;
+    if (!node || shown.length >= visible.length) return;
+    // IntersectionObserver rather than a scroll listener: it fires once when
+    // the end of the list comes into view, and costs nothing while it does not.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setWindow((current) => current + PAGE);
+        }
+      },
+      { rootMargin: "600px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [shown.length, visible.length]);
 
   const counts = useMemo(
     () => ({
@@ -507,7 +559,7 @@ export default function Library() {
         )}
 
         <ul className="library-grid grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0">
-          {visible.map((a, i) => (
+          {shown.map((a, i) => (
             <li key={a.id} className="card-in" style={{ ["--i" as string]: i }}>
               <SwipeRow
                 archiveLabel={a.state === "inbox" ? "Archive" : "To inbox"}
@@ -600,6 +652,9 @@ export default function Library() {
               </SwipeRow>
             </li>
           ))}
+          {shown.length < visible.length && (
+            <li ref={sentinel} className="list-sentinel" aria-hidden="true" />
+          )}
         </ul>
       </div>
 

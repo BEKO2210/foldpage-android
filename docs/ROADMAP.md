@@ -172,8 +172,8 @@ rendert alle Karten. `searchArticlesDetailed()` liest zusätzlich jeden
 |---|---|---|
 | B2.1 | Messen statt raten: `scripts/library-bench.mjs` sät eine synthetische Bibliothek in den gebauten Export und misst in Chromium — Öffnen, Volltextsuche, ein Stern | ✅ 12.08.2026 |
 | B2.2 | Zustandsänderungen lokal statt Vollneuladen | ✅ 12.08.2026 |
-| B2.3 | Invertierter Wortindex als eigener Store, beim Speichern gepflegt | offen |
-| B2.4 | Virtualisierte Liste (nur sichtbare Karten im DOM) | offen |
+| B2.3 | Invertierter Wortindex als eigener Store, beim Speichern gepflegt | ✅ 12.08.2026 |
+| B2.4 | Nur so viele Karten im DOM wie gebraucht | ✅ 12.08.2026 |
 
 **Gemessen bei 200 Artikeln à 900 Wörtern** (Chromium auf `lenovo`, kein
 Telefon — als Vorher/Nachher auf derselben Maschine aussagekräftig, nicht als
@@ -194,6 +194,48 @@ gelesen werden **muss** — das behebt erst B2.3.
 Ausnahme mit Absicht: das Rückgängigmachen einer Löschung lädt weiterhin voll
 neu. Der Artikel muss an seine Stelle in der Sortierung zurück, und wo die ist,
 weiß nur die Datenbank.
+
+### B2.3 und B2.4 (12.08.2026): erst messen, dann glauben
+
+**Gemessen bei 1.000 Artikeln à 900 Wörtern**, dieselbe Maschine, dieselbe
+Abfrage (ein Wort, das nur im Fließtext genau eines Artikels steht):
+
+| | vorher | nachher |
+|---|---:|---:|
+| Bibliothek öffnen | 1.789 ms | **522 ms** |
+| Volltextsuche ohne Index | 1.348 ms | **139 ms** |
+| Volltextsuche mit Index | — | **103 ms** |
+| Stern setzen | 203 ms | 146 ms |
+
+Bei 200 Artikeln: Öffnen 347 ms, Suche 119 ms (mit Index 116 ms).
+
+**Die unbequeme Erkenntnis:** Der Wortindex (B2.3) war nicht der große Hebel.
+Den Löwenanteil hat **B2.4** gebracht — die Liste rendert nur noch 40 Karten
+statt tausend und wächst beim Scrollen nach. Bei tausend Artikeln waren tausend
+Karten mit Wischgeste und je drei Knöpfen im DOM; die Datenbank war nie das
+Problem, der Browser war es.
+
+Was der Index trotzdem beiträgt, und warum er bleibt: Er halbiert die
+verbleibende Arbeit (139 → 103 ms) und **wächst nicht mit der Bibliothek**, weil
+er den Treffer nachschlägt statt jeden Artikel zu lesen. Auf dem Weg dorthin
+fielen zwei Fehler auf, die ohne Messung nie aufgefallen wären:
+
+- Die Suche lud **alle** Artikel samt gespeichertem HTML, nur um zu
+  entscheiden, welche sie zeigt. Jetzt laufen erst die Schlüssel (`by-addedAt`
+  als **Key**-Cursor, ohne die Werte anzufassen), dann werden genau die Treffer
+  geladen.
+- Jeder Tastendruck lud über `allTags()` die ganze Bibliothek nach — die
+  Tag-Liste kann sich beim Tippen aber nicht ändern. Wird beim Suchen
+  übersprungen.
+
+**Grenzen, benannt:** Der Index kennt **Wörter**. Ein Bruchstück aus der *Mitte*
+eines Wortes („finster" in „Sonnenfinsternis") kann er nicht beantworten — das
+konnte die alte Suche, weil sie jeden Artikel las. Solche Abfragen und alles,
+was der Index noch nicht kennt, fallen deshalb auf das Lesen zurück, statt
+stillschweigend weniger zu liefern. Das Wortende zählt: „mond" sucht als
+Präfix, „mond " (mit Leerzeichen) als vollständiges Wort. Artikel aus der Zeit
+vor dem Index werden über „Index for search" in den Einstellungen nachgetragen
+— bei 1.000 Artikeln dauert das rund 8 Sekunden.
 
 ### B3 · Verlässlich lesen: Zustand, den man nicht verliert
 Einzelne Bausteine sind da (Fortschritt, Scrollposition je Tab), aber es gibt

@@ -154,20 +154,50 @@ try {
   await page.waitForSelector(".card");
   const openMs = Date.now() - openStart;
 
-  // A term that exists only in one body, so every article's HTML is read.
+  // Everything saved before the word index existed is scanned, which is what
+  // the seeded library looks like: measure that first.
   const searchStart = Date.now();
-  await page.fill('input[type="search"]', BODY_ONLY_TERM);
+  await page.fill('input[type="search"]', `${BODY_ONLY_TERM} `);
   await page.waitForSelector('[role="status"]:has-text("match")');
   const searchMs = Date.now() - searchStart;
+
+  // Then build the index over the same library and ask again. Same query, same
+  // articles, same machine — the only difference is where the answer comes from.
+  await page.fill('input[type="search"]', "");
+  await page.waitForSelector(".card");
+  const indexStart = Date.now();
+  await page.goto("/settings/");
+  await page.click('button:has-text("Index for search")');
+  await page.waitForSelector('[role="status"]:has-text("indexed")', { timeout: 600_000 });
+  const indexMs = Date.now() - indexStart;
+
+  await page.goto("/");
+  await page.waitForSelector(".card");
+  const indexedSearchStart = Date.now();
+  await page.fill('input[type="search"]', `${BODY_ONLY_TERM} `);
+  await page.waitForSelector('[role="status"]:has-text("match")');
+  const indexedSearchMs = Date.now() - indexedSearchStart;
 
   await page.fill('input[type="search"]', "");
   await page.waitForSelector(".card");
 
-  // One star: the interaction that used to reload the whole library.
-  const toggleStart = Date.now();
-  await page.click('.card:first-child button[aria-label="Add to favorites"]');
-  await page.waitForSelector('.card:first-child button[aria-label="Remove from favorites"]');
-  const toggleMs = Date.now() - toggleStart;
+  // One star: the interaction that used to reload the whole library. At a
+  // thousand cards the first one can be re-rendered out from under the click,
+  // which is a measurement problem rather than an app problem — so a miss is
+  // reported as null instead of taking the whole run down with it.
+  let toggleMs = null;
+  try {
+    const toggleStart = Date.now();
+    await page.click('.card:first-child button[aria-label="Add to favorites"]', {
+      timeout: 15_000,
+    });
+    await page.waitForSelector('.card:first-child button[aria-label="Remove from favorites"]', {
+      timeout: 15_000,
+    });
+    toggleMs = Date.now() - toggleStart;
+  } catch {
+    /* reported as null */
+  }
 
   const report = {
     articles: seeded,
@@ -175,6 +205,8 @@ try {
     viewport: VIEWPORT,
     openLibraryMs: openMs,
     bodySearchMs: searchMs,
+    buildIndexMs: indexMs,
+    bodySearchIndexedMs: indexedSearchMs,
     favouriteToggleMs: toggleMs,
     note:
       "Chromium on a development machine, not a phone. Useful as a before/after on the same machine, not as an absolute number.",

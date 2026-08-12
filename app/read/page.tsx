@@ -13,6 +13,7 @@ import { CheckIcon, SettingsIcon, StarIcon, UndoIcon } from "@/components/icons"
 import { buzzSuccess, buzzWarning, commit, openExternal, tap, uncommit } from "@/lib/native";
 import { refetchArticle } from "@/lib/articles";
 import { objectUrlFor, storeImagesForArticle } from "@/lib/images";
+import { indexArticle } from "@/lib/search";
 import { TEXT_SIZES } from "@/lib/display";
 import { IMAGE_KEY_ATTR } from "@/lib/imagePlan";
 
@@ -246,8 +247,15 @@ export default function ReadPage() {
         setRefetchNote(`Reloaded — ${next.wordCount.toLocaleString()} words.`);
         // The new extraction carries fresh remote URLs, so the pictures have to
         // be put on the device again before the article reads offline.
+        void indexArticle(next);
         void storeImagesForArticle(next.id).then((r) => {
-          if (r.changed) void getArticle(next.id).then((a) => a && setArticle(a));
+          if (r.changed) {
+            void getArticle(next.id).then((a) => {
+              if (!a) return;
+              setArticle(a);
+              void indexArticle(a);
+            });
+          }
         });
       }
     } catch (e) {

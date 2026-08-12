@@ -845,6 +845,13 @@ mark {
   opacity: 1;
 }
 
+/* The marker that asks for the next batch of cards. It has to have height, or
+   it can never come into view. */
+.list-sentinel {
+  height: 1px;
+  grid-column: 1 / -1;
+}
+
 /* Whole-card tap target */
 .card a.cardlink::after {
   content: "";

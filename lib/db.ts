@@ -28,16 +28,25 @@ interface FoldPageDB extends DBSchema {
     key: string;
     value: StoredImage;
   };
+  /** The word index. One record per (term, article), so adding an article is a
+      run of puts and removing one is a range delete over the `by-id` index —
+      no array to read, rewrite and hope nothing wrote in between. */
+  postings: {
+    key: [string, string];
+    value: { term: string; id: string };
+    indexes: { "by-id": string };
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<FoldPageDB>> | null = null;
 
-/** Version 2 added the image store. The upgrade is additive on purpose: it
-    creates what is missing and touches no article, so a library saved by
-    version 1 opens unchanged and simply has no pictures stored yet. */
+/** Every upgrade here is additive: it creates what is missing and touches no
+    article, so a library written by any earlier version opens unchanged and
+    simply lacks what the new store would hold — no pictures yet, no index yet.
+    Both are filled in afterwards, in the background or on request. */
 function getDB() {
   if (!dbPromise) {
-    dbPromise = openDB<FoldPageDB>("foldpage", 2, {
+    dbPromise = openDB<FoldPageDB>("foldpage", 3, {
       upgrade(db, oldVersion) {
         if (oldVersion < 1) {
           const store = db.createObjectStore("articles", { keyPath: "id" });
@@ -47,10 +56,74 @@ function getDB() {
         if (oldVersion < 2) {
           db.createObjectStore("images", { keyPath: "key" });
         }
+        if (oldVersion < 3) {
+          const postings = db.createObjectStore("postings", {
+            keyPath: ["term", "id"],
+          });
+          postings.createIndex("by-id", "id");
+        }
       },
     });
   }
   return dbPromise;
+}
+
+/* ---------- word index ---------- */
+
+/** Replace everything the index knows about one article. Runs in a single
+    transaction, so a search never sees an article half-indexed. */
+export async function putPostings(id: string, terms: string[]): Promise<void> {
+  const db = await getDB();
+  const tx = db.transaction("postings", "readwrite");
+  const existing = await tx.store.index("by-id").getAllKeys(id);
+  await Promise.all(existing.map((key) => tx.store.delete(key)));
+  for (const term of terms) tx.store.put({ term, id });
+  await tx.done;
+}
+
+export async function dropPostings(id: string): Promise<void> {
+  const db = await getDB();
+  const tx = db.transaction("postings", "readwrite");
+  const keys = await tx.store.index("by-id").getAllKeys(id);
+  await Promise.all(keys.map((key) => tx.store.delete(key)));
+  await tx.done;
+}
+
+/** Article ids carrying an exact term. */
+export async function idsForTerm(term: string): Promise<Set<string>> {
+  const db = await getDB();
+  const keys = await db.getAllKeys(
+    "postings",
+    IDBKeyRange.bound([term, ""], [term, "\uffff"])
+  );
+  return new Set(keys.map(([, id]) => id));
+}
+
+/** Article ids carrying any term starting with `prefix` — what makes results
+    appear while a word is still being typed. */
+export async function idsForPrefix(prefix: string): Promise<Set<string>> {
+  const db = await getDB();
+  const keys = await db.getAllKeys(
+    "postings",
+    IDBKeyRange.bound([prefix, ""], [`${prefix}\uffff`, "\uffff"])
+  );
+  return new Set(keys.map(([, id]) => id));
+}
+
+/** Which articles the index has heard of. Cheap enough to ask before a search
+    decides whether it can trust the index at all. */
+export async function indexedIds(): Promise<Set<string>> {
+  const db = await getDB();
+  const ids = new Set<string>();
+  let cursor = await db.transaction("postings").store.index("by-id").openKeyCursor();
+  while (cursor) {
+    const id = cursor.key as string;
+    ids.add(id);
+    // One article holds a thousand postings. Jumping past the whole run costs
+    // one seek instead of a thousand steps.
+    cursor = await cursor.continue(`${id}\uffff`);
+  }
+  return ids;
 }
 
 /* ---------- images ---------- */
@@ -147,6 +220,41 @@ export async function hardDelete(id: string): Promise<void> {
 export async function listAllRaw(): Promise<Article[]> {
   const db = await getDB();
   return (await db.getAll("articles")).map(normalize);
+}
+
+/** Every article's id, newest first, without loading a single body.
+ *
+ *  `listArticles()` reads whole records — title, tags *and* the full stored
+ *  HTML of every article. For deciding *which* articles to show, that is the
+ *  expensive half of the work thrown away. */
+export async function listArticleIds(): Promise<string[]> {
+  const db = await getDB();
+  const ids: string[] = [];
+  // A *key* cursor, not a value cursor: reading `cursor.value` would load every
+  // article's stored HTML, which is exactly the cost this function exists to
+  // avoid. Tombstones cannot be seen from a key alone, so they are dropped when
+  // the articles are actually loaded — `getArticles()` filters them.
+  let cursor = await db
+    .transaction("articles")
+    .store.index("by-addedAt")
+    .openKeyCursor(null, "prev");
+  while (cursor) {
+    ids.push(cursor.primaryKey);
+    cursor = await cursor.continue();
+  }
+  return ids;
+}
+
+/** Load exactly the articles asked for, in the order given. */
+export async function getArticles(ids: string[]): Promise<Article[]> {
+  if (!ids.length) return [];
+  const db = await getDB();
+  const tx = db.transaction("articles");
+  const found = await Promise.all(ids.map((id) => tx.store.get(id)));
+  await tx.done;
+  return found
+    .filter((article): article is Article => !!article && !article.deleted)
+    .map(normalize);
 }
 
 export async function listArticles(): Promise<Article[]> {
