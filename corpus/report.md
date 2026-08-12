@@ -14,7 +14,6 @@
 | `long-cell` | 4 |
 | `image-flood` | 2 |
 | `wide-table` | 2 |
-| `href-relative` | 1 |
 | `tables-lost` | 1 |
 
 ### Pro Artikel
@@ -53,7 +52,7 @@
 | theguardian.com | 1482 | P: William Orbit’s first band were a curiou | 1 | 0 | 2 | empty-paragraphs |
 | simonwillison.net | 851 | P: OpenAI gave a last-minute presentation a | 0 | 0 | 5 | — |
 | simonwillison.net | 337 | P: Moonlight & Mayhem (Raccoon Heist by Cod | 2 | 0 | 11 | — |
-| en.wikipedia.org | 5689 | SECTION: A web browser is an application that all | 1 | 0 | 886 | href-relative, tables-lost |
+| en.wikipedia.org | 5689 | SECTION: A web browser is an application that all | 1 | 0 | 886 | tables-lost |
 | de.wikipedia.org | 18085 | SECTION: Als Elektroauto (auch E-Auto, elektrisch | 42 | 5 | 1610 | wide-table, table-wrapped, image-flood |
 | developer.mozilla.org | 2364 | SECTION: Try it display: block; display: inline f | 0 | 1 | 183 | long-cell, table-wrapped, no-author |
 | web.dev | 3091 | ARTICLE: Interaction to Next Paint (INP) Veröffen | 3 | 0 | 22 | empty-paragraphs, no-author |

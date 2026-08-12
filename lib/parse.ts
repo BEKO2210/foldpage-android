@@ -24,8 +24,125 @@ function bareHostname(hostname: string): string {
   return hostname.replace(/^\[|\]$/g, "").toLowerCase();
 }
 
-/** Strip scripts/styles/handlers before the HTML is stored and later
+/** Elements that may carry article content. Anything not listed here is
+    either dropped outright (DROPPED_TAGS) or unwrapped — its children stay,
+    the element itself does not. Custom elements from the source page land in
+    that second group, so `<a-gift>` loses its wrapper and keeps its text. */
+const ALLOWED_TAGS = new Set([
+  "P", "BR", "HR", "SPAN", "DIV", "SECTION", "ARTICLE", "MAIN", "ASIDE",
+  "H1", "H2", "H3", "H4", "H5", "H6",
+  "UL", "OL", "LI", "DL", "DT", "DD",
+  "BLOCKQUOTE", "PRE", "CODE", "KBD", "SAMP", "VAR",
+  "EM", "STRONG", "I", "B", "U", "S", "DEL", "INS", "SUB", "SUP", "SMALL",
+  "MARK", "ABBR", "CITE", "Q", "TIME", "ADDRESS", "WBR",
+  "RUBY", "RT", "RP", "DETAILS", "SUMMARY",
+  "FIGURE", "FIGCAPTION", "IMG", "PICTURE", "SOURCE", "VIDEO", "AUDIO",
+  "TABLE", "THEAD", "TBODY", "TFOOT", "TR", "TH", "TD", "CAPTION",
+  "COLGROUP", "COL", "A",
+]);
+
+/** Removed with their whole subtree: these execute, load, navigate, or take
+    input. Unwrapping them would keep exactly the payload we are removing.
+
+    `BASE` is in here because a single `<base href>` in stored content
+    re-points every relative URL in the app itself. `SVG` and `MATH` are out
+    because their parsers accept markup HTML's does not (`<animate>` setting
+    an `href`, `foreignObject`), which turns an attribute allowlist into a
+    guess. Article illustrations arrive as `<img>` regardless. */
+const DROPPED_TAGS = new Set([
+  "SCRIPT", "STYLE", "IFRAME", "FRAME", "FRAMESET", "OBJECT", "EMBED",
+  "APPLET", "FORM", "INPUT", "TEXTAREA", "SELECT", "OPTION", "OPTGROUP",
+  "BUTTON", "LABEL", "FIELDSET", "LEGEND", "OUTPUT", "PROGRESS", "METER",
+  "LINK", "META", "BASE", "TITLE", "HEAD", "TEMPLATE", "SLOT", "NOSCRIPT",
+  "SVG", "MATH", "CANVAS", "DIALOG", "PORTAL", "MARQUEE", "TRACK", "MAP",
+  "AREA", "PARAM",
+]);
+
+/** Attributes allowed on every element that survives. `class` is absent on
+    purpose: the reader's own classes (`tablewrap`, `numeric`, `prose`) are
+    added after this pass, so a source class can neither survive nor collide
+    with the app's stylesheet. */
+const GLOBAL_ATTRS = new Set(["id", "lang", "dir", "title"]);
+
+/** Per-element additions. Anything not listed — `style`, `srcset`, `target`,
+    `data-*`, `on*`, `xlink:href` — is dropped. */
+const TAG_ATTRS: Record<string, string[]> = {
+  A: ["href"],
+  IMG: ["src", "alt", "width", "height", "loading", "decoding"],
+  SOURCE: ["src", "type", "width", "height"],
+  VIDEO: ["src", "poster", "controls", "width", "height"],
+  AUDIO: ["src", "controls"],
+  TD: ["colspan", "rowspan", "headers", "abbr"],
+  TH: ["colspan", "rowspan", "headers", "scope", "abbr"],
+  COL: ["span"],
+  COLGROUP: ["span"],
+  OL: ["start", "reversed", "type"],
+  LI: ["value"],
+  TIME: ["datetime"],
+  DETAILS: ["open"],
+  BLOCKQUOTE: ["cite"],
+  Q: ["cite"],
+  DEL: ["cite", "datetime"],
+  INS: ["cite", "datetime"],
+};
+
+const URL_ATTRS = new Set(["href", "src", "poster", "cite"]);
+
+/** Schemes a stored article may point at. `data:` is limited to images
+    because the offline fixtures ship their pictures inline; a `data:text/html`
+    link would open a document of the attacker's choosing.
+
+    A path-relative target is refused rather than kept: absolutize() has
+    already resolved every link that had a base to resolve against, so what is
+    left resolves against the app's own origin — a tap would walk the WebView
+    into a route that does not exist. In-page fragments are the exception,
+    since footnotes depend on them. */
+function isSafeUrl(value: string): boolean {
+  const v = value.trim();
+  if (!v) return false;
+  if (v.startsWith("#")) return true;
+  if (/^data:image\//i.test(v)) return true;
+  return /^(https?|mailto|tel):/i.test(v);
+}
+
+function scrubAttributes(el: Element): void {
+  const allowed = TAG_ATTRS[el.tagName.toUpperCase()] ?? [];
+  for (const attr of [...el.attributes]) {
+    const name = attr.name.toLowerCase();
+    if (!GLOBAL_ATTRS.has(name) && !allowed.includes(name)) {
+      el.removeAttribute(attr.name);
+      continue;
+    }
+    if (URL_ATTRS.has(name) && !isSafeUrl(attr.value)) {
+      el.removeAttribute(attr.name);
+    }
+  }
+}
+
+/** Depth-first, children before parents: an element is only unwrapped once
+    its own subtree is clean, so nothing dangerous is promoted into the
+    container by the unwrap itself. */
+function scrubTree(el: Element): void {
+  for (const child of [...el.children]) {
+    const tag = child.tagName.toUpperCase();
+    if (DROPPED_TAGS.has(tag)) {
+      child.remove();
+      continue;
+    }
+    scrubTree(child);
+    if (ALLOWED_TAGS.has(tag)) scrubAttributes(child);
+    else child.replaceWith(...child.childNodes);
+  }
+}
+
+/** Reduce the extracted HTML to an allowlist before it is stored and later
     injected with dangerouslySetInnerHTML.
+
+    An allowlist rather than a list of known-bad tags and attributes: the
+    stored document is rendered inside the app's own origin, where anything
+    that runs can read the whole library out of IndexedDB. A blocklist is only
+    as good as its last update — this one has to be extended before a new
+    element or attribute can reach the reader at all.
 
     `doc` must be an inert document (DOMParser output). Building this in the
     live WebView document would fetch every <img> and fire its onerror
@@ -34,21 +151,7 @@ function bareHostname(hostname: string): string {
 function sanitize(html: string, doc: Document): string {
   const container = doc.createElement("div");
   container.innerHTML = html;
-  container
-    .querySelectorAll("script, style, iframe, object, embed, form, link, meta")
-    .forEach((el) => el.remove());
-  container.querySelectorAll("*").forEach((el) => {
-    for (const attr of [...el.attributes]) {
-      const n = attr.name.toLowerCase();
-      const v = attr.value.trim().toLowerCase();
-      if (
-        n.startsWith("on") ||
-        ((n === "href" || n === "src") && v.startsWith("javascript:"))
-      ) {
-        el.removeAttribute(attr.name);
-      }
-    }
-  });
+  scrubTree(container);
   prepareTables(container, doc);
   prepareMedia(container, doc);
   return container.innerHTML;

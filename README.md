@@ -117,7 +117,7 @@ onto the device:
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Fetching a page        | `CapacitorHttp` — native, so no CORS wall and real redirects                                                  |
 | Extracting the article | `@mozilla/readability` against a `DOMParser` document                                                         |
-| Sanitizing             | scripts, styles, frames and event handlers stripped in an inert document before anything is stored            |
+| Sanitizing             | an allowlist of tags, attributes and URL schemes, applied in an inert document before anything is stored      |
 | Storage                | IndexedDB via `idb`                                                                                           |
 | Sharing into the app   | a small Capacitor plugin (`ShareTargetPlugin.java`) that catches `ACTION_SEND`, on cold start as well as warm |
 | Exports                | written to _Documents_, then handed to the Android share sheet                                                |
@@ -157,16 +157,20 @@ components/     UI — Library, AppNav (persistent bottom bar), TopBar,
 lib/            db (IndexedDB), parse (extraction), native (Capacitor bridge),
                 importExport, tests
 android/        the Capacitor Android project incl. the share-target plugin
-docs/           release runbook, contrast and motion audits, screenshots,
-                and the legal pages published via GitHub Pages
+docs/           architecture map and roadmap, release runbook, contrast and
+                motion audits, screenshots, and the legal pages published via
+                GitHub Pages
 scripts/        icon/splash generation and the signed release build
 ```
 
 ## Status
 
-Version 1.4 — the local-only MVP after a full UI/UX pass and two rounds of
-fixes that only showed up on a real device. Sync between devices
-exists in the web version of FoldPage and is deliberately absent here.
+Version 1.5 — the local-only MVP after a full UI/UX pass and two rounds of
+fixes that only showed up on a real device, now in closed testing on Google
+Play. Sync between devices exists in the web version of FoldPage and is
+deliberately absent here. Where the work goes next is written down in
+[`docs/ROADMAP.md`](docs/ROADMAP.md); how the app is put together, in
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 The reader is measured against a frozen corpus of 39 real articles from 22
 sites — `npm run corpus` for extraction, `npm run reader-render` for the
