@@ -250,6 +250,13 @@ weniger gespeicherte HTML-Bytes**, und der Befund `href-relative` ist von 1 auf
 ### Reader (`app/read/page.tsx`)
 - Statischer Export kennt keine dynamischen Segmente → die ID steht in der
   Query: `/read/?id=<uuid>`.
+- **Die Leiste hat seit 12.08.2026 eine Hauptaktion:** ein beschriftetes
+  `.listenbtn` („Listen" / „Pause"), daneben nur noch Lese-Einstellungen, Stern
+  und Ablage — vier Bedienelemente statt sechs. Die beiden Textgrößen-Knöpfe
+  sind entfallen; ihre Funktion liegt im Lese-Sheet bei Schriftart und
+  Zeilenabstand, wo sie hingehört. Vorher waren sechs gleich große Glyphen zu
+  sehen, und „lies mir das vor" sah damit genauso wichtig aus wie „eine Stufe
+  kleiner".
 - Vier Schriftgrößen (`SIZES`), in `localStorage["fp-reader-size"]`. Beim
   Umschalten wird die **relative** Leseposition gehalten (zwei `rAF`, weil der
   Reflow erst im zweiten Frame steht).

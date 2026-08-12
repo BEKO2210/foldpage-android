@@ -284,6 +284,28 @@ check(
 );
 await page.screenshot({ path: path.join(SHOTS, "voices-reader.png") });
 
+// --- the reader's primary action is the one the app is for ---
+await page.getByRole("button", { name: "Done" }).click();
+await page.waitForTimeout(300);
+const listen = page.locator(".readerbar .listenbtn");
+check(await listen.isVisible(), "the reader carries a labelled listen control");
+check(
+  (await listen.innerText()).trim() === "Listen",
+  `the control says what it does — saw ${JSON.stringify((await listen.innerText()).trim())}`
+);
+const listenBox = await listen.boundingBox();
+check(
+  !!listenBox && listenBox.height >= 48 && listenBox.width >= 100,
+  `it is the largest control in the bar — ${JSON.stringify(listenBox)}`
+);
+const barButtons = await page.locator(".readerbar button").count();
+check(barButtons === 4, `the bar holds four controls, not six — saw ${barButtons}`);
+// Every other control in the bar keeps a real name for a screen reader.
+const named = await page.locator(".readerbar button").evaluateAll((buttons) =>
+  buttons.every((button) => (button.getAttribute("aria-label") || button.textContent || "").trim().length > 2)
+);
+check(named, "every control in the bar has a name");
+
 await browser.close();
 server.close();
 

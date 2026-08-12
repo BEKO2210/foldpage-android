@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-08-12T22:57:09.623Z",
+  "ranAt": "2026-08-12T23:02:25.747Z",
   "voices": [
     {
       "name": "Thorsten",
@@ -66,7 +66,12 @@
     "ok: a language added by hand can be removed again",
     "ok: the reader offers the article's language only — saw [\"Deutsch\"]",
     "ok: the reader does not offer to add other languages",
-    "ok: the reader's language opens on its voices rather than on a row to tap"
+    "ok: the reader's language opens on its voices rather than on a row to tap",
+    "ok: the reader carries a labelled listen control",
+    "ok: the control says what it does — saw \"Listen\"",
+    "ok: it is the largest control in the bar — {\"x\":64.4140625,\"y\":863,\"width\":115.171875,\"height\":48}",
+    "ok: the bar holds four controls, not six — saw 4",
+    "ok: every control in the bar has a name"
   ],
   "failures": []
 }

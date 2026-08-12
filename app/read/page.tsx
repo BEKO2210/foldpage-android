@@ -30,7 +30,6 @@ import {
   spokenMinutes,
   type SpeechState,
 } from "@/lib/speech";
-import { TEXT_SIZES } from "@/lib/display";
 import { IMAGE_KEY_ATTR } from "@/lib/imagePlan";
 
 /** Every tag lib/readAloud.ts speaks, as a selector. One list, two readers. */
@@ -174,7 +173,7 @@ export default function ReadPage() {
   const router = useRouter();
   const [id, setId] = useState<string | null>(null);
   const [article, setArticle] = useState<Article | null | undefined>(undefined);
-  const [prefs, updatePrefs] = useDisplayPrefs();
+  const [prefs] = useDisplayPrefs();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [refetching, setRefetching] = useState(false);
   const [refetchNote, setRefetchNote] = useState<string | null>(null);
@@ -182,7 +181,6 @@ export default function ReadPage() {
   const [voice, setVoice] = useState<SpeechState>(speech.state);
   const [voiceMissing, setVoiceMissing] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const sizeIdx = prefs.size;
 
   // Reading aloud outlives a render, so the player lives outside React and the
   // component only listens. Leaving the article stops it — speech that keeps
@@ -294,12 +292,6 @@ export default function ReadPage() {
   // app-wide, by wireExternalLinks() in NativeShell. A second listener here
   // would open every tapped link twice.
 
-  function setSize(idx: number) {
-    if (idx < 0 || idx >= TEXT_SIZES.length || idx === sizeIdx) return;
-    updatePrefs({ size: idx });
-    void tap();
-  }
-
   async function toggleArchive() {
     if (!article) return;
     await updateArticle(article.id, {
@@ -372,26 +364,19 @@ export default function ReadPage() {
       </main>
     );
 
-  const sizeControls = (
+  /* One primary action, and it is the one the app exists for.
+   *
+   * The bar used to be six equal glyphs — smaller text, larger text, play,
+   * settings, favourite, archive — so "read this to me" looked exactly as
+   * important as "one point smaller". It is a labelled pill now, and the two
+   * text-size buttons are gone from the bar: their function lives in the
+   * reading-settings sheet the button beside it opens, where the size sits
+   * with the typeface and the spacing it belongs to.
+   */
+  const readerControls = (
     <>
       <button
-        className="iconbtn pressable"
-        aria-label={`Smaller text, current size ${sizeIdx + 1} of ${TEXT_SIZES.length}`}
-        disabled={sizeIdx === 0}
-        onClick={() => setSize(sizeIdx - 1)}
-      >
-        A−
-      </button>
-      <button
-        className="iconbtn pressable"
-        aria-label={`Larger text, current size ${sizeIdx + 1} of ${TEXT_SIZES.length}`}
-        disabled={sizeIdx === TEXT_SIZES.length - 1}
-        onClick={() => setSize(sizeIdx + 1)}
-      >
-        A+
-      </button>
-      <button
-        className="iconbtn pressable"
+        className="listenbtn pressable"
         aria-label={
           voice.playing
             ? `Stop reading aloud, at part ${voice.at + 1} of ${voice.total}`
@@ -411,6 +396,7 @@ export default function ReadPage() {
         disabled={!article.contentHtml}
       >
         {voice.playing ? <PauseIcon /> : <PlayIcon />}
+        <span className="listenbtn-label">{voice.playing ? "Pause" : "Listen"}</span>
       </button>
       <button
         className="iconbtn pressable"
@@ -451,7 +437,7 @@ export default function ReadPage() {
       <TopBar
         back={{ href: "/", label: "Library" }}
         right={
-          <span className="reader-topbar-actions flex gap-2">{sizeControls}</span>
+          <span className="reader-topbar-actions flex gap-2">{readerControls}</span>
         }
       />
       <article
@@ -556,7 +542,7 @@ export default function ReadPage() {
           </p>
         )}
       </article>
-      <div className="readerbar">{sizeControls}</div>
+      <div className="readerbar">{readerControls}</div>
       <DisplaySheet
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}

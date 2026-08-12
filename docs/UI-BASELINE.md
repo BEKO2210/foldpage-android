@@ -265,3 +265,35 @@ feature, (3) the library's tag-filter block eats the top of the smallest
 screen, (4) no live regions on the library route, (5) `Appearance` is still six
 segmented controls in a row, (6) loading and error states of the language list
 have never been seen by a human — only their code paths.
+
+### Run 5 — the reader gets one primary action
+
+**Hypothesis:** the app's whole purpose was one of six identical glyphs, so it
+read as one of six equal options. Giving it a word and a size, and moving the
+two least-used glyphs to where their setting already lives, makes the main flow
+obvious without adding anything to the screen.
+
+**Changed:** the reader bar is `[▶ Listen] [reading settings] [★] [✓]` — four
+controls instead of six. The listen control is a 48 px pill with a label that
+turns into "Pause" (and goes quiet — outline instead of fill — while speaking,
+because the article is what deserves the attention then). A− and A+ are gone
+from the bar; text size lives in the reading-settings sheet beside the typeface
+and the line spacing, one tap away, where it belongs with them.
+
+**Kept:** every function. Nothing else moved; the same sheet, favourite and
+archive, with their names unchanged for a screen reader.
+
+**Measured** — five new checks in `npm run voice:check`, now **20 passing**:
+the control is visible, says "Listen", is at least 48 × 100 px, the bar holds
+four controls, and every one of them has an accessible name.
+
+**Verification:** `npm run lint` silent · `npm test` 57 pass · `npm run build`
+ok · `ui:check` seeded/empty/offline clean · `npm run jargon` clean ·
+`npm run voice:check` 20/20 · `a11y-audit` 0 unnamed, 0 heading skips, 3 known
+small targets.
+
+**Remaining, re-ranked:** (1) in-app voice packs (native work), (2) the
+library's tag-filter block eats the top of the smallest screen, (3) no live
+regions on the library route, (4) `Appearance` is six segmented controls in a
+row, (5) the loading and error states of the language list have never been seen
+by a human, (6) nothing has been run on a device this session.

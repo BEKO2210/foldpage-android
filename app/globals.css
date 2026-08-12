@@ -932,6 +932,55 @@ mark {
   min-width: 48px;
   min-height: 48px;
 }
+/* The one thing this app is for, and it says so. A pill with a word in it
+   rather than a sixth glyph: "read this to me" is not the same order of
+   decision as "one point smaller", and six identical squares said it was.
+   Wider than the icon buttons on purpose — size is the cheapest way to say
+   which control is the point of the screen. */
+.listenbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 1.1rem 0 0.95rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--highlight);
+  color: var(--accent-ink);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.listenbtn:hover {
+  filter: brightness(0.96);
+}
+.listenbtn:active {
+  transform: scale(0.97);
+}
+.listenbtn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.listenbtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+/* While it is speaking it is a Pause button, and a quiet one: the article is
+   the thing being attended to, not the control. */
+.listenbtn[aria-pressed="true"] {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+}
+.listenbtn-label {
+  /* Tabular-ish stability: "Listen" and "Pause" differ in width, and a bar
+     that jumps when the voice starts reads as a fault. */
+  min-width: 3.4rem;
+  text-align: left;
+}
 @media (min-width: 768px) {
   .readerbar {
     display: none;

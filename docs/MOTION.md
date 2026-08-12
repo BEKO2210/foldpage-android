@@ -12,6 +12,7 @@ a finished article — never on a hover or a scroll. A browser that does not kno
 | Selector | Motion | Duration | Delay | Fill mode |
 | --- | --- | ---: | ---: | --- |
 | `.btn` | filter and transform transition | 150ms | 0 | n/a |
+| `.listenbtn` (the reader's primary control) | filter and transform transition | 150ms | 0 | n/a |
 | `.card` | transform and border transition | 150ms | 0 | n/a |
 | `.iconbtn` | color, background, and transform transition | 150ms | 0 | n/a |
 | `.backlink` | color transition | 150ms | 0 | n/a |
