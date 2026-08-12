@@ -422,6 +422,42 @@ rendert bereits in Gerätegröße und in beiden Themes.
 **Abnahme:** vier Aufnahmen, kein deutscher Text darin (die App ist englisch),
 Symbol neu.
 
+### C6 · Premium-Gefühl: Haptik, Tiefe, Zustand
+Die App fühlt sich sauber an, aber nicht **teuer**. Der Unterschied liegt nicht
+in mehr Animation, sondern in drei Dingen, die Systemapps richtig machen und
+Web-Apps fast nie:
+
+1. **Haptik mit Bedeutung statt Vibration.** Es gibt bereits drei Verben
+   (setzen, zurücknehmen, verwerfen). Was fehlt: ein Puls, wenn eine Wischgeste
+   die Schwelle **überschreitet** — die Hand weiß dann, dass Loslassen etwas
+   auslöst, ohne hinzusehen. Ab Android 12 gibt es dafür
+   `HapticFeedbackConstants.GESTURE_THRESHOLD_ACTIVATE` statt einer nackten
+   Millisekundenzahl; das Capacitor-Haptics-Plugin kennt nur `impact`, also
+   braucht es eine kleine eigene Methode im vorhandenen Plugin.
+2. **Tiefe, die aus Zustand entsteht.** Karten liegen flach. Eine Karte, die
+   sich beim Drücken minimal senkt statt zu schrumpfen, eine Kopfzeile, die
+   beim Scrollen eine Kante bekommt statt einen Schatten zu erben — das ist,
+   was „hochwertig" ausmacht.
+3. **Zustände, die niemand zeigt.** Was passiert beim Laden, beim Leeren, beim
+   Fehler? Skelette gibt es, aber der Rest springt. Jeder Übergang zwischen
+   diesen Zuständen soll dieselbe Feder benutzen (`--ease-spring`).
+
+**Abnahme:** `docs/MOTION.md` mitgezogen, `lib/motion.test.ts` grün,
+`prefers-reduced-motion` schaltet alles still, und ein Gerätetest, weil Haptik
+im Browser nicht existiert.
+
+### C7 · Einstellungen, die nicht wachsen wie ein Werkzeugkasten
+✅ Teil erledigt (12.08.2026): Die Aktionen waren auf fünf, sechs gleich
+aussehende Knöpfe angewachsen, die in zwei ausgefranste Zeilen umbrachen — und
+jeder sah gleich wichtig aus, auch die zwei, die es nur zur Fehlersuche gibt.
+Jetzt eine **Zeilenliste**: eine Aktion je Zeile, Name links, Wirkung darunter,
+56 px hoch. Lesen statt Suchen.
+
+**Offen:** Die Fehlersuche-Aktionen („Check the voice") gehören eigentlich hinter
+ein „Diagnose"-Aufklappen, damit die erste Ebene nur zeigt, was man im Alltag
+braucht. Und die Einstellungen sind inzwischen fünf Karten lang — eine
+Gliederung mit Ankern oder ein zweites Blatt wäre ehrlicher als weiterscrollen.
+
 ### C5 · Leerer Zustand und erster Eindruck
 Die Willkommensseite ist gut, danach ist das leere Regal ein Bild und drei
 Zeilen. Ein erster Artikel zum Ausprobieren („speichere diesen Link") oder eine
@@ -441,6 +477,23 @@ gehen darf: eine Cloud-Anfrage würde genau das brechen, wofür es die App gibt.
 gut, wird es **nicht veröffentlicht**. Kein „Beta"-Etikett, kein „experimentell"
 im Einstellungsmenü. Eine falsche Zusammenfassung ist schlimmer als keine, weil
 sie gelesen und geglaubt wird.
+
+### D0 · Eine Stimme, die nicht nach Maschine klingt
+Die Systemstimmen klingen nach 2010. Das ist keine Frage der App — sie fragt nur
+die Engine, die das Telefon eingestellt hat. Die Antwort liegt deshalb **neben**
+der App:
+
+| Weg | Was es ist | Kosten |
+|---|---|---|
+| **sherpa-onnx TTS-Engine-APK** | Piper-Modelle (VITS, ~15M Parameter) als **System-Engine** installiert, z. B. `vits-piper-de_DE-thorsten-medium`. Offline, neuronal, wählbar wie jede andere Engine | einmalige APK, kein Eingriff in FoldPage |
+| **VoxSherpa** | dieselbe Technik als fertige App mit Modellauswahl | dito |
+| **RHVoice** | quelloffen, robuster als die Systemstimme, klanglich zwischen alt und neu | klein |
+| Modell **in** FoldPage bündeln | volle Kontrolle über Klang und Version | mehrere hundert MB, eigener Update-Pfad, eigene Lizenzprüfung je Modell |
+
+**Entscheidung für den Moment:** FoldPage bleibt bei der System-Engine und wird
+gut darin, den Weg dorthin zu zeigen (siehe „Android speech settings"). Ein
+gebündeltes Modell wäre die erste Stelle, an der diese App groß wird statt
+klein — und das ist eine Entscheidung, keine Aufgabe.
 
 ### D1 · Vorlesen ✅ gebaut (12.08.2026) · Gerätetest offen
 Über Androids eigene Engine (`@capacitor-community/text-to-speech` 8.0.2, Peer

@@ -125,13 +125,20 @@ class Player {
 
   private async speakOne(text: string): Promise<void> {
     if (isNative()) {
-      await (await engine()).speak({
-        text,
-        ...(this.lang ? { lang: this.lang } : {}),
-        rate: 1,
-        pitch: 1,
-        volume: 1,
-      });
+      // A block that never comes back would freeze the reader in "playing" with
+      // no way out but leaving the article. Sixty seconds is longer than any
+      // paragraph takes and shorter than a user's patience.
+      await withTimeout(
+        (await engine()).speak({
+          text,
+          ...(this.lang ? { lang: this.lang } : {}),
+          rate: 1,
+          pitch: 1,
+          volume: 1,
+        }),
+        60000,
+        "Speaking"
+      );
       return;
     }
     // Browser build only.
@@ -182,6 +189,18 @@ export async function languageAvailable(lang: string | null): Promise<boolean> {
   }
 }
 
+/** A plugin call that never answers is the worst outcome of all: no error, no
+ *  result, and a screen that says "Checking…" forever. Every call in the
+ *  diagnosis is raced against the clock so a silence becomes a sentence. */
+function withTimeout<T>(work: Promise<T>, ms: number, what: string): Promise<T> {
+  return Promise.race([
+    work,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`${what} did not answer within ${ms} ms`)), ms)
+    ),
+  ]);
+}
+
 export interface DiagnosisStep {
   label: string;
   ok: boolean;
@@ -203,7 +222,7 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
 
   let tts: Awaited<ReturnType<typeof engine>> | null = null;
   try {
-    tts = await engine();
+    tts = await withTimeout(engine(), 5000, "Loading the plugin");
     note("Speech plugin loaded", true, "");
   } catch (e) {
     note("Speech plugin loaded", false, e instanceof Error ? e.message : String(e));
@@ -212,7 +231,9 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
 
   let languages: string[] = [];
   try {
-    languages = (await tts.getSupportedLanguages()).languages;
+    languages = (
+      await withTimeout(tts.getSupportedLanguages(), 5000, "The engine")
+    ).languages;
     note("Engine answered", languages.length > 0, `${languages.length} languages`);
   } catch (e) {
     note("Engine answered", false, e instanceof Error ? e.message : String(e));
@@ -225,7 +246,11 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
 
   const wanted = speechLanguage(sampleLang) ?? "en-US";
   try {
-    const { supported } = await tts.isLanguageSupported({ lang: wanted });
+    const { supported } = await withTimeout(
+      tts.isLanguageSupported({ lang: wanted }),
+      5000,
+      "The engine"
+    );
     note(`Voice for ${wanted}`, supported, supported ? "installed" : "not installed");
   } catch (e) {
     note(`Voice for ${wanted}`, false, e instanceof Error ? e.message : String(e));
@@ -234,7 +259,11 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
   // The only step that proves anything: does a word actually come out.
   const started = Date.now();
   try {
-    await tts.speak({ text: "FoldPage", lang: wanted, rate: 1, pitch: 1, volume: 1 });
+    await withTimeout(
+      tts.speak({ text: "FoldPage", lang: wanted, rate: 1, pitch: 1, volume: 1 }),
+      15000,
+      "Speaking"
+    );
     const took = Date.now() - started;
     note(
       "Spoke a test word",

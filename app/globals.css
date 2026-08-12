@@ -1170,6 +1170,64 @@ input[type="file"] {
   font: inherit;
 }
 
+/* Actions in a settings card.
+   They had grown to five or six side by side, wrapped into ragged two-line
+   rows, and every one of them looked equally important — including the two
+   that only exist for diagnosing a fault. A list of rows instead: one action
+   per line, its name on the left and what it does underneath, so scanning the
+   screen means reading down a column rather than hunting through a heap. */
+.action-list {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.7rem 0;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.action-row:last-child {
+  border-bottom: none;
+}
+.action-row:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.action-row .label {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.action-row .hint {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+/* The chevron says "this opens something" without a word, and turns the whole
+   row into one target instead of a word-sized one. */
+.action-row .go {
+  flex: none;
+  color: var(--muted);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.action-row:active .go {
+  transform: translateX(2px);
+}
+
 /* Settings sections as cards */
 .section-card {
   background: var(--card);

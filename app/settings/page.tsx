@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
 import DisplaySettings from "@/components/DisplaySettings";
+import ActionRow from "@/components/ActionRow";
 import {
   exportHtml,
   exportJson,
@@ -15,7 +16,7 @@ import { findByUrl, imageBytes, listArticles, newId, saveArticle } from "@/lib/d
 import { articlesMissingImages, backfillImages, pruneImages } from "@/lib/images";
 import { buildIndex } from "@/lib/search";
 import { diagnose, installVoices, openSpeechSettings, type DiagnosisStep } from "@/lib/speech";
-import { buzzSuccess, tap } from "@/lib/native";
+import { buzzSuccess } from "@/lib/native";
 
 type ImportStatus =
   | { phase: "idle" }
@@ -143,7 +144,6 @@ export default function SettingsPage() {
   /** Pictures whose article is really gone — not merely in the undo window —
       are the only thing this removes. */
   async function freeUpSpace() {
-    void tap();
     setPruned(null);
     const { removed, bytes } = await pruneImages();
     setPruned(
@@ -157,7 +157,6 @@ export default function SettingsPage() {
       brought up to date in one pass. Explicit, so it runs even when the switch
       above says new saves should stay link-only. */
   async function runBackfill() {
-    void tap();
     stopBackfill.current = false;
     const ids = await articlesMissingImages();
     if (!ids.length) {
@@ -185,7 +184,6 @@ export default function SettingsPage() {
       without this — it reads them the old way — but each one it has to read is
       one it cannot answer from the index. */
   async function runIndex() {
-    void tap();
     setIndexing({ phase: "running", done: 0, total: 0 });
     const result = await buildIndex((done, total) =>
       setIndexing({ phase: "running", done, total })
@@ -199,7 +197,6 @@ export default function SettingsPage() {
   }
 
   async function runVoiceCheck() {
-    void tap();
     setChecking(true);
     setVoiceCheck(null);
     try {
@@ -209,8 +206,9 @@ export default function SettingsPage() {
     }
   }
 
+  /* The haptic comes from ActionRow; a second pulse here made every settings
+     action buzz twice, which is exactly how feedback stops meaning anything. */
   async function runExport(fn: () => Promise<string>) {
-    void tap();
     setExported(null);
     setExported(await fn());
   }
@@ -254,28 +252,27 @@ export default function SettingsPage() {
             This build has no account and no cloud sync. Nothing leaves the
             device except the requests that fetch the articles you save.
           </p>
-          <div className="flex gap-2 flex-wrap mt-3">
-            <button
-              className="btn btn-quiet pressable"
+          <div className="action-list">
+            <ActionRow
+              label="Fetch missing pictures"
+              hint="For articles saved before pictures were kept"
               onClick={() => void runBackfill()}
               disabled={backfill.phase === "running"}
-            >
-              Fetch missing pictures
-            </button>
-            <button
-              className="btn btn-quiet pressable"
-              onClick={() => void freeUpSpace()}
-              disabled={backfill.phase === "running"}
-            >
-              Free up space
-            </button>
-            <button
-              className="btn btn-quiet pressable"
+              busy={backfill.phase === "running" ? `${backfill.done}/${backfill.total}` : undefined}
+            />
+            <ActionRow
+              label="Index for search"
+              hint="Makes search answer from the index instead of reading"
               onClick={() => void runIndex()}
               disabled={indexing.phase === "running"}
-            >
-              {indexing.phase === "running" ? "Indexing…" : "Index for search"}
-            </button>
+              busy={indexing.phase === "running" ? "…" : undefined}
+            />
+            <ActionRow
+              label="Free up space"
+              hint="Removes pictures no article refers to any more"
+              onClick={() => void freeUpSpace()}
+              disabled={backfill.phase === "running"}
+            />
           </div>
           {indexing.phase === "running" && indexing.total > 0 && (
             <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
@@ -324,20 +321,24 @@ export default function SettingsPage() {
             Speech plays on the <b>media</b> volume, not the ringer. A phone with
             the ringer up and media muted is silent here and nowhere else.
           </p>
-          <div className="flex gap-2 flex-wrap">
-            <button
-              className="btn btn-quiet pressable"
+          <div className="action-list">
+            <ActionRow
+              label="Check the voice"
+              hint="Walks the chain and names the first link that fails"
               onClick={() => void runVoiceCheck()}
               disabled={checking}
-            >
-              {checking ? "Checking…" : "Check the voice"}
-            </button>
-            <button className="btn btn-quiet pressable" onClick={() => void openSpeechSettings()}>
-              Android speech settings
-            </button>
-            <button className="btn btn-quiet pressable" onClick={() => void installVoices()}>
-              Install voices
-            </button>
+              busy={checking ? "…" : undefined}
+            />
+            <ActionRow
+              label="Android speech settings"
+              hint="Engine, speed, language — and “Listen to an example”"
+              onClick={() => void openSpeechSettings()}
+            />
+            <ActionRow
+              label="Install voices"
+              hint="Add or repair a language's voice data"
+              onClick={() => void installVoices()}
+            />
           </div>
           {voiceCheck && (
             <ul className="text-sm mt-3 grid gap-1 pl-0" style={{ listStyle: "none" }} role="status">
@@ -401,25 +402,10 @@ export default function SettingsPage() {
             Your library is yours. Files land in <b>Documents</b> and the share
             sheet opens right after, so you can send them anywhere.
           </p>
-          <div className="flex gap-2 flex-wrap">
-            <button
-              className="btn btn-quiet pressable"
-              onClick={() => void runExport(exportJson)}
-            >
-              JSON
-            </button>
-            <button
-              className="btn btn-quiet pressable"
-              onClick={() => void runExport(exportHtml)}
-            >
-              HTML
-            </button>
-            <button
-              className="btn btn-quiet pressable"
-              onClick={() => void runExport(exportMarkdown)}
-            >
-              Markdown
-            </button>
+          <div className="action-list">
+            <ActionRow label="Export as JSON" hint="Everything, exactly as stored" onClick={() => void runExport(exportJson)} />
+            <ActionRow label="Export as HTML" hint="Readable in any browser" onClick={() => void runExport(exportHtml)} />
+            <ActionRow label="Export as Markdown" hint="Plain text with the formatting kept" onClick={() => void runExport(exportMarkdown)} />
           </div>
           {exported && (
             <p

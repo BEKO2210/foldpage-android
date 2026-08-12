@@ -147,3 +147,11 @@ export function PauseIcon({ size }: { size?: number }) {
     </Svg>
   );
 }
+
+export function ChevronRightIcon({ size }: { size?: number }) {
+  return (
+    <Svg size={size ?? 18}>
+      <path d="M9 5l7 7-7 7" />
+    </Svg>
+  );
+}
