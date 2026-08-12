@@ -13,7 +13,7 @@ Der Aufbau des Codes steht in `docs/ARCHITECTURE.md`; ohne die gelesen zu haben,
 sollte hier niemand anfangen. Was von außen kommt — Play-Fristen, Android-
 Versionen, Bibliotheks-Majors — steht getrennt in `docs/FUTURE-PROOFING.md`.
 
-Stand: 12. August 2026, Version 1.5 (`versionCode 7`), geschlossener Test bei
+Stand: 12. August 2026, Version 1.6 (`versionCode 8`), geschlossener Test bei
 Google Play.
 
 ---
