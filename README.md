@@ -167,7 +167,7 @@ scripts/        icon/splash generation and the signed release build
 
 ## Status
 
-Version 1.9 — the local-only MVP, now with an allowlist sanitizer for
+Version 1.10 — the local-only MVP, now with an allowlist sanitizer for
 everything it stores, reading settings you can change mid-article, an article's
 pictures kept on the device rather than fetched from the publisher on every
 open, and a layout measured on tablets as well as phones. In closed testing on
