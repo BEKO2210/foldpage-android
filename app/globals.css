@@ -1102,6 +1102,50 @@ mark {
   -webkit-hyphens: auto;
 }
 
+/* Two panels in the reader's sheet, so neither the type settings nor the voice
+   settings push the other one off a phone screen. */
+.sheet-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+/* ---------- voice ----------
+   The one dropdown in the app, and it earns it: a phone can carry two dozen
+   installed voices with names too long for a segmented control. Native
+   <select>, so Android opens its own list — already scrollable, already
+   announced, already keyboard-reachable. */
+.voice-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 0.7rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+}
+.voice-select:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 1px;
+}
+.setting-note {
+  margin: 0.4rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.voice-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+.voice-actions .btn {
+  flex: 1 1 auto;
+  min-height: 44px;
+}
+
 /* The reader's own settings live in a bottom sheet: <dialog> brings the focus
    trap, the Esc key and inertness of the page behind it for free. The hardware
    back button is routed to it in lib/native.ts. */

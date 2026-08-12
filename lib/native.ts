@@ -33,6 +33,36 @@ export interface SystemSettingsPlugin {
 
 export const SystemSettings = registerPlugin<SystemSettingsPlugin>("SystemSettings");
 
+/** Speaking through a named engine — see SpeechPlugin.java for why the app
+ *  keeps its own instead of only using the phone's default one. */
+export interface FoldPageSpeechPlugin {
+  listEngines(): Promise<{
+    engines: { packageName: string; label: string }[];
+    defaultEngine: string | null;
+  }>;
+  listVoices(options: { engine: string }): Promise<{
+    voices: {
+      name: string;
+      lang: string;
+      voiceURI: string;
+      localService: boolean;
+      default: boolean;
+      quality: number;
+    }[];
+  }>;
+  speak(options: {
+    text: string;
+    engine: string;
+    lang?: string;
+    voice?: string;
+    rate?: number;
+    pitch?: number;
+  }): Promise<void>;
+  stop(): Promise<void>;
+}
+
+export const FoldPageSpeech = registerPlugin<FoldPageSpeechPlugin>("FoldPageSpeech");
+
 /** The pulse a gesture gives the moment it commits.
  *
  *  Distinct from `tap()` on purpose: this is the platform's own gesture

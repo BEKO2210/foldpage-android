@@ -22,6 +22,7 @@ public class MainActivity extends BridgeActivity {
         // launch intent — a share that cold-starts the app must not be lost.
         registerPlugin(ShareTargetPlugin.class);
         registerPlugin(SystemSettingsPlugin.class);
+        registerPlugin(SpeechPlugin.class);
         super.onCreate(savedInstanceState);
         forwardInsetsToCss();
     }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
 import DisplaySettings from "@/components/DisplaySettings";
+import VoiceSettings from "@/components/VoiceSettings";
 import ActionRow from "@/components/ActionRow";
 import {
   exportHtml,
@@ -312,10 +313,13 @@ export default function SettingsPage() {
         <section className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Reading aloud</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            Android reads the article out. Which voice it uses is set on the
-            phone, not here.
+            Android does the speaking, offline, with the voices installed on this
+            phone. Speed, pitch and the length of the pauses are set here; the
+            voice is remembered per language, so a German article and an English
+            one each keep their own.
           </p>
-          <div className="action-list">
+          <VoiceSettings />
+          <div className="action-list mt-4">
             <ActionRow
               label="Android speech settings"
               hint="Engine, speed, language — and “Listen to an example”"

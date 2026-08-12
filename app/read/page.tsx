@@ -491,7 +491,11 @@ export default function ReadPage() {
         )}
       </article>
       <div className="readerbar">{sizeControls}</div>
-      <DisplaySheet open={sheetOpen} onClose={() => setSheetOpen(false)} />
+      <DisplaySheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        lang={article.lang}
+      />
     </main>
   );
 }

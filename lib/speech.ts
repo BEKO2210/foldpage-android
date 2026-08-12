@@ -1,7 +1,18 @@
 "use client";
 
-import { holdAudioFocus, isNative, releaseAudioFocus } from "./native";
+import { FoldPageSpeech, holdAudioFocus, isNative, releaseAudioFocus } from "./native";
 import { speechLanguage, spokenBlocks, wrapEngine, type SpokenBlock } from "./readAloud";
+import {
+  PITCHES,
+  RATES,
+  gapBefore,
+  getVoicePrefs,
+  sentenceGap,
+  voiceIndexFor,
+  voiceKey,
+  voicesFor,
+  type EngineVoice,
+} from "./voice";
 
 export { spokenBlocks, spokenMinutes, speechLanguage, wrapEngine } from "./readAloud";
 export { openSpeechSettings } from "./native";
@@ -108,7 +119,7 @@ class Player {
       this.at = i;
       this.emit();
       try {
-        await this.speakOne(this.blocks[i].text);
+        await this.speakBlock(this.blocks[i], i === from, run);
       } catch (e) {
         if (run !== this.token) return;
         this.playing = false;
@@ -127,17 +138,61 @@ class Player {
     this.emit();
   }
 
+  /** One block: a silence, then its sentences with a breath between them.
+   *
+   *  The silence is the whole point of doing it here rather than handing the
+   *  engine one long string. Engines run a paragraph, a heading and a caption
+   *  together with the same short hesitation, so an article arrives as one flat
+   *  stream and a listener cannot hear where a section starts. */
+  private async speakBlock(block: SpokenBlock, first: boolean, run: number) {
+    const prefs = getVoicePrefs();
+    await silence(gapBefore(block.kind, prefs.pace, first));
+    if (run !== this.token) return;
+    const between = sentenceGap(prefs.pace);
+    for (let i = 0; i < block.parts.length; i++) {
+      if (run !== this.token) return;
+      if (i > 0) {
+        await silence(between);
+        if (run !== this.token) return;
+      }
+      await this.speakOne(block.parts[i]);
+    }
+  }
+
   private async speakOne(text: string): Promise<void> {
     if (isNative()) {
       // A block that never comes back would freeze the reader in "playing" with
       // no way out but leaving the article. Sixty seconds is longer than any
       // paragraph takes and shorter than a user's patience.
+      const prefs = getVoicePrefs();
+      const chosen = prefs.engines[voiceKey(this.lang)];
+      if (chosen) {
+        // An engine was picked for this language, so the app drives it itself
+        // rather than going through the phone's default one.
+        await withTimeout(
+          FoldPageSpeech.speak({
+            text,
+            engine: chosen,
+            ...(this.lang ? { lang: this.lang } : {}),
+            ...(prefs.voices[voiceKey(this.lang)]
+              ? { voice: prefs.voices[voiceKey(this.lang)] }
+              : {}),
+            rate: RATES[prefs.rate],
+            pitch: PITCHES[prefs.pitch],
+          }),
+          60000,
+          "Speaking"
+        );
+        return;
+      }
+      const voice = voiceIndexFor(await installedVoices(), this.lang, prefs);
       await withTimeout(
         (await engine()).tts.speak({
           text,
           ...(this.lang ? { lang: this.lang } : {}),
-          rate: 1,
-          pitch: 1,
+          ...(voice === undefined ? {} : { voice }),
+          rate: RATES[prefs.rate],
+          pitch: PITCHES[prefs.pitch],
           volume: 1,
         }),
         60000,
@@ -152,8 +207,11 @@ class Player {
         reject(new Error("This browser cannot read text out loud"));
         return;
       }
+      const prefs = getVoicePrefs();
       const utterance = new SpeechSynthesisUtterance(text);
       if (this.lang) utterance.lang = this.lang;
+      utterance.rate = RATES[prefs.rate];
+      utterance.pitch = PITCHES[prefs.pitch];
       utterance.onend = () => resolve();
       utterance.onerror = () => resolve(); // a skipped block must not end the run
       synth.speak(utterance);
@@ -164,8 +222,13 @@ class Player {
     this.token += 1;
     this.playing = false;
     void releaseAudioFocus();
-    if (isNative()) void engine().then(({ tts }) => tts.stop()).catch(() => {});
-    else globalThis.speechSynthesis?.cancel();
+    if (isNative()) {
+      // Both paths, unconditionally: which one is speaking depends on a
+      // setting that may have changed since this utterance started, and a stop
+      // that only stops one of them is worse than no stop at all.
+      void engine().then(({ tts }) => tts.stop()).catch(() => {});
+      void FoldPageSpeech.stop().catch(() => {});
+    } else globalThis.speechSynthesis?.cancel();
     this.emit();
   }
 
@@ -180,12 +243,178 @@ class Player {
     single instance makes that impossible rather than unlikely. */
 export const speech = new Player();
 
+/** A pause that a stop can cut through: the loop checks its token afterwards,
+    so the longest a stopped article keeps the app busy is one gap. */
+function silence(ms: number): Promise<void> {
+  if (ms <= 0) return Promise.resolve();
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** The engine's own voice list, asked once per session.
+ *
+ *  Once, because it is a bridge call and it is needed before *every* utterance
+ *  to turn a stored voiceURI into the index the plugin wants. Asking per
+ *  paragraph would put a round trip in front of each one. Installing a voice
+ *  mid-article is rare enough to be worth `refreshVoices()` on the settings
+ *  screen instead. */
+const voiceCaches = new Map<string, Promise<EngineVoice[]>>();
+let voiceCache: Promise<EngineVoice[]> | null = null;
+
+/** The engines installed on the phone, and which one Android uses by default. */
+export async function speechEngines(): Promise<{
+  engines: { packageName: string; label: string }[];
+  defaultEngine: string | null;
+}> {
+  if (!isNative()) return { engines: [], defaultEngine: null };
+  try {
+    return await withTimeout(FoldPageSpeech.listEngines(), 5000, "The engine list");
+  } catch {
+    return { engines: [], defaultEngine: null };
+  }
+}
+
+/** The voices of one named engine. Cached per engine: binding to an engine
+    takes about a second, and the list does not change while the app is open. */
+export function voicesOfEngine(enginePackage: string): Promise<EngineVoice[]> {
+  const cached = voiceCaches.get(enginePackage);
+  if (cached) return cached;
+  const asked = (async () => {
+    try {
+      const { voices } = await withTimeout(
+        FoldPageSpeech.listVoices({ engine: enginePackage }),
+        8000,
+        "The engine"
+      );
+      return voices as EngineVoice[];
+    } catch {
+      return [];
+    }
+  })();
+  voiceCaches.set(enginePackage, asked);
+  return asked;
+}
+
+export function installedVoices(): Promise<EngineVoice[]> {
+  if (!voiceCache) {
+    voiceCache = (async () => {
+      if (!isNative()) {
+        const list = globalThis.speechSynthesis?.getVoices() ?? [];
+        return list.map((voice) => ({
+          name: voice.name,
+          lang: voice.lang,
+          voiceURI: voice.voiceURI,
+          localService: voice.localService,
+          default: voice.default,
+        }));
+      }
+      try {
+        const { voices } = await withTimeout(
+          (await engine()).tts.getSupportedVoices(),
+          5000,
+          "The engine"
+        );
+        return voices as EngineVoice[];
+      } catch {
+        return []; // no list means the device default speaks, which is a voice
+      }
+    })();
+  }
+  return voiceCache;
+}
+
+export function refreshVoices(): Promise<EngineVoice[]> {
+  voiceCache = null;
+  voiceCaches.clear();
+  return installedVoices();
+}
+
+/** The voices offered for an article's language, in the order to show them —
+    and whether they can actually say it, because a list of Turkish voices for a
+    German article is a fallback, not an answer. */
+export async function voiceChoices(
+  lang: string | null
+): Promise<{ voices: EngineVoice[]; matchesLanguage: boolean }> {
+  const chosen = getVoicePrefs().engines[voiceKey(lang)];
+  const all = chosen && isNative() ? await voicesOfEngine(chosen) : await installedVoices();
+  return voicesFor(all, speechLanguage(lang) ?? lang);
+}
+
+/** One sentence in the settings the reader just changed.
+ *
+ *  A speed or a pitch is not a number anybody can picture; it is a sound. The
+ *  sample is a full sentence rather than a word because rate and pitch only
+ *  become audible over a phrase — and it ends in a full stop so the last
+ *  syllable falls the way it will in the article. */
+export const VOICE_SAMPLE: Record<string, string> = {
+  de: "So klingt ein Absatz aus deinem Artikel, mit dieser Stimme und diesem Tempo.",
+  en: "This is how a paragraph of your article will sound, at this voice and this speed.",
+};
+
+export async function previewVoice(lang: string | null): Promise<void> {
+  const tag = speechLanguage(lang);
+  const base = (tag ?? "en").split("-")[0];
+  speech.stop();
+  const prefs = getVoicePrefs();
+  const text = VOICE_SAMPLE[base] ?? VOICE_SAMPLE.en;
+  await holdAudioFocus();
+  try {
+    if (isNative()) {
+      const chosen = prefs.engines[voiceKey(tag)];
+      if (chosen) {
+        await withTimeout(
+          FoldPageSpeech.speak({
+            text,
+            engine: chosen,
+            ...(tag ? { lang: tag } : {}),
+            ...(prefs.voices[voiceKey(tag)] ? { voice: prefs.voices[voiceKey(tag)] } : {}),
+            rate: RATES[prefs.rate],
+            pitch: PITCHES[prefs.pitch],
+          }),
+          20000,
+          "Speaking"
+        );
+        return;
+      }
+      const voice = voiceIndexFor(await installedVoices(), tag, prefs);
+      await withTimeout(
+        (await engine()).tts.speak({
+          text,
+          ...(tag ? { lang: tag } : {}),
+          ...(voice === undefined ? {} : { voice }),
+          rate: RATES[prefs.rate],
+          pitch: PITCHES[prefs.pitch],
+          volume: 1,
+        }),
+        20000,
+        "Speaking"
+      );
+    } else {
+      const utterance = new SpeechSynthesisUtterance(text);
+      if (tag) utterance.lang = tag;
+      utterance.rate = RATES[prefs.rate];
+      utterance.pitch = PITCHES[prefs.pitch];
+      globalThis.speechSynthesis?.speak(utterance);
+    }
+  } finally {
+    void releaseAudioFocus();
+  }
+}
+
 /** Android ships engines but not necessarily the voice for a language. Asking
     first means the app can say so instead of reading German in an English
     accent. */
 export async function languageAvailable(lang: string | null): Promise<boolean> {
   const tag = speechLanguage(lang);
   if (!tag || !isNative()) return true;
+  // An engine picked for this language answers for itself. Asking the *default*
+  // engine here was wrong the moment engines became a per-language choice: the
+  // reader was told no voice existed while the engine it had chosen had
+  // twenty-nine of them.
+  const chosen = getVoicePrefs().engines[voiceKey(tag)];
+  if (chosen) {
+    const { matchesLanguage } = voicesFor(await voicesOfEngine(chosen), tag);
+    return matchesLanguage;
+  }
   try {
     const { supported } = await (await engine()).tts.isLanguageSupported({ lang: tag });
     return supported;

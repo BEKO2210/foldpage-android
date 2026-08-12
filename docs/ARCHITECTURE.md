@@ -453,6 +453,14 @@ direktes APK-Update lehnt Android ab. Betrifft niemanden, 1.4 war nie öffentlic
 9. **IndexedDB-Store ändern ohne Versions-Bump** — `upgrade` läuft nie.
 10. **`EdgeToEdge.enable()` in `MainActivity`** — legt einen System-Scrim über
     die App.
+11. **Paket-Sichtbarkeit ab Android 11** — ohne `<queries>` mit
+    `android.intent.action.TTS_SERVICE` im Manifest meldet das Telefon genau
+    **eine** Sprach-Engine (die Standard-Engine), egal wie viele installiert
+    sind. Kein Fehler, kein Logeintrag. Siehe `docs/SPEECH.md`.
+12. **Anführungszeichen haben keine feste Seite** — `»` `«` öffnen im Deutschen
+    und schließen im Französischen, `“` schließt im Deutschen und öffnet im
+    Englischen. Leerzeichen daran zu „korrigieren" verklebt Wörter. Nur `„` und
+    `”` sind eindeutig.
 
 ---
 

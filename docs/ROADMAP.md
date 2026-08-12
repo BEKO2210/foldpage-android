@@ -519,6 +519,14 @@ Reader-Route vorgerendert wird; es wird deshalb erst bei Bedarf geladen. Und
 ein Tag wird beim Entfernen zu einem Leerzeichen, was „den Link ." erzeugt —
 eine Engine liest die Lücke als Pause und den Punkt als eigenen Atemzug.
 
+**Stimme einstellbar und mehrsprachig ✅ (12.08.2026, am Gerät geprüft).**
+Tempo (6 Stufen), Tonhöhe, Pausenlänge und die Stimme selbst — die Stimme
+**je Sprache** gemerkt, dazu die **Engine je Sprache** über ein eigenes
+Android-Plugin (`SpeechPlugin.java`). Grund: das Telefon hat eine
+Standard-Engine, die Bibliothek mehrere Sprachen; die neuronale deutsche Engine
+kann kein Englisch, Googles Engine beides. Gemessen und begründet in
+`docs/SPEECH.md`, geprüft mit `node scripts/speech-audit.mjs`.
+
 **Offen:** Sperrbildschirm-Steuerung (Media-Session) und Fortsetzen nach einem
 App-Neustart — heute merkt sich der Player die Stelle nur innerhalb der Sitzung.
 **Abnahme (Gerät):** ein deutscher und ein englischer Artikel vollständig

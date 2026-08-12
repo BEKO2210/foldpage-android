@@ -1,0 +1,421 @@
+{
+  "generatedFrom": "33 snapshots",
+  "blocks": 3997,
+  "findings": {
+    "heading-without-stop": 0,
+    "glued-quote": 0,
+    "leading-marker": 0,
+    "orphan-punctuation": 0,
+    "spoken-url": 0,
+    "footnote-marker": 0,
+    "shouty": 65,
+    "run-on-utterance": 5
+  },
+  "findingsPerThousandBlocks": {
+    "heading-without-stop": 0,
+    "glued-quote": 0,
+    "leading-marker": 0,
+    "orphan-punctuation": 0,
+    "spoken-url": 0,
+    "footnote-marker": 0,
+    "shouty": 16,
+    "run-on-utterance": 1
+  },
+  "why": {
+    "heading-without-stop": "an engine drops no pitch and takes no breath, so the title runs into the section",
+    "glued-quote": "a closing quote stuck to the next word is spoken as one word",
+    "leading-marker": "the bullet or number is pronounced before the sentence starts",
+    "orphan-punctuation": "a space before a full stop is read as a pause plus a separate breath",
+    "spoken-url": "a bare address is spelled out character by character",
+    "footnote-marker": "a footnote number in the middle of a sentence is read as bracket-one-bracket",
+    "shouty": "many engines spell long all-caps runs letter by letter",
+    "run-on-utterance": "over 400 characters in one utterance is a long way from the next breath"
+  },
+  "examples": {
+    "shouty": {
+      "site": "the-decoder.de",
+      "kind": "paragraph",
+      "text": "Mit dem THE‑DECODER‑Abo liest du werbefrei und wirst Teil unserer Community: Diskutiere im Kommentarsystem, erhalte unse"
+    },
+    "run-on-utterance": {
+      "site": "netzpolitik.org",
+      "kind": "paragraph",
+      "text": "Das sieht auch Die Linke so, wenn sie schreibt: „Interkulturelle Feste und Projekte schaffen Verständnis und Austausch, "
+    }
+  },
+  "articles": [
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/politik/deutschland/article6a7665b70e3689919ec747b6/nach-landtagswahl-ansage-an-landespartei-cdu-spitze-duldet-keine-koalition-mit-afd-in-sachsen-anhalt.html",
+      "blocks": 15,
+      "kinds": {
+        "paragraph": 12,
+        "heading": 2,
+        "caption": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/wirtschaft/article6a7660bc35268e50270222a9/rente-dann-werden-die-reformplaene-wie-dominosteine-fallen-wirtschaftsweise-warnt-merz.html",
+      "blocks": 20,
+      "kinds": {
+        "paragraph": 17,
+        "heading": 2,
+        "caption": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/openai-stuft-neues-ki-modell-astra-erstmals-potenziell-auf-hoechste-cybersecurity-risikostufe-ein/",
+      "blocks": 18,
+      "kinds": {
+        "paragraph": 15,
+        "heading": 3
+      },
+      "findings": {
+        "shouty": 1
+      }
+    },
+    {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/musikgenerator-suno-will-den-ki-musik-spam-eindaemmen-und-copyright-schutz-verbessern/",
+      "blocks": 13,
+      "kinds": {
+        "paragraph": 11,
+        "heading": 2
+      },
+      "findings": {
+        "shouty": 1
+      }
+    },
+    {
+      "site": "the-decoder.de",
+      "url": "https://the-decoder.de/amd-kauft-taalas-startup-brennt-ki-modelle-fest-in-chips-ein-fuer-schnelle-inferenz/",
+      "blocks": 5,
+      "kinds": {
+        "paragraph": 4,
+        "caption": 1
+      },
+      "findings": {
+        "shouty": 1
+      }
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/bestenlisten/testsieger/top-10-der-beste-smart-ring-im-test-oura-ring-5-ist-testsieger/rgglr38",
+      "blocks": 1205,
+      "kinds": {
+        "paragraph": 971,
+        "heading": 114,
+        "item": 120
+      },
+      "findings": {
+        "shouty": 33
+      }
+    },
+    {
+      "site": "heise.de",
+      "url": "https://www.heise.de/news/RCS-Google-will-mit-dem-Chatprotokoll-Business-machen-11394662.html",
+      "blocks": 15,
+      "kinds": {
+        "paragraph": 11,
+        "heading": 3,
+        "caption": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/politik/deutschland/berlin-wahl-2026-wird-die-hauptstadt-bald-unregierbar-a-5ea258c9-23e9-4d35-a548-45c2a28d32c1",
+      "blocks": 1,
+      "kinds": {
+        "caption": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "spiegel.de",
+      "url": "https://www.spiegel.de/ausland/ceuta-krise-spanien-fuehrt-grenzkontrollen-fuer-italien-ein-a-02c12f82-cfc9-4dd6-b40e-32da4c497602",
+      "blocks": 5,
+      "kinds": {
+        "paragraph": 4,
+        "heading": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/politik/ausland/2026-08/donald-trump-lisa-cook-federal-reserve-entlassung-usa",
+      "blocks": 16,
+      "kinds": {
+        "paragraph": 12,
+        "caption": 1,
+        "heading": 3
+      },
+      "findings": {
+        "shouty": 1
+      }
+    },
+    {
+      "site": "zeit.de",
+      "url": "https://www.zeit.de/news/2026-08/08/loeschhubschrauber-stuerzt-bei-waldbrand-in-utah-ab",
+      "blocks": 5,
+      "kinds": {
+        "paragraph": 4,
+        "heading": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "sueddeutsche.de",
+      "url": "https://www.sueddeutsche.de/politik/ukraine-krieg-newsblog-leipzig-drohne-russland-statement-li.3524928",
+      "blocks": 66,
+      "kinds": {
+        "paragraph": 52,
+        "heading": 14
+      },
+      "findings": {}
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/europa/spanien-italien-grenzkontrollen-102.html",
+      "blocks": 12,
+      "kinds": {
+        "paragraph": 9,
+        "heading": 3
+      },
+      "findings": {}
+    },
+    {
+      "site": "tagesschau.de",
+      "url": "https://www.tagesschau.de/ausland/afrika/ceuta-spanien-minderjaehrige-100.html",
+      "blocks": 26,
+      "kinds": {
+        "paragraph": 21,
+        "heading": 5
+      },
+      "findings": {}
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/landtagswahl-in-sachsen-anhalt-so-wollen-die-parteien-die-autoritaere-wende-aufhalten/",
+      "blocks": 74,
+      "kinds": {
+        "paragraph": 50,
+        "item": 11,
+        "heading": 13
+      },
+      "findings": {
+        "run-on-utterance": 1
+      }
+    },
+    {
+      "site": "netzpolitik.org",
+      "url": "https://netzpolitik.org/2026/verwaltungsdigitalisierung-digitalminister-wildberger-wiederholt-alte-fehler/",
+      "blocks": 24,
+      "kinds": {
+        "paragraph": 17,
+        "heading": 5,
+        "quote": 2
+      },
+      "findings": {}
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/gadgets/2026/08/europes-free-satellite-service-just-made-it-easier-to-track-wildfires/",
+      "blocks": 5,
+      "kinds": {
+        "paragraph": 5
+      },
+      "findings": {}
+    },
+    {
+      "site": "arstechnica.com",
+      "url": "https://arstechnica.com/health/2026/08/flesh-eating-screwworms-feast-on-humans-in-mexico-human-cases-top-500/",
+      "blocks": 8,
+      "kinds": {
+        "paragraph": 7,
+        "heading": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/games/977056/restart-gaming-site-walmart-moonrock-layoffs",
+      "blocks": 14,
+      "kinds": {
+        "paragraph": 12,
+        "quote": 1,
+        "item": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "theverge.com",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/976801/fenix-flexin-rubberz-ai-song-treblo",
+      "blocks": 13,
+      "kinds": {
+        "paragraph": 11,
+        "quote": 1,
+        "item": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/openai-says-it-slowed-astra-model-development-over-security-concerns/",
+      "blocks": 12,
+      "kinds": {
+        "paragraph": 12
+      },
+      "findings": {}
+    },
+    {
+      "site": "techcrunch.com",
+      "url": "https://techcrunch.com/2026/08/07/after-rippling-blew-millions-on-ai-in-months-it-built-an-employee-roi-tool/",
+      "blocks": 21,
+      "kinds": {
+        "paragraph": 21
+      },
+      "findings": {}
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c70g18vpwxvo",
+      "blocks": 11,
+      "kinds": {
+        "paragraph": 11
+      },
+      "findings": {}
+    },
+    {
+      "site": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c8jnrk4xlvdo",
+      "blocks": 101,
+      "kinds": {
+        "paragraph": 93,
+        "item": 8
+      },
+      "findings": {}
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/wellness/2026/aug/07/biggest-wellness-trends-2026",
+      "blocks": 51,
+      "kinds": {
+        "paragraph": 41,
+        "heading": 10
+      },
+      "findings": {}
+    },
+    {
+      "site": "theguardian.com",
+      "url": "https://www.theguardian.com/music/2026/aug/07/william-orbit-greatest-recordings-prince-madonna-blur-beth-orton",
+      "blocks": 30,
+      "kinds": {
+        "paragraph": 13,
+        "heading": 12,
+        "caption": 5
+      },
+      "findings": {
+        "shouty": 1
+      }
+    },
+    {
+      "site": "en.wikipedia.org",
+      "url": "https://en.wikipedia.org/wiki/Comparison_of_web_browsers",
+      "blocks": 337,
+      "kinds": {
+        "paragraph": 25,
+        "caption": 1,
+        "item": 304,
+        "heading": 7
+      },
+      "findings": {
+        "run-on-utterance": 1,
+        "shouty": 1
+      }
+    },
+    {
+      "site": "de.wikipedia.org",
+      "url": "https://de.wikipedia.org/wiki/Elektroauto",
+      "blocks": 565,
+      "kinds": {
+        "paragraph": 181,
+        "caption": 44,
+        "heading": 9,
+        "item": 331
+      },
+      "findings": {
+        "run-on-utterance": 2,
+        "shouty": 3
+      }
+    },
+    {
+      "site": "developer.mozilla.org",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/display",
+      "blocks": 151,
+      "kinds": {
+        "heading": 28,
+        "paragraph": 79,
+        "item": 44
+      },
+      "findings": {}
+    },
+    {
+      "site": "web.dev",
+      "url": "https://web.dev/articles/inp",
+      "blocks": 132,
+      "kinds": {
+        "paragraph": 100,
+        "caption": 4,
+        "heading": 13,
+        "item": 15
+      },
+      "findings": {
+        "run-on-utterance": 1
+      }
+    },
+    {
+      "site": "docs.python.org",
+      "url": "https://docs.python.org/3/library/datetime.html",
+      "blocks": 667,
+      "kinds": {
+        "paragraph": 558,
+        "heading": 18,
+        "item": 90,
+        "quote": 1
+      },
+      "findings": {
+        "shouty": 17
+      }
+    },
+    {
+      "site": "welt.de",
+      "url": "https://www.welt.de/politik/ausland/article6a7611e70e3689919ec7450e/leipzig-es-liegt-auf-der-hand-russland-veroeffentlicht-erklaerung-nach-drohnenvorfall.html",
+      "blocks": 19,
+      "kinds": {
+        "paragraph": 15,
+        "heading": 3,
+        "caption": 1
+      },
+      "findings": {}
+    },
+    {
+      "site": "github.com",
+      "url": "https://github.com/Jin-Aladdin/aladdin-spec",
+      "blocks": 340,
+      "kinds": {
+        "paragraph": 171,
+        "item": 128,
+        "heading": 39,
+        "quote": 2
+      },
+      "findings": {
+        "shouty": 6
+      }
+    }
+  ]
+}

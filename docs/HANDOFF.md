@@ -52,6 +52,28 @@ welche davon läuft.
    Lauf: `npm test`, `npm run corpus`, `npm run reader-render`,
    `node scripts/library-bench.mjs`, `node scripts/a11y-audit.mjs`.
 
+## Lauf 3 (12.08. abends): die Stimme
+
+- **Einstellbar:** Tempo (0,7–1,6×), Tonhöhe, Pausenlänge, Stimme — und die
+  **Engine je Sprache**, über ein eigenes Plugin
+  (`android/.../SpeechPlugin.java`). Ohne das bleibt Englisch stumm, sobald die
+  deutsche neuronale Engine der System-Standard ist.
+- **Am Gerät belegt:** Deutsch über sherpa-onnx (neuronal), Englisch über
+  Googles Engine mit **29** lokalen Stimmen; Pausen zwischen Absätzen von
+  1,80 s auf 0,23–0,35 s (Google) gebracht. Zahlen und Methode:
+  `docs/SPEECH.md`.
+- **Sprech-Text getrennt vom Lesetext** (`forTheEar()`): Überschriften bekommen
+  einen Punkt, Fußnotenmarken und Aufzählungszeichen fallen weg, eine nackte URL
+  wird zum Hostnamen. Absätze werden satzweise gesprochen — das kostet nichts,
+  weil die Vorlaufzeit der Engine mit der Länge wächst.
+- **Neues Messgerät:** `node scripts/speech-audit.mjs` →
+  `corpus/speech-report.json`. Es war selbst dreimal der Fehler (siehe
+  `docs/SPEECH.md`), unter anderem hat es 46 korrekte englische
+  Anführungszeichen als Defekt gezählt — derselbe Denkfehler steckte im Code.
+- **Grenze, die bleibt:** Die sherpa-Engine-APKs tragen alle denselben
+  Paketnamen. Eine englische Piper-Stimme **ersetzt** damit die deutsche; beide
+  neuronal gleichzeitig geht nur über ein in der App gebündeltes Modell (D0).
+
 ## Was als Nächstes ansteht
 
 In dieser Reihenfolge, sofern nichts dazwischenkommt:

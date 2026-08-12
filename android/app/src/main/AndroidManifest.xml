@@ -43,4 +43,15 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Since Android 11 an app sees only the packages it declares an interest
+         in. Without this block the phone reports exactly one speech engine —
+         the default — no matter how many are installed, and picking a German
+         neural engine for German articles and another one for English would be
+         impossible for a reason nothing in the log ever mentions. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
 </manifest>
