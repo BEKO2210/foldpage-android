@@ -32,7 +32,7 @@ export default function TagEditor({
       ))}
       <input
         className="input"
-        style={{ width: "9rem", padding: "0.3rem 0.6rem", fontSize: "0.85rem" }}
+        style={{ width: "9rem", minHeight: "44px", padding: "0.3rem 0.6rem", fontSize: "0.85rem" }}
         placeholder="+ tag"
         value={input}
         maxLength={100}

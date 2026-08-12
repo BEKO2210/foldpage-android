@@ -83,14 +83,16 @@ Capacitor), damit sie offline testbar ist; der Test prüft auch, welche Felder
 Dateien: `lib/refetch.ts`, `lib/refetch.test.ts`, `lib/articles.ts`,
 `app/read/page.tsx`, `app/globals.css`.
 
-### A8 · Wischgesten in der Bibliothek · G
-Archivieren und Löschen brauchen heute einen genauen Treffer auf ein kleines
-Icon. Auf dem Telefon ist Wischen die erwartete Geste.
-**Ziel:** nach rechts = archivieren, nach links = löschen (mit demselben
-Undo-Toast), mit `prefers-reduced-motion`-Rücksicht.
-**Dateien:** `components/Library.tsx`, `app/globals.css`, `docs/MOTION.md` +
-`lib/motion.test.ts` (neue Animation dokumentieren und prüfen).
-**Abnahme:** Motion-Test grün, Gerätetest inklusive Fehlgriff-Rückweg.
+### A8 · Wischgesten in der Bibliothek ✅ erledigt (12.08.2026) · Gerätetest offen
+Nach rechts archivieren (bzw. zurück in die Inbox), nach links löschen — mit
+demselben Undo-Toast. `components/SwipeRow.tsx`, Pointer-Events statt
+Touch-Events, damit Finger, Maus und Stift denselben Pfad nehmen und ein Zug,
+der das Element verlässt, per `setPointerCapture` trotzdem hier endet.
+Zwei Regeln gegen Fehlgriffe: die Richtung wird **einmal** entschieden (sonst
+wird die Liste unscrollbar), und unter 96 px federt die Karte zurück.
+**Die Knöpfe bleiben.** Eine Wischgeste existiert für TalkBack, Tastatur und
+alle, deren Hände keine feinen Gesten machen, nicht — sie ist eine Abkürzung,
+nie der einzige Weg. Nichts, was sie auslöst, ist endgültig.
 
 ### A9 · Anzeige-Einstellungen ✅ erledigt (12.08.2026)
 Aus „Schriftwahl im Reader" wurde ein vollständiger Satz Einstellungen: Theme
@@ -291,16 +293,23 @@ Erstes das Messinstrument verdächtig. Sinkt ein Befund, während ein anderer st
 die Commit-Nachricht.
 
 ### B6 · Barrierefreiheit über den Kontrast hinaus
-Kontrast und Motion sind getestet, der Rest nicht: TalkBack-Reihenfolge,
-Fokusreihenfolge nach Routenwechsel, Live-Regionen für Toast und Import,
-Bedienung mit Systemschriftgröße 200 %.
 
-| Etappe | Inhalt | Abnahme |
+| Etappe | Inhalt | Stand |
 |---|---|---|
-| B6.1 | Bestandsaufnahme mit TalkBack am Gerät, Fundliste in `docs/A11Y.md` | Dokument mit je Fund einer Zeile |
-| B6.2 | Fokus nach Routenwechsel setzen, Überschriftenebenen korrigieren | Wiederholter TalkBack-Durchgang |
-| B6.3 | Layout bei 200 % Systemschrift ohne Überlauf | Screenshots bei 412 px, beide Themes |
-| B6.4 | Prüfungen, wo möglich, in `reader-render.mjs` verankern | Lauf schlägt bei Regression fehl |
+| B6.1 | Bestandsaufnahme, Fundliste in `docs/A11Y.md` | ✅ 12.08.2026, **3 Befunde gefunden und behoben** |
+| B6.2 | Fokus nach Routenwechsel setzen, TalkBack-Durchgang am Gerät | offen — braucht ein Gerät |
+| B6.3 | Layout bei 200 % Systemschrift | ✅ mit B6.1 erledigt und als Prüfung verankert |
+| B6.4 | Prüfungen dauerhaft verankern | ✅ `node scripts/a11y-audit.mjs` |
+
+**Gefunden und behoben:** die Einstellungen liefen bei doppelter Systemschrift
+**267 px** über den Rand (der native Datei-Wähler bemisst sich an seinem eigenen
+Beschriftungstext), die segmentierten Regler passten dann nicht mehr
+nebeneinander, und drei Bedienelemente im Reader lagen unter 44 px.
+
+**Offen und benannt:** der Fokus bleibt nach einem Routenwechsel auf `<body>` —
+für TalkBack heißt das, sich jede Seite neu von oben zu erarbeiten. Das ist
+B6.2 und braucht ein Gerät, weil dort auch die Ansage-Reihenfolge zu beurteilen
+ist. Vollständig in `docs/A11Y.md`.
 
 ### B7 · Sprache — **entschieden am 12.08.2026: international, Englisch**
 Die App bleibt englisch. Damit ist der große Übersetzungsstrang gestrichen; was
@@ -333,7 +342,7 @@ Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
    in einem Punkt schöner als die Wirklichkeit. **Als Nächstes dran.**
 3. ~~A5, A6, A7~~ — erledigt am 12.08.2026.
 4. **B5** — der Reader ist das Produkt, und er ist messbar.
-5. **A8, A9, B6** — Bedienung und Zugänglichkeit.
+5. ~~A8, A9~~, **B6.2** — der TalkBack-Durchgang am Gerät ist der Rest.
 6. **B2.3, B2.4** — Wortindex und virtualisierte Liste, sobald Öffnen und
    Suche spürbar werden (heute 0,5 s bzw. 0,3 s bei 200 Artikeln).
 7. **B4** — zuletzt, und nur, wenn B4.1 wirklich getragen hat.

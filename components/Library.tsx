@@ -14,6 +14,7 @@ import {
 import { Abandoned, addArticleFromUrl } from "@/lib/articles";
 import { storeImagesForArticle } from "@/lib/images";
 import TopBar from "./TopBar";
+import SwipeRow from "./SwipeRow";
 import Welcome from "./Welcome";
 import { SECTION_EVENT } from "./AppNav";
 import {
@@ -507,11 +508,19 @@ export default function Library() {
 
         <ul className="library-grid grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0">
           {visible.map((a, i) => (
-            <li
-              key={a.id}
-              className={`card card-in ${a.progress >= 0.98 ? "is-read" : ""}`}
-              style={{ ["--i" as string]: i }}
-            >
+            <li key={a.id} className="card-in" style={{ ["--i" as string]: i }}>
+              <SwipeRow
+                archiveLabel={a.state === "inbox" ? "Archive" : "To inbox"}
+                onArchive={() =>
+                  void toggle(
+                    a,
+                    { state: a.state === "inbox" ? "archived" : "inbox" },
+                    a.state === "inbox"
+                  )
+                }
+                onDelete={() => void removeWithUndo(a)}
+              >
+                <div className={`card ${a.progress >= 0.98 ? "is-read" : ""}`}>
               <p
                 className="text-xs uppercase tracking-widest mb-1"
                 style={{ color: "var(--muted)", fontFamily: "var(--sans)" }}
@@ -587,6 +596,8 @@ export default function Library() {
                   </button>
                 </div>
               </div>
+                </div>
+              </SwipeRow>
             </li>
           ))}
         </ul>

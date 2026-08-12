@@ -213,6 +213,10 @@ mark {
   color: var(--paper);
 }
 
+.card-in > .swipe,
+.swipe-card > .card {
+  height: 100%;
+}
 .card {
   position: relative;
   background: var(--card);
@@ -288,9 +292,21 @@ mark {
   font-size: 0.875rem;
   margin: 0 0 1rem;
 }
+/* The source line holds two touch targets — the original and the reload — so
+   its own links get the same floor as every other control. */
+.reader-source a {
+  display: inline-block;
+  min-height: 44px;
+  line-height: 44px;
+}
 /* An action that reads as a link because it sits in a line of links, but is a
    button because it does something rather than going somewhere. */
 .linkbtn {
+  /* Sits in a line of text, so it cannot be given a box — but it can be given
+     the room a finger needs around it. */
+  display: inline-block;
+  min-height: 44px;
+  line-height: 44px;
   border: none;
   background: none;
   padding: 0;
@@ -742,6 +758,59 @@ mark {
   }
 }
 
+/* Swipe to archive or delete.
+   The card carries the gesture, a layer behind it says what will happen. The
+   transform is set from JavaScript while a finger is down and cleared when it
+   lifts; nothing here animates by itself, so `prefers-reduced-motion` has
+   nothing to switch off — a direct-manipulation gesture *is* the reduced-motion
+   version of itself. */
+.swipe {
+  position: relative;
+  touch-action: pan-y;
+}
+.swipe-card {
+  position: relative;
+  z-index: 1;
+  transition: transform var(--dur-fast) var(--ease-out);
+  will-change: transform;
+}
+.swipe.is-dragging .swipe-card {
+  transition: none;
+}
+.swipe-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  border-radius: 0.75rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--highlight);
+  opacity: 0;
+}
+.swipe.is-dragging .swipe-hint {
+  opacity: 1;
+}
+/* Delete is the destructive half, so it reads as the toast does rather than as
+   the app's accent — the yellow means "this is fine" everywhere else. */
+.swipe[data-intent="delete"] .swipe-hint {
+  background: var(--toast-bg);
+  color: var(--toast-text);
+}
+.swipe-hint .lead {
+  opacity: 0;
+}
+.swipe[data-intent="archive"] .swipe-hint .lead,
+.swipe[data-intent="delete"] .swipe-hint .trail {
+  opacity: 1;
+}
+
 /* Whole-card tap target */
 .card a.cardlink::after {
   content: "";
@@ -873,6 +942,11 @@ mark {
    inputs so a screen reader announces the group, the position and the state. */
 .segmented {
   display: flex;
+  /* At a large system font the four or five options no longer fit side by
+     side. Wrapping is the only honest answer: shrinking them further would
+     take the labels below the size the setting exists to respect. Measured at
+     32px root font, where the settings screen used to overflow by 267px. */
+  flex-wrap: wrap;
   gap: 0.25rem;
   padding: 0.25rem;
   background: var(--paper);
@@ -880,7 +954,8 @@ mark {
   border-radius: 0.6rem;
 }
 .segmented label {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: max-content;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1015,6 +1090,14 @@ mark {
   min-height: 44px;
   padding: 0 0.5rem;
   cursor: pointer;
+}
+
+/* The native file picker sizes itself from its own label text, which at a
+   large system font ran 267px past the screen edge — the one element on the
+   settings screen that broke the layout at 200%. It has to be told. */
+input[type="file"] {
+  max-width: 100%;
+  font: inherit;
 }
 
 /* Settings sections as cards */

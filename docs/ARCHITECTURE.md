@@ -58,6 +58,7 @@ components/
   AppNav.tsx            Bottom-Navigation, lebt im Layout (siehe 6.)
   DisplaySettings.tsx   Theme/Größe/Schrift/Ausrichtung/Zeilenabstand (siehe 6a.)
   DisplaySheet.tsx      dieselben Regler als <dialog> im Reader
+  SwipeRow.tsx          Wischen: rechts archivieren, links löschen (Knöpfe bleiben)
   TopBar.tsx            Kopfzeile: Logo oder Zurück-Link + rechte Aktionen
   TagEditor.tsx         Chips + Eingabefeld im Reader
   Welcome.tsx           Einmaliger Erststart-Dialog (+ SVG-Marke)
@@ -390,6 +391,7 @@ englisch gefasst (`docs/ROADMAP.md`, A4).
 | `npm run reader-render` | baut den Export und misst ihn mit Playwright/Chromium in **zwei** Viewports — Telefon 412×915 und Tablet 1024×768 —, DPR 2, hell + dunkel; schreibt `corpus/reader-report.json` + Screenshots (nur Telefon) | mehrere Minuten, braucht Chromium (`npx playwright install`) |
 | `npx eslint` | Lint (eslint-config-next) | schnell |
 | `node scripts/library-bench.mjs` | sät eine synthetische Bibliothek und misst Öffnen, Suche, Stern | ~1 min, braucht Chromium |
+| `node scripts/a11y-audit.mjs` | strukturelle Barrierefreiheit über drei Routen, dazu 200 % Systemschrift | ~1 min, braucht Chromium |
 | `node scripts/image-budget.mjs` | misst reale Bildgrößen — **braucht Netz**, gehört nicht in einen Testlauf | mehrere Minuten |
 
 `corpus/report.json` und `report.md` sind **eingecheckt**. Eine Änderung an der

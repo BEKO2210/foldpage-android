@@ -1,0 +1,123 @@
+{
+  "viewport": {
+    "width": 412,
+    "height": 915
+  },
+  "touchFloorPx": 44,
+  "largeFontPx": 32,
+  "pages": [
+    {
+      "route": "library",
+      "unnamed": [],
+      "small": [
+        "a.cardlink 337x20",
+        "a.cardlink 337x20",
+        "a.cardlink 337x20"
+      ],
+      "headings": [
+        {
+          "level": 3,
+          "text": "An article with a reasonably long headli"
+        },
+        {
+          "level": 3,
+          "text": "An article with a reasonably long headli"
+        },
+        {
+          "level": 3,
+          "text": "An article with a reasonably long headli"
+        }
+      ],
+      "headingSkips": [],
+      "firstHeadingLevel": 3,
+      "landmarks": {
+        "main": 1,
+        "nav": 1,
+        "header": 1
+      },
+      "liveRegions": 0,
+      "langAttribute": "en",
+      "largeFont": {
+        "overflow": false,
+        "widest": 0
+      }
+    },
+    {
+      "route": "reader",
+      "unnamed": [],
+      "small": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "An article with a reasonably long headli"
+        },
+        {
+          "level": 2,
+          "text": "Reading"
+        }
+      ],
+      "headingSkips": [],
+      "firstHeadingLevel": 1,
+      "landmarks": {
+        "main": 1,
+        "nav": 0,
+        "header": 2
+      },
+      "liveRegions": 0,
+      "langAttribute": "en",
+      "largeFont": {
+        "overflow": false,
+        "widest": 0
+      }
+    },
+    {
+      "route": "settings",
+      "unnamed": [],
+      "small": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Settings"
+        },
+        {
+          "level": 2,
+          "text": "Appearance"
+        },
+        {
+          "level": 2,
+          "text": "Your library"
+        },
+        {
+          "level": 2,
+          "text": "Import"
+        },
+        {
+          "level": 2,
+          "text": "Export"
+        },
+        {
+          "level": 2,
+          "text": "Save from anywhere"
+        }
+      ],
+      "headingSkips": [],
+      "firstHeadingLevel": 1,
+      "landmarks": {
+        "main": 1,
+        "nav": 1,
+        "header": 1
+      },
+      "liveRegions": 0,
+      "langAttribute": "en",
+      "largeFont": {
+        "overflow": false,
+        "widest": 0
+      }
+    }
+  ],
+  "focusAfterNavigation": {
+    "tag": "BODY",
+    "label": "LibrarySettingsAppearanceHow the app and"
+  },
+  "coversOnly": "Structural faults a browser can see. Announcement order, gesture reachability and TalkBack behaviour need a device."
+}
