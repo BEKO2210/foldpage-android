@@ -1,6 +1,6 @@
 ## Reader-Korpus
 
-39/39 Artikel extrahiert, 23 davon ohne Befund. Median 587 Woerter. 5 mit Tabelle, 22 mit Bild.
+39/39 Artikel extrahiert, 23 davon ohne Befund. Median 587 Woerter. 5 mit Tabelle, 21 mit Bild.
 
 ### Befunde nach Haeufigkeit
 
@@ -41,10 +41,10 @@
 | t3n.de | 515 | P: Kein Bug: Wenn du Apps aus dem Microsoft | 1 | 0 | 3 | — |
 | arstechnica.com | 245 | P: Users could previously add this script m | 0 | 0 | 7 | — |
 | arstechnica.com | 414 | P: The study identified 204 cases in all, b | 0 | 0 | 5 | — |
-| theverge.com | 339 | DIV: Restart’s former editor-in-chief says th | 2 | 0 | 10 | — |
+| theverge.com | 317 | DIV: Restart’s former editor-in-chief says th | 2 | 0 | 10 | — |
 | theverge.com | 347 | DIV: Fenix now claims he’s ‘never said I didn | 3 | 0 | 11 | — |
-| techcrunch.com | 501 | DIV: Image Credits:SeongJoon Cho/Bloomberg /  | 1 | 0 | 7 | — |
-| techcrunch.com | 983 | DIV: HR software provider Rippling this week  | 0 | 0 | 6 | — |
+| techcrunch.com | 418 | DIV: OpenAI said Friday it has suspended work | 0 | 0 | 7 | — |
+| techcrunch.com | 963 | P: HR software provider Rippling this week  | 0 | 0 | 5 | — |
 | bbc.co.uk | 266 | P: Levy, from Tottenham, north London, was  | 0 | 0 | 0 | — |
 | bbc.co.uk | 2644 | DIV: Warning: Contains graphic details of sex | 0 | 0 | 2 | — |
 | theguardian.com | 1301 | P: Every year, the wellness industry churns | 0 | 0 | 25 | — |
@@ -54,7 +54,7 @@
 | en.wikipedia.org | 5689 | SECTION: A web browser is an application that all | 1 | 0 | 886 | tables-lost |
 | de.wikipedia.org | 18085 | SECTION: Als Elektroauto (auch E-Auto, elektrisch | 42 | 5 | 1610 | wide-table, table-wrapped, image-flood |
 | developer.mozilla.org | 2364 | SECTION: Try it display: block; display: inline f | 0 | 1 | 183 | long-cell, table-wrapped, no-author |
-| web.dev | 3091 | ARTICLE: Interaction to Next Paint (INP) Veröffen | 3 | 0 | 22 | no-author |
+| web.dev | 3042 | P: Veröffentlicht am 6. Mai 2022, zuletzt a | 3 | 0 | 19 | no-author |
 | docs.python.org | 13246 | P: The datetime module supplies classes for | 1 | 6 | 581 | wide-table, long-cell, table-wrapped, no-author |
 | welt.de | 550 | DIV: „Welle antirussischer Hysterie“„Es liegt | 1 | 0 | 3 | last-empty |
 | github.com | 2336 | DIV: Portable knowledge. Verifiable sources.  | 8 | 8 | 131 | long-cell, table-wrapped, no-author |

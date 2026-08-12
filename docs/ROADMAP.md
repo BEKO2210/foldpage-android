@@ -243,7 +243,27 @@ nennen schlicht niemanden. `twitter:creator` wurde bewusst **nicht** genommen:
 „@MozDevNet" hätte die Zahl gesenkt und die Kopfzeile verschlechtert.
 
 **Regel für diesen Strang:** keine Änderung ohne Vorher/Nachher-Zahl aus
-`npm run corpus`. Sinkt ein Befund, während ein anderer steigt, gehört das in
+`npm run corpus`.
+
+### Nachtrag B7.3 (12.08.2026): das Messinstrument war blind
+
+Der Auftrag lautete „englische Muster ergänzen, Befunde an englischen Quellen
+sinken". Die englischen Quellen hatten aber **null** Befunde — nicht weil sie
+sauber waren, sondern weil die Möbel-Erkennung **im Korpus-Skript** ebenfalls
+fast nur deutsche Formeln kannte. Reihenfolge deshalb umgedreht:
+
+1. Zuerst das Messinstrument (`scripts/corpus.mjs`, `FURNITURE`) um englische
+   Muster erweitert. Ergebnis: **4 Befunde**, die vorher unsichtbar waren —
+   theverge (Autoren-Biografie als letzter Block), techcrunch (Bildnachweis mit
+   Uhrzeit als erster, Affiliate-Hinweis als letzter Block), web.dev
+   (Lizenz-Boilerplate).
+2. Dann `EDGE_FURNITURE` in `lib/parse.ts` entsprechend erweitert.
+3. Nachgemessen: **4 → 0**, dabei nur **174 Wörter** entfernt, ausschließlich in
+   genau diesen vier Artikeln.
+
+Lehre für den ganzen Strang: eine Null im Bericht heißt „nichts gefunden", nicht
+„nichts da". Wenn ein Befund an einer Quellengruppe systematisch fehlt, ist als
+Erstes das Messinstrument verdächtig. Sinkt ein Befund, während ein anderer steigt, gehört das in
 die Commit-Nachricht.
 
 ### B6 · Barrierefreiheit über den Kontrast hinaus
@@ -271,7 +291,7 @@ Paywall-Formeln und bleiben unangetastet.
 |---|---|---|
 | B7.1 | ✅ Entscheidung getroffen: Englisch, international | hier festgehalten |
 | B7.2 | ✅ erledigt (12.08.2026): `toLocaleString()` ohne festes Locale, folgt dem Gerät | mit A4 zusammen umgesetzt |
-| B7.3 | Möbel-Erkennung um englischsprachige Muster erweitern („accept cookies", „subscribe to continue", „skip to main content") — die Regex kennt heute fast nur deutsche Seiten | `npm run corpus`: Befunde an den englischen Quellen sinken |
+| B7.3 | ✅ erledigt (12.08.2026) — siehe unten, das Messinstrument war selbst deutsch | 4 Befunde sichtbar gemacht, 4 behoben |
 | B7.4 | Play-Eintrag international ausrichten: englische Beschreibung als Standard, Screenshots ohne deutschen Text | Store-Eintrag geprüft |
 | B7.5 | Reader-Sprache: `article.lang` steht bereits im Datenmodell — Silbentrennung und Anführungszeichen je Artikel setzen, statt alles wie Englisch zu behandeln | Reader-Lab-Lauf ohne neue Befunde |
 

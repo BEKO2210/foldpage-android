@@ -286,6 +286,45 @@ test("extractArticle removes chrome only from article edges", async () => {
   assert.equal(result.wordCount, 55);
 });
 
+test("English page furniture is trimmed from the edges too", async () => {
+  const { extractArticle } = await load();
+  const body = `<p>The article itself runs for several sentences so that
+      Readability keeps it, and it carries enough text for the heuristic to be
+      comfortable calling this block the content of the page.</p>
+      <p>A second paragraph, also long enough to be counted, which mentions
+      that reporters exist without being a staff biography itself.</p>`;
+  const page = (extra: string) =>
+    `<html lang="en"><head><title>Edges</title></head><body><article>${extra}</article></body></html>`;
+
+  const bio = extractArticle(
+    page(`${body}<p>Jay Peters is a senior reporter covering technology.</p>`),
+    "https://example.test/a"
+  ).contentHtml;
+  assert.doesNotMatch(bio, /senior reporter/);
+  assert.match(bio, /second paragraph/);
+
+  const affiliate = extractArticle(
+    page(`${body}<p>When you purchase through links in our articles, we may earn a small commission.</p>`),
+    "https://example.test/b"
+  ).contentHtml;
+  assert.doesNotMatch(affiliate, /small commission/);
+
+  const credit = extractArticle(
+    page(`<p>Image Credits:Getty Images 3:48 PM PDT</p>${body}`),
+    "https://example.test/c"
+  ).contentHtml;
+  assert.doesNotMatch(credit, /Image Credits/);
+
+  // The words themselves are not banned — only a block that is nothing else.
+  assert.match(
+    extractArticle(
+      page(`${body}<p>The report says that when you purchase through links like these, publishers earn money, which is the whole point of the disclosure rules it examines in detail.</p>`),
+      "https://example.test/d"
+    ).contentHtml,
+    /disclosure rules/
+  );
+});
+
 test("extractArticle reports the failures the UI shows", async () => {
   const { extractArticle } = await load();
 

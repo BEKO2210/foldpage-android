@@ -251,8 +251,15 @@ async function fetchAll() {
 
 /** Website furniture that shows up as the first or last block of an extracted
  *  article. Matched against collapsed text, case-insensitively. */
+/** What counts as page furniture at an article's edge.
+ *
+ *  Grown from what the corpus actually showed. The English half was added on
+ *  12.08.2026: the measurement had been almost entirely German, which is why
+ *  every English source reported a clean edge while carrying an affiliate
+ *  disclosure, a staff biography or a licence notice as its last block. An
+ *  instrument that cannot see a fault is not evidence that there is none. */
 const FURNITURE =
-  /(pfadnavigation|brotkrumen|breadcrumb|startseite|zur startseite|inhaltsverzeichnis|table of contents|mehr zum thema|lesen sie auch|auch interessant|das k[oö]nnte sie auch interessieren|newsletter abonnieren|jetzt anmelden|artikel teilen|teilen per|folgen sie uns|share this|advertisement|anzeige|werbung|cookie|zustimmung|einwilligung|abonnieren sie|skip to (main )?content|zum hauptinhalt|weiterlesen mit|jetzt kostenlos testen)/i;
+  /(pfadnavigation|brotkrumen|breadcrumb|startseite|zur startseite|inhaltsverzeichnis|table of contents|mehr zum thema|lesen sie auch|auch interessant|das k[oö]nnte sie auch interessieren|newsletter abonnieren|jetzt anmelden|artikel teilen|teilen per|folgen sie uns|share this|advertisement|anzeige|werbung|cookie|zustimmung|einwilligung|abonnieren sie|skip to (main )?content|zum hauptinhalt|weiterlesen mit|jetzt kostenlos testen|when you (purchase|buy) through links|we may earn (a |an )?(affiliate )?commission|image credits?:|sofern nicht anders angegeben|content is licensed under|all rights reserved|sign up for (our|the) newsletter|subscribe to our newsletter|most read|related stories|follow us on|is a (senior |staff |contributing )?(reporter|editor|writer|correspondent|journalist)\b)/i;
 
 /** A consent or paywall interstitial that Readability mistook for the text.
  *  Only meaningful together with a low word count — a real article may well

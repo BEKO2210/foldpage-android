@@ -289,8 +289,16 @@ const EDGE_CHROME_TAGS = new Set([
   "SVG",
 ]);
 
+/** Text that is page furniture rather than article, matched only against the
+    first and last block of what Readability returned (see cleanArticleEdges).
+
+    The list grew out of German news sites and stayed that way far too long:
+    with the corpus measuring in German too, every English source looked clean
+    while carrying an affiliate disclosure or a staff biography as its last
+    block. The English half was added on 12.08.2026, after the measurement was
+    taught to see it. */
 const EDGE_FURNITURE =
-  /^(pfadnavigation|benachrichtigungpfeil nach links|ki-news ohne hype|als bevorzugte quelle auf google hinzufügen|zum hauptinhalt springen$|source code:|startseite$|anzeige$|top-artikel$|cookies? (zustimmen|akzeptieren)|besuchen sie golem\.de|um der nutzung von golem\.de|die zustimmung in einem iframe|der zustimmungs-dialog konnte nicht|die möglichkeit zum widerruf|… oder golem pur bestellen|mit golem pur ab|informationen auf einem gerät speichern|personalisierte anzeigen und inhalte|diesen artikel weiterlesen mit)/i;
+  /^(pfadnavigation|benachrichtigungpfeil nach links|ki-news ohne hype|als bevorzugte quelle auf google hinzufügen|zum hauptinhalt springen$|source code:|startseite$|anzeige$|top-artikel$|cookies? (zustimmen|akzeptieren)|besuchen sie golem\.de|um der nutzung von golem\.de|die zustimmung in einem iframe|der zustimmungs-dialog konnte nicht|die möglichkeit zum widerruf|… oder golem pur bestellen|mit golem pur ab|informationen auf einem gerät speichern|personalisierte anzeigen und inhalte|diesen artikel weiterlesen mit|image credits?:|when you (purchase|buy) through links|sofern nicht anders angegeben|the content of this page is licensed|sign up for (our|the) newsletter|follow us on|most read$|related stories$|[\p{L}.'’-]+(?: [\p{L}.'’-]+){0,2} is an? (?:senior |staff |contributing |former )*(?:reporter|editor|writer|correspondent|journalist)\b)/iu;
 
 const EDGE_WRAPPERS = new Set(["DIV", "SECTION", "ARTICLE", "MAIN"]);
 const EDGE_MEDIA = "img, picture, video, audio, canvas";
