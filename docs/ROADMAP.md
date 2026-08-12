@@ -10,7 +10,8 @@ Zwei Sorten Arbeit, bewusst getrennt:
 Jeder Eintrag nennt **Ziel · betroffene Dateien · Abnahme**. Abnahme heißt:
 woran man *belegt*, dass es fertig ist — Testlauf, Korpuszahl oder Gerätetest.
 Der Aufbau des Codes steht in `docs/ARCHITECTURE.md`; ohne die gelesen zu haben,
-sollte hier niemand anfangen.
+sollte hier niemand anfangen. Was von außen kommt — Play-Fristen, Android-
+Versionen, Bibliotheks-Majors — steht getrennt in `docs/FUTURE-PROOFING.md`.
 
 Stand: 12. August 2026, Version 1.5 (`versionCode 7`), geschlossener Test bei
 Google Play.
@@ -113,8 +114,8 @@ aber nichts erzwingt das Fenster. Eine CSS-Änderung kann es unbemerkt sprengen.
 **Ziel:** Grenze (etwa 30–50 Zeichen bei 412 px) als Testbedingung.
 **Dateien:** `scripts/reader-render.mjs`, `docs/READER-LAB.md`.
 **Abnahme:** `npm run reader-render` schlägt bei absichtlich verstellter
-`max-width` fehl. ⚠ Braucht `npx playwright install` — auf `lenovo` fehlt
-Chromium derzeit (`chrome-headless-shell` nicht vorhanden).
+`max-width` fehl. Chromium ist seit 12.08.2026 auf `lenovo` installiert, das
+Lab läuft dort.
 
 ### A11 · Play-Store-Pflichtangaben nachziehen
 Datenschutz und Impressum liegen auf GitHub Pages und sind aus der App verlinkt.
@@ -135,22 +136,20 @@ Release driftet das auseinander.
 
 ---
 
-### A13 · Große Bildschirme, weil Android 17 es erzwingt
-Android 17 (API 37, erschienen 16.06.2026) **entfernt die Opt-outs** für
-Orientierung und Größenänderung auf Geräten ab `sw600dp`: `screenOrientation`,
-`setRequestedOrientation()`, `resizeableActivity`, `minAspectRatio` und
-`maxAspectRatio` werden dort ignoriert. Pflicht wird `targetSdk 37` bei Google
-Play im **August 2027**; die App steht heute auf 36, das reicht bis
-**31.08.2026** und danach weiterhin, solange nicht auf 37 gehoben wird.
-Betroffen ist die App als Tablet-/Faltgerät-Layout: Bibliothek und Reader sind
-auf 412 px vermessen, breite Fenster sind nie geprüft worden.
-**Ziel:** Reader und Bibliothek bei 600–1400 px Breite und im Querformat ohne
-gestreckte Zeilen, unerreichbare Knöpfe oder Sprünge; Scrollposition übersteht
-den Konfigurationswechsel.
-**Dateien:** `app/globals.css` (Breakpoints), `scripts/reader-render.mjs`
-(zweites Viewport-Paar messen), `android/variables.gradle` beim späteren Sprung
-auf 37.
-**Abnahme:** Reader-Lab-Lauf bei 412×915 **und** 1024×768 ohne neue Befunde.
+### A13 · Große Bildschirme ✅ erledigt (12.08.2026)
+Android 17 (API 37, erschienen 16.06.2026) entfernt auf Geräten ab `sw600dp`
+die Opt-outs für Orientierung und Größenänderung. Pflicht wird `targetSdk 37`
+bei Google Play im **August 2027**; bis dahin reicht 36, das die App bereits
+hat (Play-Frist 31.08.2026 damit erfüllt).
+**Umgesetzt:** Das Reader-Lab misst zwei Viewports statt einem — Telefon
+412 × 915 und Tablet 1024 × 768, beide Themes. Dazu drei Spalten in der
+Bibliothek ab 1100 px, breiterer Container, das Einstellungs-Sheet als
+zentrierter Dialog ab 768 px, eigene Regeln für kurze Querformat-Fenster.
+**Ergebnis:** 156 Renderings, 84 Tabellenprüfungen, **0 Befunde**.
+Dateien: `app/globals.css`, `components/Library.tsx`, `components/TopBar.tsx`,
+`scripts/reader-render.mjs`, `corpus/reader-report.json`.
+Der Sprung auf `targetSdk 37` selbst steht in `docs/FUTURE-PROOFING.md`, samt
+Ablauf und der Begründung, warum er **nicht vor Capacitor** passiert.
 
 ---
 

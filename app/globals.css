@@ -681,6 +681,28 @@ body {
     padding-bottom: 4rem;
   }
 }
+/* Large screens are not optional any more: from Android 17 on, a device with a
+   smallest width of 600dp ignores every orientation and resizability
+   restriction an app declares, so the layout has to hold at any width and in
+   both orientations. Two rules do the work — the library gets a third column
+   once there is room for one, and nothing is allowed to stretch past the width
+   where a line of text stops being readable. */
+@media (min-width: 1100px) {
+  .library-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* A landscape phone is wide but very short. The cards keep their rhythm; what
+   has to give is the vertical padding, otherwise a single row fills the
+   screen. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .welcome {
+    align-items: flex-start;
+  }
+  .reader {
+    padding-bottom: 4rem;
+  }
+}
 @media (max-width: 767.98px) {
   .desktop-tabs {
     display: none !important;
@@ -911,6 +933,26 @@ body {
   color: var(--ink);
   box-shadow: 0 -10px 40px -20px rgba(10, 14, 25, 0.8);
   animation: fp-sheet-in var(--dur-med) var(--ease-out) backwards;
+}
+/* A short landscape window — a phone on its side, a freeform window — must not
+   push the controls off the bottom. `dvh` rather than `vh` because the WebView
+   viewport changes height when the system bars come and go. */
+.sheet {
+  max-height: min(85dvh, 34rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+/* From a tablet's width up, a sheet glued to the bottom edge is a long way
+   from where the eye is. It becomes a centred dialog instead. */
+@media (min-width: 768px) {
+  .sheet {
+    inset: 0;
+    margin: auto;
+    height: fit-content;
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    padding-bottom: 1.15rem;
+  }
 }
 .sheet::backdrop {
   background: rgba(10, 14, 25, 0.45);

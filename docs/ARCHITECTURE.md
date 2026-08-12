@@ -5,7 +5,8 @@ beschreibt, **was wo liegt, warum es so gebaut ist und welche Regeln nicht
 gebrochen werden dürfen**, damit niemand den Code erneut kartieren muss.
 Ergänzend: `README.md` (öffentliche Sicht), `docs/RELEASE.md` (Signieren und
 Ausliefern), `docs/ROADMAP.md` (was als Nächstes ansteht),
-`docs/READER-LAB.md`, `docs/CONTRAST.md`, `docs/MOTION.md` (Messwerte).
+`docs/READER-LAB.md`, `docs/CONTRAST.md`, `docs/MOTION.md` (Messwerte),
+`docs/FUTURE-PROOFING.md` (Plattformfristen, Versionen, Browsereigenschaften).
 
 Stand: 12. August 2026, App-Version 1.5 (`versionCode 7`), im geschlossenen
 Test bei Google Play.
@@ -85,8 +86,8 @@ scripts/
   make-assets.mjs       Icon-/Splash-Quellen erzeugen
   adaptive-icon.mjs     Adaptive-Icon-Nachbearbeitung
   release-build.sh      ⚠ stillgelegt, bricht absichtlich ab
-docs/                   diese Datei + RELEASE/READER-LAB/CONTRAST/MOTION,
-                        datenschutz/ + impressum/ (GitHub Pages), screenshots/
+docs/                   diese Datei + ROADMAP/FUTURE-PROOFING/RELEASE/READER-LAB/
+                        CONTRAST/MOTION, datenschutz/ + impressum/ (Pages), screenshots/
 ```
 
 ---
@@ -373,7 +374,7 @@ englisch gefasst (`docs/ROADMAP.md`, A4).
 |---|---|---|
 | `npm test` | 14 Tests: Extraktion, Sanitizer-Allowlist, Kontrast, Motion, 6 Fixtures | ~15 s, offline |
 | `npm run corpus` | `extractArticle` über 39 eingefrorene Snapshots, schreibt `corpus/report.{json,md}` | ~1 min, offline, deterministisch |
-| `npm run reader-render` | baut den Export und misst ihn mit Playwright/Chromium bei 412×915, DPR 2, hell + dunkel; schreibt `corpus/reader-report.json` + Screenshots | mehrere Minuten, braucht Chromium |
+| `npm run reader-render` | baut den Export und misst ihn mit Playwright/Chromium in **zwei** Viewports — Telefon 412×915 und Tablet 1024×768 —, DPR 2, hell + dunkel; schreibt `corpus/reader-report.json` + Screenshots (nur Telefon) | mehrere Minuten, braucht Chromium (`npx playwright install`) |
 | `npx eslint` | Lint (eslint-config-next) | schnell |
 
 `corpus/report.json` und `report.md` sind **eingecheckt**. Eine Änderung an der

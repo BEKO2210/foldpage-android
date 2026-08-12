@@ -273,7 +273,7 @@ export default function Library() {
           </Link>
         }
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-5 content-pad w-full">
+      <div className="max-w-5xl mx-auto px-4 sm:px-5 content-pad w-full">
         <form
           className="flex gap-2 mb-3"
           onSubmit={(e) => {
@@ -424,7 +424,7 @@ export default function Library() {
           </div>
         )}
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0">
+        <ul className="library-grid grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0">
           {visible.map((a, i) => (
             <li
               key={a.id}

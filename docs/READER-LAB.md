@@ -1,5 +1,14 @@
 ## Zusammenfassung
 
+**Nachtrag 12. August 2026:** Das Lab misst seit diesem Tag zwei Viewports —
+Telefon 412 × 915 und Tablet 1024 × 768, jeweils hell und dunkel. Grund ist
+Android 17: ab `sw600dp` ignoriert das System jede Orientierungs- und
+Größenbeschränkung einer App, ein reines Telefon-Layout ist damit keine Option
+mehr. Ergebnis des ersten Laufs: **156 Renderings, 84 Tabellenprüfungen, 0
+Befunde**, keine Seitenüberläufe in beiden Formaten. Screenshots entstehen
+weiterhin nur im Telefonformat. Die Messwerte unten stammen aus dem Lauf vom
+8. August und beschreiben das Telefonformat.
+
 Stand 8. August 2026: 37 von 37 gespeicherten Artikeln wurden offline extrahiert und bei 412 × 915 px, DPR 2, in hellem und dunklem Theme gerendert (74 Renderings). Es gab **0 führende Fremdblöcke**, **0 springende Tabellen** bei 26 Tabellenmessungen und **0 Seitenüberläufe**. Von 748 Bildinstanzen wurden 66 tatsächlich geladen und geprüft; 682 blieben wegen externer, im Offline-Korpus nicht mitgespeicherter Dateien ungeprüft. Bei den geladenen Bildern gab es 0 kaputte und 0 zu breite Bilder.
 
 Die vollständigen Rohdaten stehen in `corpus/report.json` und `corpus/reader-report.json`. Tabellenwerte sind `Spalten/Zeilen/scrollbar/stabil`; L/D steht für hell/dunkel. Bildwerte sind `gesamt/geladen/kaputt/zu breit`.

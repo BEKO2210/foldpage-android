@@ -10,7 +10,7 @@ export default function TopBar({
   back?: { href: string; label: string };
 }) {
   return (
-    <header className="flex items-center justify-between px-4 sm:px-5 py-1 max-w-4xl mx-auto w-full">
+    <header className="flex items-center justify-between px-4 sm:px-5 py-1 max-w-5xl mx-auto w-full">
       {back ? (
         <Link href={back.href} className="backlink">
           <ChevronLeftIcon />

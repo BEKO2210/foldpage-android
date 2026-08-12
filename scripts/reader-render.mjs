@@ -14,7 +14,15 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "out");
 const CORPUS = path.join(ROOT, "corpus");
 const SCREENSHOTS = path.join(CORPUS, "screenshots");
-const VIEWPORT = { width: 412, height: 915 };
+/** Two shapes, because from Android 17 on a device with a smallest width of
+ *  600dp ignores whatever orientation and resizability an app declares. The
+ *  phone stays the reference; the tablet catches a reader that only ever held
+ *  together in one column. Screenshots are taken on the phone only — the
+ *  tablet run is about numbers, not another 24 files in the repository. */
+const VIEWPORTS = [
+  { name: "phone", width: 412, height: 915, shots: true },
+  { name: "tablet", width: 1024, height: 768, shots: false },
+];
 const THEMES = ["light", "dark"];
 const WORST_BASELINE_SITES = new Set(["welt.de", "golem.de", "the-decoder.de"]);
 
@@ -208,27 +216,36 @@ const browser = await chromium.launch({ headless: true });
 const results = [];
 
 try {
-  for (const theme of THEMES) {
-    for (const { entry, article, hasTable } of articles) {
-      const context = await browser.newContext({
-        baseURL: origin,
-        colorScheme: theme,
-        deviceScaleFactor: 2,
-        viewport: VIEWPORT,
-      });
-      const page = await context.newPage();
-      await seed(page, article);
-      await page.goto(`/read/?id=${article.id}`);
-      const measurement = await measurePage(page, hasTable);
-      // Tabellenfaelle plus die drei schwersten Ausgangsbefunde dokumentieren.
-      let screenshot = null;
-      if (hasTable || WORST_BASELINE_SITES.has(entry.site)) {
-        screenshot = path.join("screenshots", theme, `${slug(entry.url)}.png`);
-        fs.mkdirSync(path.dirname(path.join(CORPUS, screenshot)), { recursive: true });
-        await page.screenshot({ path: path.join(CORPUS, screenshot) });
+  for (const viewport of VIEWPORTS) {
+    for (const theme of THEMES) {
+      for (const { entry, article, hasTable } of articles) {
+        const context = await browser.newContext({
+          baseURL: origin,
+          colorScheme: theme,
+          deviceScaleFactor: 2,
+          viewport: { width: viewport.width, height: viewport.height },
+        });
+        const page = await context.newPage();
+        await seed(page, article);
+        await page.goto(`/read/?id=${article.id}`);
+        const measurement = await measurePage(page, hasTable);
+        // Tabellenfaelle plus die drei schwersten Ausgangsbefunde dokumentieren.
+        let screenshot = null;
+        if (viewport.shots && (hasTable || WORST_BASELINE_SITES.has(entry.site))) {
+          screenshot = path.join("screenshots", theme, `${slug(entry.url)}.png`);
+          fs.mkdirSync(path.dirname(path.join(CORPUS, screenshot)), { recursive: true });
+          await page.screenshot({ path: path.join(CORPUS, screenshot) });
+        }
+        results.push({
+          site: entry.site,
+          url: entry.url,
+          viewport: viewport.name,
+          theme,
+          screenshot,
+          ...measurement,
+        });
+        await context.close();
       }
-      results.push({ site: entry.site, url: entry.url, theme, screenshot, ...measurement });
-      await context.close();
     }
   }
 } finally {
@@ -236,17 +253,20 @@ try {
   await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
 }
 
-const failures = results.flatMap((result) => [
-  ...(result.pageOverflow ? [`${result.site}/${result.theme}: page overflow`] : []),
-  ...(result.images?.broken ? [`${result.site}/${result.theme}: ${result.images.broken} broken images`] : []),
-  ...(result.images?.tooWide ? [`${result.site}/${result.theme}: ${result.images.tooWide} images wider than the column`] : []),
-  ...(result.images?.decorative ? [`${result.site}/${result.theme}: ${result.images.decorative} decorative images left`] : []),
-  ...result.tables.flatMap((table, index) =>
-    table.stable ? [] : [`${result.site}/${result.theme}/table-${index + 1}: ${table.before} -> ${table.after}`]
-  ),
-]);
+const failures = results.flatMap((result) => {
+  const where = `${result.site}/${result.viewport}/${result.theme}`;
+  return [
+    ...(result.pageOverflow ? [`${where}: page overflow`] : []),
+    ...(result.images?.broken ? [`${where}: ${result.images.broken} broken images`] : []),
+    ...(result.images?.tooWide ? [`${where}: ${result.images.tooWide} images wider than the column`] : []),
+    ...(result.images?.decorative ? [`${where}: ${result.images.decorative} decorative images left`] : []),
+    ...result.tables.flatMap((table, index) =>
+      table.stable ? [] : [`${where}/table-${index + 1}: ${table.before} -> ${table.after}`]
+    ),
+  ];
+});
 const report = {
-  viewport: { ...VIEWPORT, deviceScaleFactor: 2 },
+  viewports: VIEWPORTS.map((v) => ({ ...v, deviceScaleFactor: 2 })),
   themes: THEMES,
   articles: articles.length,
   renders: results.length,
