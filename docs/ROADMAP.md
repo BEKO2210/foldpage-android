@@ -30,35 +30,22 @@ weg, URLs nur noch `http(s)`/`mailto`/`tel`/`#`/`data:image`.
 (85.676), gespeicherte HTML-Bytes −22,5 %, Befund `href-relative` 1 → 0.
 Dateien: `lib/parse.ts`, `lib/parse.test.ts`, `corpus/report.*`.
 
-### A2 · `source` beim Teilen korrekt setzen · G
-`addArticleFromUrl` wird aus dem Share-Intent ohne zweites Argument gerufen,
-alles landet als `"manual"`. Damit ist nicht mehr auswertbar, wie Artikel
-hereinkommen, und eine spätere „zuletzt geteilt"-Ansicht hat keine Grundlage.
-**Ziel:** Share-Weg schreibt `"share"`, `?add=`-Weg ebenfalls.
-**Dateien:** `components/Library.tsx` (`handleAdd` bekommt einen Quellparameter).
-**Abnahme:** Artikel per Share speichern, Export als JSON, Feld prüfen.
+### A2 · `source` beim Teilen korrekt setzen ✅ erledigt (12.08.2026)
+`handleAdd` nimmt jetzt die Quelle als zweites Argument; Share-Intent (kalt und
+warm) und der `?add=`-Weg schreiben `"share"`, das Eingabefeld `"manual"`.
+Dateien: `components/Library.tsx`.
 
-### A3 · Toten Code entfernen
-`components/BottomNav.tsx` ist der abgelöste Vorgänger von `AppNav` und wird
-nirgends importiert. Zwei Navigationen im Baum sind eine Einladung, die falsche
-zu ändern.
-**Dateien:** `components/BottomNav.tsx` (löschen).
-**Abnahme:** `npx eslint` + `npm run build` grün, `grep -r BottomNav` leer.
+### A3 · Toten Code entfernen ✅ erledigt (12.08.2026)
+`components/BottomNav.tsx` gelöscht — abgelöster Vorgänger von `AppNav`,
+nirgends importiert.
 
-### A4 · Sprachbruch in der Oberfläche beseitigen
-Die Oberfläche ist **durchgehend englisch** — „Inbox", „Archive", „Search your
-library…", „Could not reach that page". Deutsch sind genau drei Stellen: der
-Titel des Android-Share-Sheets beim Export („Export teilen", `lib/native.ts`
-Zeile 174) und die Fußzeilen-Links „Datenschutz" / „Impressum"
-(`app/settings/page.tsx` Zeile 251/255). Dazu steht `<html lang="en">`
-(`app/layout.tsx`), während die verlinkten Rechtstexte deutsch sind und der
-Play-Eintrag auf ein deutsches Publikum zielt.
-**Ziel:** die drei Stellen englisch fassen („Share export", „Privacy",
-„Legal notice"). Die Sprachfrage ist am 12.08.2026 entschieden — die App ist
-international und spricht Englisch (siehe **B7**).
-**Dateien:** `lib/native.ts`, `app/settings/page.tsx`.
-**Abnahme:** kein Bildschirm mehr mit zwei Sprachen; Export-Sheet und
-Einstellungs-Fußzeile am Gerät gesehen.
+### A4 · Sprachbruch beseitigt ✅ erledigt (12.08.2026)
+Die drei deutschen Stellen sind englisch: „Share export" im Share-Sheet
+(`lib/native.ts`), „Privacy" und „Legal notice" in der Fußzeile
+(`app/settings/page.tsx`) — beide Links tragen jetzt `hrefLang="de"`, weil die
+Zielseiten deutsch bleiben (sie sind die rechtsverbindliche Fassung). Dazu
+B7.2 gleich miterledigt: `toLocaleString("de-DE")` ist auf die Gerätesprache
+umgestellt, ein englisches Telefon liest wieder „12,500" statt „12.500".
 
 ### A5 · Abbruch beim Speichern
 Ein hängender Abruf blockiert bis zum Timeout (15 s Connect / 25 s Read) ohne
@@ -77,13 +64,16 @@ markiert (`<mark>`), bei reinem Body-Treffer ein Hinweis „im Text gefunden".
 `app/globals.css`.
 **Abnahme:** neuer Test für den Fundort in `lib/`, Sichtprüfung.
 
-### A7 · Artikel erneut laden
-Ein Artikel, der beim Speichern halb kaputt extrahiert wurde (Paywall,
-Consent-Wand, langsame Seite), bleibt für immer halb kaputt.
-**Ziel:** „Neu laden" im Reader — holt die Seite erneut, ersetzt `contentHtml`,
-`wordCount`, `readingMin`, behält `id`, `tags`, `favorite`, `progress`.
-**Dateien:** `app/read/page.tsx`, `lib/articles.ts` (`refetchArticle`).
-**Abnahme:** Unit-Test für `refetchArticle` (Felder bleiben erhalten), Gerätetest.
+### A7 · Artikel erneut laden ✅ erledigt (12.08.2026)
+„Reload" neben „View original" im Reader. Holt die Seite erneut und ersetzt
+Titel, Text, Wortzahl, Lesezeit, Sprache und Canonical — behält Tags, Stern,
+Ablage, Lesefortschritt, `addedAt` und die ID.
+**Ergebnis:** 19/19 Tests grün. Die Zusammenführung steckt bewusst in einem
+eigenen Modul (`lib/refetch.ts`, reine Funktion ohne IndexedDB und ohne
+Capacitor), damit sie offline testbar ist; der Test prüft auch, welche Felder
+**nicht** im Patch stehen dürfen.
+Dateien: `lib/refetch.ts`, `lib/refetch.test.ts`, `lib/articles.ts`,
+`app/read/page.tsx`, `app/globals.css`.
 
 ### A8 · Wischgesten in der Bibliothek · G
 Archivieren und Löschen brauchen heute einen genauen Treffer auf ein kleines
@@ -254,7 +244,7 @@ Paywall-Formeln und bleiben unangetastet.
 | Etappe | Inhalt | Abnahme |
 |---|---|---|
 | B7.1 | ✅ Entscheidung getroffen: Englisch, international | hier festgehalten |
-| B7.2 | Zahlenformat entkoppeln: `toLocaleString("de-DE")` in `app/settings/page.tsx` ist fest verdrahtet und macht aus 12.500 Wörtern „12.500" statt „12,500" | `undefined` als Locale, Anzeige bei englischem Gerät geprüft |
+| B7.2 | ✅ erledigt (12.08.2026): `toLocaleString()` ohne festes Locale, folgt dem Gerät | mit A4 zusammen umgesetzt |
 | B7.3 | Möbel-Erkennung um englischsprachige Muster erweitern („accept cookies", „subscribe to continue", „skip to main content") — die Regex kennt heute fast nur deutsche Seiten | `npm run corpus`: Befunde an den englischen Quellen sinken |
 | B7.4 | Play-Eintrag international ausrichten: englische Beschreibung als Standard, Screenshots ohne deutschen Text | Store-Eintrag geprüft |
 | B7.5 | Reader-Sprache: `article.lang` steht bereits im Datenmodell — Silbentrennung und Anführungszeichen je Artikel setzen, statt alles wie Englisch zu behandeln | Reader-Lab-Lauf ohne neue Befunde |
@@ -268,10 +258,10 @@ Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
 
 ## Reihenfolge, wenn niemand etwas anderes sagt
 
-1. **A2, A3, A4** — kleine Korrekturen, sofort erledigt, machen den Rest sauberer.
+1. ~~**A2, A3, A4**~~ — erledigt am 12.08.2026.
 2. **B1** — das einzige offene *Versprechen*; bis dahin sind README und Welcome
-   in einem Punkt schöner als die Wirklichkeit.
-3. **A7, A5, A6** — sichtbarer Nutzen im Alltag.
+   in einem Punkt schöner als die Wirklichkeit. **Als Nächstes dran.**
+3. ~~A7~~ erledigt; **A5, A6** — sichtbarer Nutzen im Alltag.
 4. **B5** — der Reader ist das Produkt, und er ist messbar.
 5. **A8, A9, B6** — Bedienung und Zugänglichkeit.
 6. **B2** — sobald echte Bibliotheken groß genug werden, dass man es merkt.

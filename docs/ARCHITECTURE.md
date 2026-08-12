@@ -56,7 +56,8 @@ components/
   Library.tsx           529 Z. — die Bibliothek: Tabs, Suche, Tag-Filter,
                         Speichern, Karten, Undo-Toast, Share-Intent-Empfang
   AppNav.tsx            Bottom-Navigation, lebt im Layout (siehe 6.)
-  BottomNav.tsx         ⚠ toter Code — Vorgänger von AppNav, nirgends importiert
+  DisplaySettings.tsx   Theme/Größe/Schrift/Ausrichtung/Zeilenabstand (siehe 6a.)
+  DisplaySheet.tsx      dieselben Regler als <dialog> im Reader
   TopBar.tsx            Kopfzeile: Logo oder Zurück-Link + rechte Aktionen
   TagEditor.tsx         Chips + Eingabefeld im Reader
   Welcome.tsx           Einmaliger Erststart-Dialog (+ SVG-Marke)
@@ -64,7 +65,9 @@ components/
 lib/
   types.ts              `Article`, `ParseResult` — das Datenmodell
   db.ts                 IndexedDB über `idb`, alle Lese-/Schreibwege
-  articles.ts           `addArticleFromUrl` — Abruf + Dublettenprüfung + Speichern
+  articles.ts           `addArticleFromUrl`, `refetchArticle` — Abruf, Dublette, Speichern
+  refetch.ts            reine Zusammenführung beim Neuladen (ohne DB/Capacitor)
+  display.ts            Anzeige-Einstellungen (siehe 6a.)
   parse.ts              409+ Z. — Abruf, Extraktion, Möbelentfernung, Sanitizer
   native.ts             Capacitor-Brücke: Haptik, Statusleiste, Splash, Dateien,
                         externe Links, Hardware-Zurück, ShareTarget-Plugin
@@ -107,7 +110,7 @@ docs/                   diese Datei + ROADMAP/FUTURE-PROOFING/RELEASE/READER-LAB
 | `favorite` | boolean | |
 | `progress` | 0..1 | Lesefortschritt; ≥ 0.98 gilt als gelesen |
 | `tags` | string[] | kleingeschrieben, max. 100 Zeichen je Tag |
-| `source` | `"manual" \| "import" \| "share"` | ⚠ der Share-Weg schreibt derzeit `"manual"`, siehe Roadmap |
+| `source` | `"manual" \| "import" \| "share"` | Eingabefeld, Import, oder Share-Intent bzw. `?add=` |
 | `addedAt`, `readAt`, `modifiedAt` | epoch ms | `modifiedAt` bei jeder Änderung neu |
 | `deleted` | boolean | **Soft Delete** (Tombstone), damit Undo verlustfrei ist |
 
@@ -241,6 +244,9 @@ weniger gespeicherte HTML-Bytes**, und der Befund `href-relative` ist von 1 auf
   sonst die `.tablewrap`-Elemente neu erzeugen und deren `scrollLeft` verlieren.
 - Der `.tablewrap` bekommt `has-more`, solange rechts noch etwas steht
   (ResizeObserver + Scroll-Listener).
+- „Reload" holt die Seite erneut (`refetchArticle`). Was dabei ersetzt wird und
+  was bleibt, entscheidet `lib/refetch.ts` — Text und Metadaten neu, alles vom
+  Leser (Tags, Stern, Ablage, Fortschritt) unangetastet.
 - Links im Artikel behandelt **nicht** der Reader, sondern global
   `wireExternalLinks()` — ein zweiter Listener würde jeden Link doppelt öffnen.
 

@@ -276,6 +276,24 @@ body {
   font-size: 0.875rem;
   margin: 0 0 1rem;
 }
+/* An action that reads as a link because it sits in a line of links, but is a
+   button because it does something rather than going somewhere. */
+.linkbtn {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: var(--highlight);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+.linkbtn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
 .reader h1,
 .reader h2,
 .reader h3 {

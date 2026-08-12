@@ -121,15 +121,18 @@ export default function Library() {
     refresh();
   }, [refresh]);
 
+  /** `source` is stored with the article, so how a page arrived stays
+      answerable later — from the share sheet, from a link handed to the app, or
+      typed in by hand. Defaulting every path to "manual" made the field lie. */
   const handleAdd = useCallback(
-    async (addUrl?: string) => {
+    async (addUrl?: string, source: Article["source"] = "manual") => {
       const target = (addUrl ?? url).trim();
       if (!target || addingRef.current) return;
       addingRef.current = true;
       setBusy(true);
       setNotice(null);
       try {
-        const { article, duplicate } = await addArticleFromUrl(target);
+        const { article, duplicate } = await addArticleFromUrl(target, source);
         setUrl("");
         setNotice(
           duplicate ? "Already in your library." : `Saved: ${article.title}`
@@ -155,10 +158,10 @@ export default function Library() {
     (async () => {
       const pending = await ShareTarget.consume();
       const cold = pending.value?.match(URL_IN_TEXT);
-      if (cold) await handleAdd(cold[0]);
+      if (cold) await handleAdd(cold[0], "share");
       const handle = await ShareTarget.addListener("shared", ({ value }) => {
         const warm = value?.match(URL_IN_TEXT);
-        if (warm) void handleAdd(warm[0]);
+        if (warm) void handleAdd(warm[0], "share");
       });
       remove = handle.remove;
     })();
@@ -184,7 +187,7 @@ export default function Library() {
     const match = raw.match(URL_IN_TEXT);
     if (match) {
       window.history.replaceState({}, "", "/");
-      void handleAdd(match[0]);
+      void handleAdd(match[0], "share");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restoreScroll]);

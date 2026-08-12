@@ -152,9 +152,7 @@ export default function SettingsPage() {
             {stats
               ? `${stats.count} article${
                   stats.count === 1 ? "" : "s"
-                } · ${stats.words.toLocaleString(
-                  "de-DE"
-                )} words — stored on this phone only.`
+                } · ${stats.words.toLocaleString()} words — stored on this phone only.`
               : "…"}
           </p>
           <p className="text-sm mt-2" style={{ color: "var(--muted)" }}>
@@ -256,13 +254,22 @@ export default function SettingsPage() {
           </ul>
         </section>
 
+        {/* The pages themselves are German — they are the legally binding
+            wording for a German publisher — but the labels that lead to them
+            belong to the interface, and that is English. */}
         <footer className="legal-links mt-8" aria-label="Legal information">
-          <a href="https://beko2210.github.io/foldpage-android/datenschutz/">
-            Datenschutz
+          <a
+            href="https://beko2210.github.io/foldpage-android/datenschutz/"
+            hrefLang="de"
+          >
+            Privacy
           </a>
           <span aria-hidden="true">·</span>
-          <a href="https://beko2210.github.io/foldpage-android/impressum/">
-            Impressum
+          <a
+            href="https://beko2210.github.io/foldpage-android/impressum/"
+            hrefLang="de"
+          >
+            Legal notice
           </a>
         </footer>
       </div>

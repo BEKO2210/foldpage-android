@@ -1,10 +1,20 @@
 "use client";
 
 import type { Article } from "./types";
-import { findByUrl, newId, saveArticle } from "./db";
+import { findByUrl, getArticle, newId, saveArticle, updateArticle } from "./db";
 import { parseUrl } from "./parse";
+import { mergeRefetch } from "./refetch";
 
 export { parseUrl };
+export { mergeRefetch } from "./refetch";
+
+/** Fetch a saved article again and replace its text with what comes back. */
+export async function refetchArticle(id: string): Promise<Article | undefined> {
+  const current = await getArticle(id);
+  if (!current) return undefined;
+  const parsed = await parseUrl(current.url);
+  return updateArticle(id, mergeRefetch(current, parsed));
+}
 
 export async function addArticleFromUrl(
   url: string,

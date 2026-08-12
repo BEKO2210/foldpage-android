@@ -10,7 +10,8 @@ import TagEditor from "@/components/TagEditor";
 import DisplaySheet from "@/components/DisplaySheet";
 import { useDisplayPrefs } from "@/components/DisplaySettings";
 import { CheckIcon, SettingsIcon, StarIcon, UndoIcon } from "@/components/icons";
-import { buzzSuccess, commit, openExternal, tap, uncommit } from "@/lib/native";
+import { buzzSuccess, buzzWarning, commit, openExternal, tap, uncommit } from "@/lib/native";
+import { refetchArticle } from "@/lib/articles";
 import { TEXT_SIZES } from "@/lib/display";
 
 /** Static export has no dynamic route segments, so the article id travels in
@@ -81,6 +82,8 @@ export default function ReadPage() {
   const [article, setArticle] = useState<Article | null | undefined>(undefined);
   const [prefs, updatePrefs] = useDisplayPrefs();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [refetching, setRefetching] = useState(false);
+  const [refetchNote, setRefetchNote] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sizeIdx = prefs.size;
@@ -194,6 +197,30 @@ export default function ReadPage() {
     if (next) setArticle(next);
   }
 
+  /** A page that was behind a consent wall, or timed out halfway, stays broken
+      for as long as the article exists. This is the way out that does not cost
+      the tags, the star or the shelf it sits on. */
+  async function refetch() {
+    if (!article || refetching) return;
+    setRefetching(true);
+    setRefetchNote(null);
+    try {
+      const next = await refetchArticle(article.id);
+      if (next) {
+        setArticle(next);
+        void buzzSuccess();
+        setRefetchNote(`Reloaded — ${next.wordCount.toLocaleString()} words.`);
+      }
+    } catch (e) {
+      void buzzWarning();
+      setRefetchNote(
+        e instanceof Error ? e.message : "Could not reload that page"
+      );
+    } finally {
+      setRefetching(false);
+    }
+  }
+
   if (article === undefined) return null;
   if (article === null)
     return (
@@ -293,7 +320,21 @@ export default function ReadPage() {
               ↗
             </span>
           </a>
+          <span aria-hidden="true"> · </span>
+          <button
+            type="button"
+            className="linkbtn pressable"
+            onClick={() => void refetch()}
+            disabled={refetching}
+          >
+            {refetching ? "Reloading…" : "Reload"}
+          </button>
         </p>
+        {refetchNote && (
+          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+            {refetchNote}
+          </p>
+        )}
         <div className="mb-8" style={{ fontFamily: "var(--sans)" }}>
           <TagEditor tags={article.tags} onChange={(t) => void setTags(t)} />
         </div>

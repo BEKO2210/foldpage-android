@@ -174,7 +174,7 @@ export async function saveAndShare(
     await Share.share({
       title: filename,
       url: written.uri,
-      dialogTitle: "Export teilen",
+      dialogTitle: "Share export",
     });
   } catch {
     /* user dismissed the sheet — the file is written either way */
