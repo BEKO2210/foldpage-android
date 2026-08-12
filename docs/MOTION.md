@@ -3,6 +3,12 @@
 All motion is defined in `app/globals.css`. The two duration tokens are
 `--dur-fast: 150ms` and `--dur-med: 250ms`.
 
+Since 12.08.2026 there is a third easing, `--ease-spring`, written as a
+`linear()` curve that overshoots by six percent and settles. It is used only
+where something *appears* or is *committed* — the settings sheet, the dog-ear on
+a finished article — never on a hover or a scroll. A browser that does not know
+`linear()` ignores the declaration and falls back to `--ease-out`.
+
 | Selector | Motion | Duration | Delay | Fill mode |
 | --- | --- | ---: | ---: | --- |
 | `.btn` | filter and transform transition | 150ms | 0 | n/a |
@@ -17,6 +23,8 @@ All motion is defined in `app/globals.css`. The two duration tokens are
 | `.reader-in` | `fp-page-in` | 250ms | 40ms | backwards |
 | active bottom-nav underline | `fp-nav-underline` | 150ms | 0 | backwards |
 | `.sheet` | `fp-sheet-in` | 250ms | 0 | backwards |
+| `.card.is-read::after` | `fp-dogear`, spring easing | 250ms | 0 | backwards |
+| `.swipe-card` | transform transition, none while dragging | 150ms | 0 | n/a |
 | `.segmented label` | background and colour transition | 150ms | 0 | n/a |
 | `.skeleton-card` | `fp-shimmer` | 1.4s per loop | 0 | none, infinite |
 

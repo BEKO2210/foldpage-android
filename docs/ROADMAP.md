@@ -335,6 +335,114 @@ Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
 
 ---
 
+## Teil C — Marke und Feinschliff
+
+Eigener Teil, weil hier nicht Funktionen fehlen, sondern **Ausführung**. Regel
+für alles hier: eine Bewegung darf nur dann existieren, wenn sie etwas erklärt.
+Der Rest ist Dekoration und altert schlecht.
+
+### C1 · Zeichen und Falz ✅ erledigt (12.08.2026)
+Das App-Symbol war ein Blatt mit drei Linien und einer kleinen gelben Ecke —
+bei 48 px zerfielen die Linien zu Grau und übrig blieb ein beliebiges
+Dokument-Symbol. Jetzt nimmt die **Falz ein Drittel des Blattes**, der Knick
+wirft einen kurzen Schatten, sonst steht nichts im Bild. Dieselbe Geometrie in
+`public/icon.svg`, im Kopfzeilen-Zeichen (vorher ein nacktes gelbes Dreieck —
+also die Falz ohne das Blatt, von dem sie stammt) und in der Willkommens-Marke.
+Die Karten-Ecke „gelesen" ist kein gelber Spitz mehr, sondern eine echte
+umgeschlagene Ecke: Unterseite des Papiers, warm getönt, mit Knickschatten.
+`scripts/make-assets.mjs` rendert alles neu — jetzt über Chromium statt über
+`sharp`, das nie in der `package.json` stand und auf dieser Maschine gar nicht
+lief. Ein Werkzeug, das man nicht ausführen kann, ist keine Pipeline.
+
+### C2 · Bewegung mit Physik
+`--ease-spring` (als `linear()`-Kurve, mit 6 % Überschwingen) ist eingeführt und
+wird beim Erscheinen von Sheet und Falz benutzt. Offen: dieselbe Kurve für den
+Undo-Toast, die Karten-Staffelung und das Öffnen eines Artikels — aber je
+einzeln geprüft, nicht pauschal ersetzt.
+**Abnahme:** `docs/MOTION.md` und `lib/motion.test.ts` mitgezogen, unter
+`prefers-reduced-motion` bleibt alles still.
+
+### C3 · Der Übergang in den Artikel
+Beim Öffnen springt der Reader hart auf. Eine geteilte Element-Bewegung —
+Kartentitel wird Artikelüberschrift — ist die eine Stelle, an der eine
+Animation wirklich etwas erklärt: wohin man gegangen ist und wie man zurück
+kommt. Technisch mit der View-Transition-API, die in `docs/FUTURE-PROOFING.md`
+bewusst noch als „nicht benutzt" steht, weil sie mit den bestehenden
+`backwards`-Animationen kollidiert. Erst deren Zusammenspiel klären, dann
+bauen.
+**Abnahme:** Reader-Lab ohne neue Befunde, Bottom-Navigation bleibt an ihrem
+Platz (das war die Falle, die sie einmal in die Bildschirmmitte gehoben hat).
+
+### C4 · Play-Auftritt
+Die Store-Screenshots zeigen die alte Oberfläche und das alte Symbol. Neue
+Aufnahmen aus dem Reader-Lab erzeugen, statt sie von Hand zu schießen — das Lab
+rendert bereits in Gerätegröße und in beiden Themes.
+**Abnahme:** vier Aufnahmen, kein deutscher Text darin (die App ist englisch),
+Symbol neu.
+
+### C5 · Leerer Zustand und erster Eindruck
+Die Willkommensseite ist gut, danach ist das leere Regal ein Bild und drei
+Zeilen. Ein erster Artikel zum Ausprobieren („speichere diesen Link") oder eine
+sichtbare Erklärung, wie das Teilen aus anderen Apps geht, wäre der Unterschied
+zwischen „leer" und „bereit".
+
+---
+
+## Teil D — Vorlesen und Verstehen, auf dem Gerät
+
+Der Wunsch: **Vorlesen**, **Zusammenfassung**, **Fragen zum Artikel** — und
+zwar auf dem Telefon, ohne dass ein Text das Gerät verlässt. Das passt zum
+einzigen Versprechen, das diese App hat. Es ist auch die einzige Art, wie es
+gehen darf: eine Cloud-Anfrage würde genau das brechen, wofür es die App gibt.
+
+**Die Bedingung steht vor der Arbeit, nicht danach:** Ist die Qualität nicht
+gut, wird es **nicht veröffentlicht**. Kein „Beta"-Etikett, kein „experimentell"
+im Einstellungsmenü. Eine falsche Zusammenfassung ist schlimmer als keine, weil
+sie gelesen und geglaubt wird.
+
+### D1 · Vorlesen (der ehrliche Anfang)
+Android bringt TTS mit (`TextToSpeech`, Stimmen je Sprache nachladbar). Kein
+Modell, keine Modellgröße, kein Speicherplatz — es ist eine Systemfunktion.
+Damit ist es der Teil, der sicher funktioniert.
+**Zu klären:** Absatzweises Vorlesen mit Fortschritt, Weiterlesen nach
+Unterbrechung, Sperrbildschirm-Steuerung (Media-Session), Sprache aus
+`article.lang` statt aus der Systemsprache.
+**Abnahme:** ein deutscher und ein englischer Artikel vollständig vorgelesen,
+Anruf dazwischen, Wiederaufnahme an derselben Stelle.
+
+### D2 · Zusammenfassung, wenn das Gerät es kann
+Der Stand der Technik (geprüft 12.08.2026): **Gemini Nano über die ML-Kit-
+GenAI-APIs**, on-device über AICore. Die Summarization-API ist auf **Englisch,
+Japanisch, Koreanisch** beschränkt — für einen deutschen Artikel also heute
+**nicht** brauchbar. Verfügbar ist das Ganze auf Pixel 8+, Galaxy S24+ und
+einzelnen Xiaomi/Motorola-Geräten, nicht auf jedem Telefon.
+Alternative: ein eigenes kleines Modell (Gemma in INT4, wenige Gigabyte) über
+MediaPipe LLM Inference — dann trägt die App den Download und die
+Geschwindigkeit hängt am Chip.
+**Reihenfolge:** erst messen, was auf Belkis' eigenen Geräten wirklich
+herauskommt — Latenz, Qualität, Sprache —, dann entscheiden. Nicht umgekehrt.
+**Abnahme:** 20 Artikel aus dem Korpus, Zusammenfassung neben dem Original
+gelesen und bewertet; erfundene Aussagen sind ein K.-o.-Kriterium, nicht ein
+Punktabzug.
+
+### D3 · Fragen zum Artikel
+Nur über **diesen** Artikel, mit dem Text im Prompt statt aus dem Gedächtnis
+des Modells — das begrenzt das Erfinden und passt zu einem 1B-Modell. Über die
+ML-Kit-Prompt-API (Alpha) oder dasselbe lokale Modell wie D2.
+**Abnahme:** ein Satz Fragen je Artikel, darunter solche, die der Artikel
+**nicht** beantwortet — das Modell muss „steht nicht drin" sagen können.
+
+### D4 · Was die Oberfläche verspricht
+Wenn D2/D3 kommen, gehört sichtbar dazu, **wer** antwortet: auf dem Gerät,
+welches Modell, und dass es sich irren kann. Und ein Schalter, der es ganz
+abstellt.
+
+**Warum in dieser Reihenfolge:** D1 funktioniert überall und sofort. D2 und D3
+hängen an Geräten, Sprachen und Modellqualität, die wir nicht kontrollieren —
+und an der Bedingung oben.
+
+---
+
 ## Reihenfolge, wenn niemand etwas anderes sagt
 
 1. ~~**A2, A3, A4**~~ — erledigt am 12.08.2026.
@@ -345,7 +453,11 @@ Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
 5. ~~A8, A9~~, **B6.2** — der TalkBack-Durchgang am Gerät ist der Rest.
 6. **B2.3, B2.4** — Wortindex und virtualisierte Liste, sobald Öffnen und
    Suche spürbar werden (heute 0,5 s bzw. 0,3 s bei 200 Artikeln).
-7. **B4** — zuletzt, und nur, wenn B4.1 wirklich getragen hat.
+7. **C2–C5** — Feinschliff, sobald die Funktionen stehen.
+8. **D1** — Vorlesen; es hängt an nichts als Android selbst.
+9. **D2/D3** — erst messen, dann entscheiden, und nur veröffentlichen, wenn die
+   Qualität stimmt.
+10. **B4** — zuletzt, und nur, wenn B4.1 wirklich getragen hat.
 
 ## Arbeitsregeln für jeden Lauf
 

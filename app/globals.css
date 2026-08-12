@@ -18,6 +18,14 @@
   --dur-fast: 150ms;
   --dur-med: 250ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  /* A spring, written as a linear() curve: it overshoots by six percent and
+     settles, which is what makes a movement read as physical rather than
+     animated. Used only where something appears or is committed — never on a
+     hover. Browsers that do not know linear() fall back to the ease above. */
+  --ease-spring: linear(
+    0, 0.402 7.4%, 0.842 15.3%, 1.024 21%, 1.087 25.4%, 1.096 29.8%,
+    1.052 38.4%, 0.996 48.6%, 0.986 58.6%, 1.002 78.9%, 1
+  );
 }
 /* Three theme states, and the order of these blocks is what makes them work.
    `:root` holds the light palette. The media query below serves the "system"
@@ -98,12 +106,9 @@ mark {
   color: var(--accent-ink);
 }
 
-.corner {
-  width: 1rem;
-  height: 1rem;
-  background: var(--highlight);
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-  display: inline-block;
+.brandmark {
+  display: block;
+  flex: none;
 }
 
 .btn {
@@ -239,16 +244,45 @@ mark {
 .card h3 {
   font-family: var(--serif);
 }
+/* A finished article is dog-eared, which is what the app is named after.
+   The triangle shows the *back* of the page — paper, a shade darker — and the
+   accent is only the thin crease where it turned over. The old version was the
+   accent itself as a solid spike, and it read as a sticker stuck onto the card
+   rather than as the card's own corner. */
 .card.is-read::after {
   content: "";
   position: absolute;
   top: 0;
   right: 0;
-  width: 1.4rem;
-  height: 1.4rem;
-  background: var(--highlight);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  border-bottom-left-radius: 0.3rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  /* Exactly the card's own radius, so the fold is the card's corner rather
+     than a shape sitting near it. */
+  border-top-right-radius: 0.75rem;
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+  /* Two gradients on one element: the underside of the page, lighter at the
+     tip and shading toward the crease, and the crease itself as a thin bright
+     line where the paper turned over. The bands run parallel to the fold
+     because 225deg is perpendicular to it. */
+  /* The underside of the page, shading from almost-paper at the tip to the
+     brand's warm yellow where it turned over. The accent is present as a tone
+     rather than as a solid triangle — the old spike read as a sticker. */
+  background-image: linear-gradient(
+    225deg,
+    color-mix(in oklab, var(--paper) 94%, var(--ink)) 0%,
+    color-mix(in oklab, var(--highlight) 30%, var(--paper)) 55%,
+    color-mix(in oklab, var(--highlight) 72%, var(--paper)) 100%
+  );
+  /* drop-shadow follows the clip; box-shadow would draw the square behind it. */
+  filter: drop-shadow(-1px 1px 1.5px rgba(10, 14, 25, 0.2));
+  transform-origin: 100% 0;
+  animation: fp-dogear var(--dur-med) var(--ease-spring) backwards;
+}
+@keyframes fp-dogear {
+  from {
+    transform: scale(0.35);
+    opacity: 0;
+  }
 }
 
 /* Reader typography — the product */

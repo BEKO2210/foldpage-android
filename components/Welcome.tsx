@@ -76,12 +76,13 @@ function PaperMark() {
     >
       <path
         className="wm-sheet"
-        d="M6 4h58l26 26v86H6z"
+        d="M6 4h48l36 36v76H6z"
         fill="var(--card)"
         stroke="var(--line)"
         strokeWidth="2"
       />
-      <path className="wm-fold" d="M64 4l26 26H64z" fill="var(--highlight)" />
+      <path className="wm-fold" d="M54 4l36 36H54z" fill="var(--highlight)" />
+      <path className="wm-fold" d="M54 40h36l-36 7z" fill="var(--ink)" opacity="0.16" />
       <g
         className="wm-lines"
         stroke="var(--muted)"

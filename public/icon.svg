@@ -1,8 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- The fold is the mark. The old icon was a page with three rule lines and a
+       small yellow corner; at 48px the lines turned to mush and what was left
+       looked like every other document icon. Now the dog-ear takes a third of
+       the sheet, the crease casts a short shadow so the corner reads as turned
+       over rather than painted on, and nothing else competes with it. -->
   <rect width="512" height="512" rx="96" fill="#1a1e26"/>
-  <path d="M128 112h192l64 64v224H128z" fill="#fafaf7"/>
-  <path d="M320 112l64 64h-64z" fill="#f5d547"/>
-  <rect x="160" y="232" width="192" height="18" rx="9" fill="#c9ccc4"/>
-  <rect x="160" y="278" width="192" height="18" rx="9" fill="#c9ccc4"/>
-  <rect x="160" y="324" width="128" height="18" rx="9" fill="#f5d547"/>
+  <path d="M96 80h176l144 144v208H96z" fill="#fafaf7"/>
+  <path d="M272 80l144 144H272z" fill="#f5d547"/>
+  <path d="M272 224h144l-144 26z" fill="#000000" opacity="0.16"/>
 </svg>
