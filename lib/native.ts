@@ -26,9 +26,54 @@ export const ShareTarget = registerPlugin<ShareTargetPlugin>("ShareTarget");
 /** Screens the app can point at but not replace — see SystemSettingsPlugin. */
 export interface SystemSettingsPlugin {
   openTextToSpeech(): Promise<void>;
+  requestAudioFocus(): Promise<{ granted: boolean }>;
+  abandonAudioFocus(): Promise<void>;
+  gestureThreshold(): Promise<void>;
 }
 
 export const SystemSettings = registerPlugin<SystemSettingsPlugin>("SystemSettings");
+
+/** The pulse a gesture gives the moment it commits.
+ *
+ *  Distinct from `tap()` on purpose: this is the platform's own gesture
+ *  feedback, tuned per device, not a duration in milliseconds. The hand should
+ *  know that letting go will do something — without looking. */
+export async function gestureThreshold(): Promise<void> {
+  if (!isNative()) return;
+  try {
+    await SystemSettings.gestureThreshold();
+  } catch {
+    // Older phone, or the effect is unavailable: a plain tap still says
+    // "something changed", which is the part that matters.
+    void tap(ImpactStyle.Light);
+  }
+}
+
+/** Claim audio focus while an article is read out.
+ *
+ *  Android 16 mutes audio that another process starts on an app's behalf
+ *  unless somebody holds focus — and the speech engine is another process. On
+ *  a Galaxy S23 the engine synthesised the text, opened an audio track, and the
+ *  system muted it; the app was told everything had gone fine. Holding focus is
+ *  what makes the sound arrive. */
+export async function holdAudioFocus(): Promise<boolean> {
+  if (!isNative()) return true;
+  try {
+    const { granted } = await SystemSettings.requestAudioFocus();
+    return granted;
+  } catch {
+    return false;
+  }
+}
+
+export async function releaseAudioFocus(): Promise<void> {
+  if (!isNative()) return;
+  try {
+    await SystemSettings.abandonAudioFocus();
+  } catch {
+    /* nothing held it */
+  }
+}
 
 /** Android's own text-to-speech screen: engine, speed, language, and the
     "Listen to an example" button that settles whether a silent reader is the

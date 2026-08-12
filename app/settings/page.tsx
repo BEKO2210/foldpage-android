@@ -312,46 +312,56 @@ export default function SettingsPage() {
         <section className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Reading aloud</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            The voice comes from Android, not from FoldPage: whichever engine the
-            phone is set to use does the speaking. If the reader stays silent,
-            this says which link in the chain is missing — and two of them are
-            outside the app.
-          </p>
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            Speech plays on the <b>media</b> volume, not the ringer. A phone with
-            the ringer up and media muted is silent here and nowhere else.
+            Android reads the article out. Which voice it uses is set on the
+            phone, not here.
           </p>
           <div className="action-list">
-            <ActionRow
-              label="Check the voice"
-              hint="Walks the chain and names the first link that fails"
-              onClick={() => void runVoiceCheck()}
-              disabled={checking}
-              busy={checking ? "…" : undefined}
-            />
             <ActionRow
               label="Android speech settings"
               hint="Engine, speed, language — and “Listen to an example”"
               onClick={() => void openSpeechSettings()}
             />
-            <ActionRow
-              label="Install voices"
-              hint="Add or repair a language's voice data"
-              onClick={() => void installVoices()}
-            />
           </div>
-          {voiceCheck && (
-            <ul className="text-sm mt-3 grid gap-1 pl-0" style={{ listStyle: "none" }} role="status">
-              {voiceCheck.map((step) => (
-                <li key={step.label}>
-                  <span aria-hidden="true">{step.ok ? "✓" : "✗"}</span> {step.label}
-                  {step.detail ? (
-                    <span style={{ color: "var(--muted)" }}> — {step.detail}</span>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          )}
+          {/* Fault-finding belongs one level down. Kept beside the setting it
+              explains rather than on a screen of its own, but not competing
+              with it: most people never need this, and the two who do need it
+              at exactly this moment. */}
+          <details className="disclosure">
+            <summary>If it stays silent</summary>
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
+              Speech plays on the <b>media</b> volume, not the ringer — a phone
+              with the ringer up and media muted is silent here and nowhere
+              else. The voice itself comes from Android: whichever engine the
+              phone is set to use does the speaking.
+            </p>
+            <div className="action-list">
+              <ActionRow
+                label="Check the voice"
+                hint="Walks the chain and names the first link that fails"
+                onClick={() => void runVoiceCheck()}
+                disabled={checking}
+                busy={checking ? "…" : undefined}
+              />
+              <ActionRow
+                label="Install voices"
+                hint="Add or repair a language's voice data"
+                onClick={() => void installVoices()}
+              />
+            </div>
+            {voiceCheck && (
+              <ul className="check-list" role="status">
+                {voiceCheck.map((step) => (
+                  <li key={step.label} data-ok={step.ok ? "yes" : "no"}>
+                    <span className="mark" aria-hidden="true">{step.ok ? "✓" : "✗"}</span>
+                    <span>
+                      {step.label}
+                      {step.detail ? <span className="hint"> {step.detail}</span> : null}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </details>
         </section>
 
         <section className="section-card mb-5">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { gestureThreshold } from "@/lib/native";
 
 /** Swipe a card sideways to archive or delete it.
  *
@@ -42,6 +43,10 @@ export default function SwipeRow({
   const [dragging, setDragging] = useState(false);
   const start = useRef<{ x: number; y: number } | null>(null);
   const decided = useRef<"horizontal" | "vertical" | null>(null);
+  /** The threshold is a line the hand should feel, not read. Pulsed once when
+      it is crossed and once when it is crossed back — never repeatedly, which
+      is how a gesture turns into a rattle. */
+  const armed = useRef(false);
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -64,6 +69,11 @@ export default function SwipeRow({
       }
     }
     if (decided.current !== "horizontal") return;
+    const nowArmed = Math.abs(deltaX) >= COMMIT_PX;
+    if (nowArmed !== armed.current) {
+      armed.current = nowArmed;
+      void gestureThreshold();
+    }
     setDx(deltaX);
   }
 
@@ -71,6 +81,7 @@ export default function SwipeRow({
     const travelled = dx;
     start.current = null;
     decided.current = null;
+    armed.current = false;
     setDragging(false);
     setDx(0);
     if (travelled >= COMMIT_PX) onArchive();

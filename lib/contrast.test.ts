@@ -92,6 +92,22 @@ for (const [theme, palette] of [
   });
 }
 
+/** The check list is the one place with colours outside the token set: a green
+    and a red that have to be legible on both papers. They are pinned here so a
+    later theme change cannot quietly bury them. */
+test("the check marks stay legible on both papers", () => {
+  for (const [name, palette] of [
+    ["light", light],
+    ["dark", dark],
+  ] as const) {
+    for (const role of ["ok", "warn"] as const) {
+      assert.ok(palette[role], `${name}: --${role} is missing`);
+      const ratio = contrast(palette[role], palette.card);
+      assert.ok(ratio >= 4.5, `${name} --${role}: ${ratio.toFixed(2)}:1`);
+    }
+  }
+});
+
 test("card boundaries meet the 3:1 non-text contrast threshold", () => {
   for (const [theme, palette] of [
     ["light", light],

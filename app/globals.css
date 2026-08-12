@@ -12,6 +12,11 @@
   --card: #ffffff;
   --toast-bg: #1a1e26;
   --toast-text: #fafaf7;
+  /* Status marks. Per theme, because one colour cannot carry 4.5:1 against
+     white and against near-black at the same time — and these are text, not
+     decoration. lib/contrast.test.ts holds both to that. */
+  --ok: #1f6b41;
+  --warn: #a8322a;
   --serif: "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   /* motion tokens — one rhythm everywhere */
@@ -39,6 +44,8 @@
    of shipping a half-dark theme. */
 @media (prefers-color-scheme: dark) {
   :root {
+    --ok: #6ec98f;
+    --warn: #ef8a80;
     --ink: #e8e6df;
     --paper: #14171e;
     --muted: #9aa3b0;
@@ -49,6 +56,8 @@
   }
 }
 :root[data-theme="light"] {
+  --ok: #1f6b41;
+  --warn: #a8322a;
   --ink: #1a1e26;
   --paper: #fafaf7;
   --muted: #5a6472;
@@ -59,6 +68,8 @@
   color-scheme: light;
 }
 :root[data-theme="dark"] {
+  --ok: #6ec98f;
+  --warn: #ef8a80;
   --ink: #e8e6df;
   --paper: #14171e;
   --muted: #9aa3b0;
@@ -1226,6 +1237,77 @@ input[type="file"] {
 }
 .action-row:active .go {
   transform: translateX(2px);
+}
+
+/* Progressive disclosure. `<details>` rather than a state flag: it is
+   keyboard-operable, screen readers announce it as expandable, and it survives
+   a re-render without anything having to remember it. */
+.disclosure {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  list-style: none;
+}
+.disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+/* The triangle is drawn rather than borrowed from the browser, so it turns
+   with the same easing as everything else. */
+.disclosure > summary::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.disclosure[open] > summary::before {
+  transform: rotate(45deg);
+}
+.disclosure[open] > summary {
+  color: var(--ink);
+}
+
+.check-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0.4rem;
+  padding: 0;
+  list-style: none;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+}
+.check-list li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+}
+.check-list .mark {
+  flex: none;
+  width: 1.1rem;
+  font-weight: 700;
+}
+/* Never colour alone: the mark carries the meaning as a character too, so it
+   still reads when the difference between green and red does not. */
+.check-list li[data-ok="yes"] .mark {
+  color: var(--ok);
+}
+.check-list li[data-ok="no"] .mark {
+  color: var(--warn);
+}
+.check-list .hint {
+  color: var(--muted);
 }
 
 /* Settings sections as cards */

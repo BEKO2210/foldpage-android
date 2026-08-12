@@ -1,7 +1,14 @@
 package de.ithandwerk.foldpage;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
+import android.os.Build;
+import android.view.HapticFeedbackConstants;
+import android.view.View;
 
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -20,6 +27,91 @@ import com.getcapacitor.annotation.CapacitorPlugin;
  */
 @CapacitorPlugin(name = "SystemSettings")
 public class SystemSettingsPlugin extends Plugin {
+
+    private AudioFocusRequest focusRequest;
+
+    /**
+     * Claims audio focus for speech, and keeps it until speaking is done.
+     *
+     * <p>Android 16 hardened background playback: audio started by another
+     * process on an app's behalf is muted unless somebody holds focus. The
+     * speech engine is a separate process, so on this phone it synthesised the
+     * article, opened an AudioTrack, and the system muted it — the log said
+     * "AudioHardening background playback would be muted for
+     * com.google.android.tts" while the app itself reported success. Nothing in
+     * the app could see that, which is why it looked like nothing happened at
+     * all.
+     *
+     * <p>Requested as MEDIA/SPEECH, transient with duck: a navigation prompt or
+     * an incoming call lowers or stops the article rather than talking over it.
+     */
+    @PluginMethod
+    public void requestAudioFocus(PluginCall call) {
+        AudioManager audio = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        if (audio == null) {
+            call.reject("No audio service on this device");
+            return;
+        }
+        int result;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build();
+            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                    .setAudioAttributes(attributes)
+                    .setWillPauseWhenDucked(false)
+                    .build();
+            result = audio.requestAudioFocus(focusRequest);
+        } else {
+            result = audio.requestAudioFocus(
+                    null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+        }
+        com.getcapacitor.JSObject answer = new com.getcapacitor.JSObject();
+        answer.put("granted", result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+        call.resolve(answer);
+    }
+
+    /**
+     * The pulse a gesture gives when it crosses the point of no return.
+     *
+     * <p>Android has a constant for exactly this — the same feedback the system
+     * uses when a swipe-to-dismiss will actually dismiss — and it is tuned per
+     * device rather than being a duration somebody guessed. The web API can
+     * only vibrate for N milliseconds, which feels like a phone buzzing rather
+     * than like an interface answering.
+     */
+    @PluginMethod
+    public void gestureThreshold(PluginCall call) {
+        View view = getBridge().getWebView();
+        if (view == null) {
+            call.resolve();
+            return;
+        }
+        int effect = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                ? HapticFeedbackConstants.GESTURE_START
+                : HapticFeedbackConstants.VIRTUAL_KEY;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            effect = HapticFeedbackConstants.GESTURE_THRESHOLD_ACTIVATE;
+        }
+        view.performHapticFeedback(effect, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+        call.resolve();
+    }
+
+    /** Hands focus back, so music or a podcast can resume. */
+    @PluginMethod
+    public void abandonAudioFocus(PluginCall call) {
+        AudioManager audio = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        if (audio != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && focusRequest != null) {
+                audio.abandonAudioFocusRequest(focusRequest);
+                focusRequest = null;
+            } else {
+                audio.abandonAudioFocus(null);
+            }
+        }
+        call.resolve();
+    }
 
     /** Android's text-to-speech output screen: engine, speed, language, and the
      *  "Listen to an example" button that settles whether the fault is here or

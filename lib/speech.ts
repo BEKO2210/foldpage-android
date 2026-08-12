@@ -1,6 +1,6 @@
 "use client";
 
-import { isNative } from "./native";
+import { holdAudioFocus, isNative, releaseAudioFocus } from "./native";
 import { speechLanguage, spokenBlocks, wrapEngine, type SpokenBlock } from "./readAloud";
 
 export { spokenBlocks, spokenMinutes, speechLanguage, wrapEngine } from "./readAloud";
@@ -13,8 +13,8 @@ export type { SpokenBlock } from "./readAloud";
  *  pre-rendered at build time where there is no window — importing it at the
  *  top of this file breaks `npm run build` outright. */
 async function engine() {
-  const module = await import("@capacitor-community/text-to-speech");
-  return wrapEngine(module);
+  const loaded = await import("@capacitor-community/text-to-speech");
+  return wrapEngine(loaded);
 }
 
 /** Reading an article out loud, one block at a time.
@@ -99,6 +99,9 @@ class Player {
     this.error = null;
     this.at = from;
     this.emit();
+    // Held for the whole article rather than per block: taking and giving back
+    // focus between paragraphs would duck the user's music twenty times.
+    await holdAudioFocus();
 
     for (let i = from; i < this.blocks.length; i++) {
       if (run !== this.token) return; // stopped, or another play() took over
@@ -120,6 +123,7 @@ class Player {
     if (run !== this.token) return;
     this.playing = false;
     this.at = -1;
+    void releaseAudioFocus();
     this.emit();
   }
 
@@ -159,6 +163,7 @@ class Player {
   stop() {
     this.token += 1;
     this.playing = false;
+    void releaseAudioFocus();
     if (isNative()) void engine().then(({ tts }) => tts.stop()).catch(() => {});
     else globalThis.speechSynthesis?.cancel();
     this.emit();
@@ -256,7 +261,10 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
     note(`Voice for ${wanted}`, false, e instanceof Error ? e.message : String(e));
   }
 
-  // The only step that proves anything: does a word actually come out.
+  // The only step that proves anything: does a word actually come out. With
+  // focus held, for the same reason the article needs it.
+  const focus = await holdAudioFocus();
+  note("Audio focus", focus, focus ? "held" : "refused — playback will be muted");
   const started = Date.now();
   try {
     await withTimeout(
@@ -277,6 +285,7 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
   } catch (e) {
     note("Spoke a test word", false, e instanceof Error ? e.message : String(e));
   }
+  void releaseAudioFocus();
   return steps;
 }
 
