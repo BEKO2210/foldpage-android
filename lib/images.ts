@@ -8,10 +8,12 @@ import {
   getImage,
   hasImage,
   listAllRaw,
+  listArticles,
   putImage,
   updateArticle,
 } from "./db";
 import { isNative } from "./native";
+import { getPrefs } from "./display";
 import {
   LIMITS,
   markStoredImages,
@@ -88,8 +90,15 @@ export interface StoreResult {
  *
  *  Limits come from docs/IMAGE-STORAGE.md, where they are argued from measured
  *  sizes rather than picked. */
-export async function storeImagesForArticle(id: string): Promise<StoreResult> {
+export async function storeImagesForArticle(
+  id: string,
+  { force = false }: { force?: boolean } = {}
+): Promise<StoreResult> {
   const result: StoreResult = { stored: 0, skipped: 0, bytes: 0, changed: false };
+  // The switch governs what happens on its own; asking for it by hand — the
+  // backfill in settings, "Reload" in the reader — is an explicit instruction
+  // and overrides it.
+  if (!force && getPrefs().images === "off") return result;
   const article = await getArticle(id);
   if (!article?.contentHtml) return result;
 
@@ -150,6 +159,48 @@ export async function storeImagesForArticle(id: string): Promise<StoreResult> {
 export async function objectUrlFor(key: string): Promise<string | null> {
   const image = await getImage(key);
   return image ? URL.createObjectURL(image.blob) : null;
+}
+
+/** Articles saved before image storage existed, or whose downloads failed.
+ *
+ *  An article counts as done when every remote picture it shows already
+ *  carries a key. Cheap enough to run over a whole library, because it is
+ *  string work on records that are loaded anyway. */
+export async function articlesMissingImages(): Promise<string[]> {
+  const articles = await listArticles();
+  return articles
+    .filter((article) => {
+      if (!article.contentHtml) return false;
+      const urls = pickImageUrls(article.contentHtml);
+      if (!urls.length) return false;
+      return storedKeysIn(article.contentHtml).length < urls.length;
+    })
+    .map((article) => article.id);
+}
+
+/** Fetch the pictures for a whole backlog, one article at a time.
+ *
+ *  Sequential on purpose: a hundred articles fetching in parallel is a way to
+ *  be throttled by every server at once, and the point is that this can run in
+ *  the background while the library stays usable. `shouldStop` lets the screen
+ *  that started it stop it. */
+export async function backfillImages(
+  ids: string[],
+  onProgress?: (done: number, total: number, result: StoreResult) => void,
+  shouldStop?: () => boolean
+): Promise<{ articles: number; stored: number; bytes: number; stopped: boolean }> {
+  let stored = 0;
+  let bytes = 0;
+  let done = 0;
+  for (const id of ids) {
+    if (shouldStop?.()) return { articles: done, stored, bytes, stopped: true };
+    const result = await storeImagesForArticle(id, { force: true });
+    stored += result.stored;
+    bytes += result.bytes;
+    done += 1;
+    onProgress?.(done, ids.length, result);
+  }
+  return { articles: done, stored, bytes, stopped: false };
 }
 
 /** Throw away images no article refers to any more.

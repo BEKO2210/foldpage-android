@@ -102,13 +102,21 @@ Artikels neu geparst würde. Blobs bleiben Blobs.
   Bilder zurückholt, wäre schlimmer als ein paar Kilobyte zu lange gehalten.
 - **Sichtbar:** die Einstellungen zeigen Artikel, Wörter, Bilder und Megabyte.
 
+- **Schalter „Store pictures".** In den Einstellungen, nicht im Lese-Sheet: er
+  ändert, was künftige Speichervorgänge tun, nicht das Aussehen der Seite vor
+  dem Leser. „With the article" (Standard) oder „Link only". Ein ausdrücklicher
+  Auftrag — „Reload" im Reader, „Fetch missing pictures" — hat Vorrang vor dem
+  Schalter, weil er ausdrücklich ist.
+- **Nachladen für Altbestand.** „Fetch missing pictures" sucht Artikel, bei
+  denen weniger Bilder einen Schlüssel tragen als sie remote Bilder zeigen, und
+  arbeitet sie **nacheinander** ab — hundert Artikel gleichzeitig abzurufen ist
+  der schnellste Weg, von jedem Server gedrosselt zu werden. Mit Fortschritt
+  und Stopp-Knopf.
+
 ## Offen
 
-- **Schalter „Bilder mitspeichern"** samt „nur im WLAN". Beides braucht eine
-  Einstellung mehr als Anzeige-Optionen und im WLAN-Fall das Network-Plugin;
-  bis dahin ist das Mitspeichern immer an und durch die Deckel begrenzt.
-- **Nachladen für Altbestand:** Artikel, die vor dieser Version gespeichert
-  wurden, haben keine abgelegten Bilder. „Reload" im Reader holt sie einzeln
-  nach; ein Sammellauf über die ganze Bibliothek fehlt.
-
-Erst wenn beides steht, ist der Strang wirklich fertig.
+- **„Nur im WLAN"** braucht das Network-Plugin und damit eine zusätzliche
+  Abhängigkeit. Bis dahin schützen die Deckel: im Median 56 KB je Artikel.
+- **Automatisches Nachladen** ohne Knopf. Bewusst nicht gebaut: ein
+  Hintergrundlauf, der ungefragt hundert Artikel abruft, gehört nicht in eine
+  App, die damit wirbt, nur das zu holen, worum man sie bittet.

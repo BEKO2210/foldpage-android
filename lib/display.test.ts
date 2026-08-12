@@ -12,8 +12,22 @@ test("stored display settings are repaired, never trusted", async () => {
   assert.deepEqual(normalizePrefs("not an object"), DEFAULT_PREFS);
 
   assert.deepEqual(
-    normalizePrefs({ theme: "dark", align: "justify", font: "sans", leading: "airy", size: 3 }),
-    { theme: "dark", align: "justify", font: "sans", leading: "airy", size: 3 }
+    normalizePrefs({
+      theme: "dark",
+      align: "justify",
+      font: "sans",
+      leading: "airy",
+      size: 3,
+      images: "off",
+    }),
+    {
+      theme: "dark",
+      align: "justify",
+      font: "sans",
+      leading: "airy",
+      size: 3,
+      images: "off",
+    }
   );
 
   // Values from a future version, a hand-edited store or a half-written write
@@ -26,6 +40,7 @@ test("stored display settings are repaired, never trusted", async () => {
   assert.equal(normalizePrefs({ align: "center" }).align, "left");
   assert.equal(normalizePrefs({ font: "comic" }).font, "serif");
   assert.equal(normalizePrefs({ leading: "tight" }).leading, "cozy");
+  assert.equal(normalizePrefs({ images: "wifi" }).images, "on");
 });
 
 /** The pre-paint script in the layout is a second implementation of the same

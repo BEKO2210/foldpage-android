@@ -12,6 +12,7 @@ export type ThemeChoice = "system" | "light" | "dark";
 export type AlignChoice = "left" | "justify";
 export type FontChoice = "serif" | "sans";
 export type LeadingChoice = "cozy" | "airy";
+export type ImageChoice = "on" | "off";
 
 export interface DisplayPrefs {
   theme: ThemeChoice;
@@ -20,6 +21,11 @@ export interface DisplayPrefs {
   leading: LeadingChoice;
   /** Index into the reader's four text sizes. */
   size: number;
+  /** Whether an article's pictures are downloaded and kept with it. The only
+      setting here that is not about looks — it lives with the others because
+      this is where a user goes to change how the app behaves, and because the
+      storage, the event and the repair of bad values already exist. */
+  images: ImageChoice;
 }
 
 export const TEXT_SIZES = ["1rem", "1.15rem", "1.3rem", "1.5rem"];
@@ -30,6 +36,7 @@ export const DEFAULT_PREFS: DisplayPrefs = {
   font: "serif",
   leading: "cozy",
   size: 1,
+  images: "on",
 };
 
 export const STORAGE_KEY = "fp-display";
@@ -71,6 +78,9 @@ export function normalizePrefs(raw: unknown): DisplayPrefs {
     leading: isOneOf(input.leading, ["cozy", "airy"] as const)
       ? input.leading
       : DEFAULT_PREFS.leading,
+    images: isOneOf(input.images, ["on", "off"] as const)
+      ? input.images
+      : DEFAULT_PREFS.images,
     size:
       Number.isInteger(size) && size >= 0 && size < TEXT_SIZES.length
         ? size

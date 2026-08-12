@@ -12,7 +12,7 @@ import {
 } from "@/lib/importExport";
 import { addArticleFromUrl } from "@/lib/articles";
 import { findByUrl, imageBytes, listArticles, newId, saveArticle } from "@/lib/db";
-import { pruneImages } from "@/lib/images";
+import { articlesMissingImages, backfillImages, pruneImages } from "@/lib/images";
 import { buzzSuccess, tap } from "@/lib/native";
 
 type ImportStatus =
@@ -35,6 +35,10 @@ export default function SettingsPage() {
     imageBytes: number;
   } | null>(null);
   const [pruned, setPruned] = useState<string | null>(null);
+  const [backfill, setBackfill] = useState<
+    { phase: "idle" } | { phase: "running"; done: number; total: number } | { phase: "done"; text: string }
+  >({ phase: "idle" });
+  const stopBackfill = useRef(false);
   const [exported, setExported] = useState<string | null>(null);
   const cancelRef = useRef(false);
 
@@ -142,6 +146,34 @@ export default function SettingsPage() {
     );
   }
 
+  /** Articles saved before pictures were kept — or whose downloads failed —
+      brought up to date in one pass. Explicit, so it runs even when the switch
+      above says new saves should stay link-only. */
+  async function runBackfill() {
+    void tap();
+    stopBackfill.current = false;
+    const ids = await articlesMissingImages();
+    if (!ids.length) {
+      setBackfill({ phase: "done", text: "Every article already has its pictures." });
+      return;
+    }
+    setBackfill({ phase: "running", done: 0, total: ids.length });
+    const result = await backfillImages(
+      ids,
+      (done, total) => setBackfill({ phase: "running", done, total }),
+      () => stopBackfill.current
+    );
+    setBackfill({
+      phase: "done",
+      text: `${result.articles} article${result.articles === 1 ? "" : "s"} processed, ${
+        result.stored
+      } image${result.stored === 1 ? "" : "s"} stored (${formatBytes(result.bytes)})${
+        result.stopped ? " — stopped" : ""
+      }.`,
+    });
+    setPruned(null);
+  }
+
   async function runExport(fn: () => Promise<string>) {
     void tap();
     setExported(null);
@@ -165,7 +197,7 @@ export default function SettingsPage() {
             How the app and your articles are set. The same controls sit behind
             the gear in the reader, so you can change them while reading.
           </p>
-          <DisplaySettings />
+          <DisplaySettings storage />
         </section>
 
         <section className="section-card mb-5">
@@ -185,12 +217,40 @@ export default function SettingsPage() {
             This build has no account and no cloud sync. Nothing leaves the
             device except the requests that fetch the articles you save.
           </p>
-          <button
-            className="btn btn-quiet pressable mt-3"
-            onClick={() => void freeUpSpace()}
-          >
-            Free up space
-          </button>
+          <div className="flex gap-2 flex-wrap mt-3">
+            <button
+              className="btn btn-quiet pressable"
+              onClick={() => void runBackfill()}
+              disabled={backfill.phase === "running"}
+            >
+              Fetch missing pictures
+            </button>
+            <button
+              className="btn btn-quiet pressable"
+              onClick={() => void freeUpSpace()}
+              disabled={backfill.phase === "running"}
+            >
+              Free up space
+            </button>
+          </div>
+          {backfill.phase === "running" && (
+            <div className="mt-3 text-sm" role="status">
+              <p>
+                Fetching pictures for article {backfill.done + 1} of {backfill.total} …
+              </p>
+              <button
+                className="btn btn-quiet pressable mt-2"
+                onClick={() => (stopBackfill.current = true)}
+              >
+                Stop
+              </button>
+            </div>
+          )}
+          {backfill.phase === "done" && (
+            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+              {backfill.text}
+            </p>
+          )}
           {pruned && (
             <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
               {pruned}

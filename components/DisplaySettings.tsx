@@ -70,7 +70,16 @@ function Segmented<T extends string | number>({
 /** The whole look of the app in one control set: theme, text size, typeface,
     alignment and line spacing. Used by the reader sheet and the settings page,
     so there is one implementation and one wording for both. */
-export default function DisplaySettings({ preview = true }: { preview?: boolean }) {
+export default function DisplaySettings({
+  preview = true,
+  storage = false,
+}: {
+  preview?: boolean;
+  /** The image switch belongs on the settings screen, not in the sheet a
+      reader opens mid-article: it changes what future saves do, not how the
+      page in front of them looks. */
+  storage?: boolean;
+}) {
   const [prefs, update] = useDisplayPrefs();
 
   return (
@@ -127,6 +136,18 @@ export default function DisplaySettings({ preview = true }: { preview?: boolean 
           { value: "airy", label: "Airy" },
         ]}
       />
+      {storage && (
+        <Segmented
+          label="Store pictures"
+          name="fp-images"
+          value={prefs.images}
+          onChange={(images) => update({ images })}
+          options={[
+            { value: "on", label: "With the article", hint: "Reads offline, and reopening tells the site nothing" },
+            { value: "off", label: "Link only", hint: "Saves space; pictures load from the site each time" },
+          ]}
+        />
+      )}
       {preview && (
         <p className="setting-preview" aria-hidden="true">
           The quick brown fox jumps over the lazy dog, and the paragraph runs on

@@ -16,9 +16,10 @@ Versionen, Bibliotheks-Majors — steht getrennt in `docs/FUTURE-PROOFING.md`.
 Stand: 12. August 2026, Version 1.6 (`versionCode 8`), geschlossener Test bei
 Google Play.
 
-**Release-Zähler:** seit 1.6 ist **1 von ~5** Läufen erledigt (A2, A3, A4, A7,
-B7.2 am 12.08.2026). Der nächste Versionssprung ist 1.7 / `versionCode 9` — bis
-dahin bleiben die Versionsdateien unberührt.
+**Release-Zähler:** seit 1.6 sind **3 von ~5** Läufen erledigt —
+1. A2, A3, A4, A7, B7.2 · 2. B1.1–B1.5 (Bilder mitspeichern) · 3. Schalter und
+Nachladen für Altbestand. Der nächste Versionssprung ist 1.7 / `versionCode 9`;
+bis dahin bleiben die Versionsdateien unberührt.
 
 ---
 
@@ -149,24 +150,13 @@ Ablauf und der Begründung, warum er **nicht vor Capacitor** passiert.
 
 ## Teil B — Vorhaben über mehrere Läufe
 
-### B1 · Wirklich offline: Bilder mit ablegen
-**Das Versprechen stimmt noch nicht.** README und Welcome sagen, der Artikel
-liege mit Bildern auf dem Telefon; tatsächlich speichert die App nur absolute
-`img src`-URLs. Ohne Netz ist der Artikel bebildert leer — der Reader entfernt
-die Bilder dann sogar (`naturalWidth === 0`). Zusätzlich lädt jedes Öffnen die
-Bilder erneut beim fremden Server, der damit Lesezeit und IP mitbekommt: für
-eine App, die mit „kein Tracking" wirbt, die größte offene Flanke.
-
-| Etappe | Inhalt | Abnahme |
-|---|---|---|
-| B1.1 | Entscheidung + Messung: wie viele Bytes je Artikel, Obergrenze pro Bild und Artikel, Speicherort (IndexedDB-Blob-Store `images`, Schlüssel = SHA-256 der URL) | Notiz in `docs/`, Zahlen aus dem Korpus |
-| B1.2 | DB-Schema auf Version 2, neuer Store, `normalize()` und Migration | Test: alte Bibliothek öffnet ohne Verlust |
-| B1.3 | Beim Speichern Bilder nachladen (begrenzt parallel, Zeitbudget, Fehler tolerant) und `img src` auf `blob:`/Objekt-URL umschreiben | Fixture-Test mit Data-URI-Bild + Gerätetest im Flugmodus |
-| B1.4 | Aufräumen: Bilder eines gelöschten Artikels verschwinden, Statistik in Settings zeigt Speicherbedarf | Test für die Aufräumfunktion |
-| B1.5 | Texte korrigieren oder Versprechen einlösen — README, Welcome, Play-Beschreibung | Diff geprüft |
-
-**Risiko:** Speicherplatz. Deshalb Obergrenze pro Artikel und ein Schalter
-„Bilder mitspeichern" in den Einstellungen, standardmäßig an, im WLAN.
+### B1 · Wirklich offline: Bilder mit ablegen ✅ erledigt (12.08.2026)
+Gemessen, entschieden, gebaut und in den Texten eingelöst. Bilder liegen in
+IndexedDB (Schema 2, Store `images`, Schlüssel = SHA-256 der Bild-URL), Deckel
+2 MB je Bild / 4 MB je Artikel / 40 Bilder, Abruf **nach** dem Speichern, mit
+Schalter, Nachladen für Altbestand, Aufräumen und Speicheranzeige.
+Vollständig: `docs/IMAGE-STORAGE.md`. Offen bleibt bewusst nur „nur im WLAN"
+(bräuchte das Network-Plugin).
 
 ### B2 · Bibliothek, die auch bei 5.000 Artikeln trägt
 Heute liest jede Aktion **alle** Artikel aus IndexedDB, filtert im Speicher und
