@@ -262,7 +262,13 @@ mark {
     box-shadow var(--dur-fast) var(--ease-out);
 }
 .card:active {
-  transform: scale(0.985);
+  /* Depth from state, not decoration: a pressed card *sinks* — a hair down,
+     a hair smaller, and its shadow tightens as if it moved closer to the
+     paper. Scaling alone reads as a web page reacting; this reads as
+     something being pushed. The numbers are small on purpose: the finger is
+     already covering the card, and the eye only has the edges to go by. */
+  transform: translateY(1px) scale(0.995);
+  box-shadow: 0 1px 2px -1px rgba(10, 14, 25, 0.18);
 }
 @media (hover: hover) {
   .card:hover {
@@ -1136,6 +1142,80 @@ mark {
   font-size: 0.8rem;
   color: var(--muted);
 }
+/* ---------- opening an article ----------
+   See lib/viewTransition.ts for why each of these exists. The entry animation
+   of the reader is suppressed while a transition runs, so the page does not
+   slide at the same time as the title flies; the bottom navigation gets a name
+   of its own so it stays out of the page snapshot and does not float. */
+:root.vt-running :is(.reader-in, .page-enter, .page-push) {
+  animation: none;
+}
+.bottomnav {
+  view-transition-name: fp-nav;
+}
+::view-transition-group(fp-article),
+::view-transition-group(root) {
+  animation-duration: var(--dur-med);
+  animation-timing-function: var(--ease-out);
+}
+
+/* An index for a settings page that had grown five cards long. Chips rather
+   than a list: they wrap, they are already a 44px touch target elsewhere in the
+   app, and six of them fit in two rows on a phone. */
+.settings-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+}
+.settings-index .chip {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.section-card {
+  /* The sticky header would otherwise cover the heading an anchor jumps to. */
+  scroll-margin-top: 4.5rem;
+}
+
+/* ---------- state transitions ----------
+   Loading, empty and error are states, not pages: they replace each other in
+   the same place, and until now they cut. The spring is the same one the sheet
+   and the dog-ear use, so an appearing thing behaves the same way everywhere in
+   the app — that consistency is the whole point of having one curve.
+
+   `backwards` and no `forwards`: a transform that lingers would make this a
+   containing block for anything fixed inside it, which is the bug that once
+   parked the bottom navigation in the middle of the screen. */
+@keyframes fp-state-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.state-in {
+  animation: fp-state-in var(--dur-med) var(--ease-spring) backwards;
+}
+
+/* The header earns an edge once the page has moved under it. A shadow inherited
+   from nowhere says "this floats"; a one-pixel line says "there is more above",
+   which is the thing the reader actually needs to know. */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--paper);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.topbar.is-scrolled {
+  border-bottom-color: var(--line);
+}
+
 /* Onboarding: language chips, then one line per language with a mark, the
    voice that was found, and a way to hear it. */
 .lang-chips {

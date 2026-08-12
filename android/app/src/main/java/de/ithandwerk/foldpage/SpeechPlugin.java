@@ -1,6 +1,12 @@
 package de.ithandwerk.foldpage;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 
@@ -16,6 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
+// Build.VERSION is used by the notification channel helper.
 
 /**
  * Speaking, with the engine as part of the choice.
@@ -44,11 +52,114 @@ public class SpeechPlugin extends Plugin {
      *  second, and doing that per paragraph would be audible. */
     private final Map<String, TextToSpeech> engines = new HashMap<>();
 
+    /** The one plugin instance, so the lock-screen receiver can reach it.
+     *  There is exactly one WebView and one player; a second instance would
+     *  mean two articles speaking at once, which is a state the app does not
+     *  have. */
+    private static SpeechPlugin current;
+
+    private MediaSessionCompat session;
+
     /** The call waiting for the utterance that is currently being spoken.
      *  Written from the bridge thread and read from the engine's callback
      *  thread, hence volatile. */
     private volatile PluginCall speaking;
     private final AtomicInteger utteranceId = new AtomicInteger();
+
+    @Override
+    public void load() {
+        current = this;
+        super.load();
+    }
+
+    /** A lock-screen button, on its way to the JavaScript player. */
+    static void dispatchTransport(String action) {
+        SpeechPlugin plugin = current;
+        if (plugin == null) return;
+        JSObject payload = new JSObject();
+        payload.put("action", action.substring(action.lastIndexOf('.') + 1).toLowerCase());
+        plugin.notifyListeners("transport", payload);
+    }
+
+    /**
+     * Announces the article to the system: a media session, plus the
+     * notification that puts its controls on the lock screen.
+     *
+     * <p>Called when speaking starts and again whenever it pauses or resumes,
+     * because the state and the button have to agree with what is audible.
+     */
+    @PluginMethod
+    public void showControls(PluginCall call) {
+        String title = call.getString("title", "");
+        boolean playing = Boolean.TRUE.equals(call.getBoolean("playing", true));
+        getActivity().runOnUiThread(() -> {
+            try {
+                SpeechNotification.ensureChannel(getContext());
+                if (session == null) {
+                    session = new MediaSessionCompat(getContext(), "FoldPage");
+                    // Without this the session is never the phone's "media
+                    // button session", and a headset key reaches nothing.
+                    android.content.Intent button =
+                            new android.content.Intent(getContext(), SpeechControlReceiver.class)
+                                    .setAction(android.content.Intent.ACTION_MEDIA_BUTTON);
+                    session.setMediaButtonReceiver(android.app.PendingIntent.getBroadcast(
+                            getContext(), 0, button,
+                            android.app.PendingIntent.FLAG_IMMUTABLE
+                                    | android.app.PendingIntent.FLAG_UPDATE_CURRENT));
+                    session.setCallback(new MediaSessionCompat.Callback() {
+                        @Override
+                        public void onPlay() {
+                            dispatchTransport(SpeechControlReceiver.PLAY);
+                        }
+
+                        @Override
+                        public void onPause() {
+                            dispatchTransport(SpeechControlReceiver.PAUSE);
+                        }
+
+                        @Override
+                        public void onStop() {
+                            dispatchTransport(SpeechControlReceiver.STOP);
+                        }
+                    });
+                }
+                session.setMetadata(new MediaMetadataCompat.Builder()
+                        .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+                        .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "FoldPage")
+                        .build());
+                session.setPlaybackState(SpeechNotification.state(playing));
+                session.setActive(true);
+                Notification notification =
+                        SpeechNotification.build(getContext(), session, title, playing);
+                NotificationManager manager =
+                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                if (manager != null) {
+                    manager.notify(SpeechNotification.NOTIFICATION_ID, notification);
+                }
+                call.resolve();
+            } catch (Exception e) {
+                // A refused notification permission must never stop the voice:
+                // the article still reads, it just has no lock-screen controls.
+                call.resolve();
+            }
+        });
+    }
+
+    /** Takes the controls away again — the article ended, or the reader left. */
+    @PluginMethod
+    public void hideControls(PluginCall call) {
+        getActivity().runOnUiThread(() -> {
+            NotificationManager manager =
+                    (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            if (manager != null) manager.cancel(SpeechNotification.NOTIFICATION_ID);
+            if (session != null) {
+                session.setActive(false);
+                session.release();
+                session = null;
+            }
+            call.resolve();
+        });
+    }
 
     @Override
     protected void handleOnDestroy() {
@@ -57,6 +168,14 @@ public class SpeechPlugin extends Plugin {
             tts.shutdown();
         }
         engines.clear();
+        NotificationManager manager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) manager.cancel(SpeechNotification.NOTIFICATION_ID);
+        if (session != null) {
+            session.release();
+            session = null;
+        }
+        if (current == this) current = null;
         super.handleOnDestroy();
     }
 

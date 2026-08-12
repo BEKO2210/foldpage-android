@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Article } from "@/lib/types";
 import {
   allTags,
@@ -17,6 +18,7 @@ import { storeImagesForArticle } from "@/lib/images";
 import TopBar from "./TopBar";
 import SwipeRow from "./SwipeRow";
 import { markNavigation } from "./RouteFocus";
+import { openWithTransition } from "@/lib/viewTransition";
 import Welcome from "./Welcome";
 import { SECTION_EVENT } from "./AppNav";
 import {
@@ -76,6 +78,7 @@ const URL_IN_TEXT = /https?:\/\/\S+/;
 const PAGE = 40;
 
 export default function Library() {
+  const router = useRouter();
   const [articles, setArticles] = useState<Article[]>([]);
   const [tab, setTab] = useState<Tab>("inbox");
   const [query, setQuery] = useState("");
@@ -528,7 +531,7 @@ export default function Library() {
         )}
 
         {!loaded && (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0" aria-hidden="true">
+          <ul className="state-in grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0" aria-hidden="true">
             {[0, 1, 2, 3].map((i) => (
               <li key={i} className="skeleton-card" />
             ))}
@@ -538,7 +541,7 @@ export default function Library() {
         {busy && <div className="skeleton-card mb-3" aria-hidden="true" />}
 
         {loaded && visible.length === 0 && (
-          <div className="text-center py-16" style={{ color: "var(--muted)" }}>
+          <div className="state-in text-center py-16" style={{ color: "var(--muted)" }}>
             {articles.length === 0 && !query && !tagFilter && (
               /* The shelf illustration is the first-run welcome, so it stays
                  for a genuinely empty library — the per-section states below
@@ -595,7 +598,17 @@ export default function Library() {
                   href={`/read/?id=${a.id}`}
                   className="cardlink no-underline"
                   style={{ color: "var(--ink)" }}
-                  onClick={markNavigation}
+                  onClick={(e) => {
+                    markNavigation();
+                    // The title is what travels, so it is the element that
+                    // carries the name — not the card, which changes shape
+                    // entirely and would stretch into the whole article.
+                    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+                    e.preventDefault();
+                    openWithTransition(e.currentTarget, () =>
+                      router.push(`/read/?id=${a.id}`)
+                    );
+                  }}
                 >
                   <Highlight text={a.title} term={query} />
                 </Link>

@@ -51,8 +51,38 @@ export interface SpeechState {
 
 type Listener = (state: SpeechState) => void;
 
+/** Where the voice was, per article, so a restart does not start over.
+ *
+ *  In localStorage rather than IndexedDB on purpose: it is written on every
+ *  block, it is worthless if it is a paragraph out of date, and it must survive
+ *  a process kill that happens between two words. One key, one article — the
+ *  last one that was read aloud is the only one anybody continues. */
+const POSITION_KEY = "fp-speech-at";
+
+function rememberPosition(articleId: string | null, at: number) {
+  if (!articleId || typeof localStorage === "undefined") return;
+  try {
+    if (at <= 0) localStorage.removeItem(POSITION_KEY);
+    else localStorage.setItem(POSITION_KEY, JSON.stringify({ id: articleId, at }));
+  } catch {
+    /* storage full: the session keeps its position anyway */
+  }
+}
+
+export function rememberedPosition(articleId: string | null): number {
+  if (!articleId || typeof localStorage === "undefined") return -1;
+  try {
+    const raw = JSON.parse(localStorage.getItem(POSITION_KEY) ?? "null");
+    return raw && raw.id === articleId && Number.isInteger(raw.at) ? raw.at : -1;
+  } catch {
+    return -1;
+  }
+}
+
 class Player {
   private blocks: SpokenBlock[] = [];
+  private articleId: string | null = null;
+  private title = "";
   private lang: string | null = null;
   private at = -1;
   private playing = false;
@@ -81,18 +111,34 @@ class Player {
 
   /** Load an article. Keeps the position if it is the same text, so leaving the
       settings sheet does not restart the article. */
-  load(contentHtml: string, lang: string | null) {
+  /** The article's own title, for the lock screen. */
+  describe(title: string) {
+    this.title = title;
+  }
+
+  load(contentHtml: string, lang: string | null, articleId: string | null = null) {
     const blocks = spokenBlocks(contentHtml);
     const same =
       blocks.length === this.blocks.length &&
       blocks.every((block, i) => block.text === this.blocks[i]?.text);
     if (!same) {
       this.stop();
-      this.at = -1;
+      // Where the voice was when the app was last closed. Restored as a
+      // *position*, never as playback: a phone that starts talking because it
+      // was unlocked is a fright, not a feature.
+      const remembered = rememberedPosition(articleId);
+      this.at = remembered >= 0 && remembered < blocks.length ? remembered : -1;
     }
     this.blocks = blocks;
+    this.articleId = articleId;
     this.lang = speechLanguage(lang);
     this.emit();
+  }
+
+  /** True when the position came out of storage rather than out of this
+      session — the reader is offered a "continue" rather than a "play". */
+  get resumable(): boolean {
+    return !this.playing && this.at > 0;
   }
 
   async toggle(): Promise<void> {
@@ -115,10 +161,12 @@ class Player {
     // Held for the whole article rather than per block: taking and giving back
     // focus between paragraphs would duck the user's music twenty times.
     await holdAudioFocus();
+    void this.controls(true);
 
     for (let i = from; i < this.blocks.length; i++) {
       if (run !== this.token) return; // stopped, or another play() took over
       this.at = i;
+      rememberPosition(this.articleId, i);
       this.emit();
       try {
         await this.speakBlock(this.blocks[i], i === from, run);
@@ -136,6 +184,10 @@ class Player {
     if (run !== this.token) return;
     this.playing = false;
     this.at = -1;
+    void this.controls(false, true);
+    // Finished: nothing left to continue, so the mark goes away rather than
+    // sending the next open back to the last paragraph.
+    rememberPosition(this.articleId, 0);
     void releaseAudioFocus();
     this.emit();
   }
@@ -220,9 +272,23 @@ class Player {
     });
   }
 
+  /** Keeps the lock screen in step with what is audible. Failures are
+      swallowed on purpose: a refused notification permission must cost the
+      controls, never the article. */
+  private async controls(playing: boolean, gone = false): Promise<void> {
+    if (!isNative()) return;
+    try {
+      if (gone) await FoldPageSpeech.hideControls();
+      else await FoldPageSpeech.showControls({ title: this.title, playing });
+    } catch {
+      /* no notification permission, or no session */
+    }
+  }
+
   stop() {
     this.token += 1;
     this.playing = false;
+    void this.controls(false, true);
     void releaseAudioFocus();
     if (isNative()) {
       // Both paths, unconditionally: which one is speaking depends on a
@@ -244,6 +310,20 @@ class Player {
 /** One player for the app: two articles speaking at once is never wanted, and a
     single instance makes that impossible rather than unlikely. */
 export const speech = new Player();
+
+/** The lock screen, the headset button and the notification all arrive here.
+ *
+ *  Wired once, at module level, because the controls outlive any component: a
+ *  reader who locks the phone mid-article has no mounted screen left, and the
+ *  pause button on the lock screen still has to work. */
+if (isNative()) {
+  void FoldPageSpeech.addListener("transport", ({ action }) => {
+    if (action === "play") void speech.play();
+    else speech.stop();
+  }).catch(() => {
+    /* older build without the plugin method */
+  });
+}
 
 /** A pause that a stop can cut through: the loop checks its token afterwards,
     so the longest a stopped article keeps the app busy is one gap. */

@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronLeftIcon } from "./icons";
 import { markNavigation } from "./RouteFocus";
@@ -29,8 +32,22 @@ export default function TopBar({
   /** Renders a back link on the left instead of the logo (label + href). */
   back?: { href: string; label: string };
 }) {
+  /** The edge under the header appears once the page has actually moved.
+      Read from the scroll position rather than from an IntersectionObserver on
+      a sentinel: there is no element above the header to observe, and this is
+      one boolean per frame at most. */
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="flex items-center justify-between px-4 sm:px-5 py-1 max-w-5xl mx-auto w-full">
+    <header
+      className={`topbar ${scrolled ? "is-scrolled" : ""} flex items-center justify-between px-4 sm:px-5 py-1 max-w-5xl mx-auto w-full`}
+    >
       {back ? (
         <Link href={back.href} className="backlink" onClick={markNavigation}>
           <ChevronLeftIcon />

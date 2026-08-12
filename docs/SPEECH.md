@@ -93,3 +93,50 @@ festgehalten.
 - **Fünf Äußerungen über 400 Zeichen** sind einzelne, wirklich lange Sätze. Ein
   Schnitt mitten hinein wäre schlimmer als der lange Atem.
 - **Sperrbildschirm und Fortsetzen nach Neustart** (D1-Rest) fehlen weiterhin.
+
+## Sperrbildschirm und Fortsetzen (12.08.2026, D1-Rest)
+
+**Fortsetzen nach Neustart.** Die Stelle wird je Block in `localStorage`
+geschrieben (`fp-speech-at`, ein Eintrag: der zuletzt vorgelesene Artikel).
+Beim Öffnen desselben Artikels steht die Marke wieder dort — als **Position**,
+nicht als Wiedergabe: ein Telefon, das beim Entsperren von selbst zu reden
+anfängt, ist ein Schreck. Der Reader bietet stattdessen „Reading aloud stopped
+at part N of M. **Continue**". Ist der Artikel durchgelaufen, wird die Marke
+gelöscht.
+
+**Sperrbildschirm.** `SpeechPlugin` hält eine `MediaSessionCompat` samt
+MediaStyle-Benachrichtigung, solange gesprochen wird; Play/Pause/Stop kommen
+über `SpeechControlReceiver` zurück in denselben Player, den auch die Knöpfe in
+der App bedienen.
+
+Am Gerät belegt (`dumpsys media_session`):
+
+```
+FoldPage de.ithandwerk.foldpage/FoldPage/149 (userId=0)
+  mediaButtonReceiver=MBR {... SpeechControlReceiver}
+  active=true
+  state=PlaybackState {state=PLAYING(3), ... actions=519}
+  metadata: description=Partielle Sonnenfinsternis: Wo sie in Hamburg gut zu sehen ist, FoldPage
+```
+
+⚠️ **Zwei gemessene Grenzen, bewusst so:**
+
+1. `Media button session is null` — Hardware-Medientasten (Headset, Auto)
+   landen auf diesem Gerät nicht bei uns. Grund ist die Fokus-Art: FoldPage
+   nimmt `AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK`, damit ein Navigationshinweis den
+   Artikel **leiser** macht statt ihn zu beenden. Vollen `GAIN` zu nehmen würde
+   die Tasten bringen und das Ducking kosten. Die Wahl steht zur Diskussion,
+   ist aber keine Panne.
+2. Die sichtbare „Now bar" auf dem Sperrbildschirm zeigte im Test die
+   Samsung-TV-Sitzung, nicht FoldPage — bei mehreren aktiven Sitzungen wählt
+   One UI selbst. Die FoldPage-Benachrichtigung ist da (im Log als
+   `0|de.ithandwerk.foldpage|4711| ... ACTIONS: Pausieren`), sie liegt im
+   Benachrichtigungs-Schatten.
+   **Noch nicht am Gerät geprüft:** ob Pause/Stop aus dieser Benachrichtigung
+   den Player wirklich anhalten — die Kette ist gebaut und der Receiver ist
+   registriert, aber ein Fingerdruck darauf steht aus.
+
+⚠️ `POST_NOTIFICATIONS` steht auf `granted=false` und die Benachrichtigung
+erschien trotzdem, weil Medien-Benachrichtigungen einen eigenen Weg gehen. Auf
+einem Gerät ohne diesen Weg fehlen die Steuerungen — der Artikel liest
+weiter, das ist der bewusste Rückfall.

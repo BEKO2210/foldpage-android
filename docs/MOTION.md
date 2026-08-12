@@ -27,12 +27,32 @@ a finished article — never on a hover or a scroll. A browser that does not kno
 | `.swipe-card` | transform transition, none while dragging | 150ms | 0 | n/a |
 | `.segmented label` | background and colour transition | 150ms | 0 | n/a |
 | `.skeleton-card` | `fp-shimmer` | 1.4s per loop | 0 | none, infinite |
+| `.state-in` (loading, empty, error) | `fp-state-in`, spring easing | 250ms | 0 | backwards |
+| `.card:active` | sinks: translateY(1px) scale(0.995) plus a tighter shadow | 150ms | 0 | n/a |
+| `.topbar.is-scrolled` | border-colour transition | 150ms | 0 | n/a |
+| opening an article | view transition, shared `fp-article` title | 250ms | 0 | n/a (browser-driven) |
 
 Page wrappers use `backwards`, so their transforms are removed when their
 animations finish and they cannot remain containing blocks for fixed children.
 The reading-settings sheet is a `<dialog>` and follows the same rule: it holds
 a `translateY` while entering, and a lingering transform would make it the
 containing block for anything fixed inside it.
+Opening an article is the one place where a movement explains something rather
+than decorating it: the card's title carries over into the article's heading, so
+it is visible where the reader went and where they came from. Two rules keep it
+from misbehaving — the reader's own entry animation is switched off for the
+length of the transition (`:root.vt-running`), and the bottom navigation carries
+its own `view-transition-name`, which keeps it out of the page snapshot instead
+of cross-fading it over the page. Without a running API, or under
+`prefers-reduced-motion`, the navigation happens plainly.
+
+Loading, empty and error replace each other in the same place, so they share
+one entry animation (`.state-in`) on the same spring as the sheet and the
+dog-ear. Depth comes from state rather than decoration: a pressed card sinks a
+pixel and tightens its shadow instead of merely shrinking, and the header takes
+a one-pixel edge once the page has scrolled under it — an inherited shadow says
+"this floats", a line says "there is more above".
+
 The card stagger is capped at 100ms; including its 250ms animation, even the
 last card settles at 350ms.
 

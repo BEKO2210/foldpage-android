@@ -228,7 +228,28 @@ export default function SettingsPage() {
           Settings
         </h1>
 
-        <section className="section-card mb-5">
+        {/* Five cards long is too long to scroll blind. An index rather than a
+            second screen: the sections stay one page — searchable, linkable and
+            scrollable in one gesture — and this says what is on it. Real
+            anchors, so the back gesture and a screen reader's link list both
+            work; `scroll-margin-top` keeps the heading clear of the sticky
+            header. */}
+        <nav className="settings-index" aria-label="Sections">
+          {[
+            ["s-appearance", "Appearance"],
+            ["s-library", "Your library"],
+            ["s-reading-aloud", "Reading aloud"],
+            ["s-import", "Import"],
+            ["s-export", "Export"],
+            ["s-sharing", "Save from anywhere"],
+          ].map(([id, label]) => (
+            <a key={id} className="chip pressable" href={`#${id}`}>
+              {label}
+            </a>
+          ))}
+        </nav>
+
+        <section id="s-appearance" className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Appearance</h2>
           <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>
             How the app and your articles are set. The same controls sit behind
@@ -237,7 +258,7 @@ export default function SettingsPage() {
           <DisplaySettings storage />
         </section>
 
-        <section className="section-card mb-5">
+        <section id="s-library" className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Your library</h2>
           <p className="text-sm" style={{ color: "var(--muted)" }}>
             {stats
@@ -311,7 +332,7 @@ export default function SettingsPage() {
           )}
         </section>
 
-        <section className="section-card mb-5">
+        <section id="s-reading-aloud" className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Reading aloud</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
             Android does the speaking, offline, with the voices installed on this
@@ -376,7 +397,7 @@ export default function SettingsPage() {
           </details>
         </section>
 
-        <section className="section-card mb-5">
+        <section id="s-import" className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Import</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
             Bring your library along: a Pocket export (CSV or HTML) or any
@@ -418,7 +439,7 @@ export default function SettingsPage() {
           )}
         </section>
 
-        <section className="section-card mb-5">
+        <section id="s-export" className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Export</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
             Your library is yours. Files land in <b>Documents</b> and the share
@@ -440,7 +461,7 @@ export default function SettingsPage() {
           )}
         </section>
 
-        <section className="section-card">
+        <section id="s-sharing" className="section-card">
           <h2 className="text-lg font-semibold mb-2">Save from anywhere</h2>
           <ul
             className="text-sm grid gap-2 pl-5"

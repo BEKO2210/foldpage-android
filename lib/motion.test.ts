@@ -16,12 +16,30 @@ test("state-change durations and card completion stay within the audit limits", 
 });
 
 test("transforming entry animations do not fill forwards", () => {
-  for (const selector of ["page-enter", "card-in", "page-push", "reader-in", "sheet"]) {
+  for (const selector of ["page-enter", "card-in", "page-push", "reader-in", "sheet", "state-in"]) {
     const rule = css.match(new RegExp(`\\.${selector}\\s*\\{([^}]*)\\}`));
     assert.ok(rule, `missing .${selector}`);
     assert.match(rule[1], /animation:[^;]*backwards/);
     assert.doesNotMatch(rule[1], /\b(?:both|forwards)\b/);
   }
+});
+
+test("depth comes from state, and the header edge is a line rather than a shadow", () => {
+  // A pressed card sinks instead of only shrinking. Both parts matter: the
+  // shift downwards is what reads as depth, the tighter shadow is what makes
+  // the shift believable.
+  const pressed = css.match(/\.card:active\s*\{([^}]*)\}/);
+  assert.ok(pressed, "missing .card:active");
+  assert.match(pressed[1], /transform:\s*translateY\(1px\) scale\(0\.995\)/);
+  assert.match(pressed[1], /box-shadow:/);
+
+  const scrolled = css.match(/\.topbar\.is-scrolled\s*\{([^}]*)\}/);
+  assert.ok(scrolled, "missing .topbar.is-scrolled");
+  assert.match(scrolled[1], /border-bottom-color:\s*var\(--line\)/);
+  assert.doesNotMatch(scrolled[1], /box-shadow/);
+
+  // The three states share one curve, and it is the app's spring.
+  assert.match(css, /\.state-in\s*\{[^}]*var\(--ease-spring\)/s);
 });
 
 test("reduced motion leaves no running animation or transition", () => {

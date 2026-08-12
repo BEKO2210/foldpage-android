@@ -50,6 +50,12 @@ export interface FoldPageSpeechPlugin {
       quality: number;
     }[];
   }>;
+  showControls(options: { title: string; playing: boolean }): Promise<void>;
+  hideControls(): Promise<void>;
+  addListener(
+    eventName: "transport",
+    cb: (data: { action: "play" | "pause" | "stop" }) => void
+  ): Promise<{ remove: () => Promise<void> }>;
   speak(options: {
     text: string;
     engine: string;

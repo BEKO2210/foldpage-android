@@ -174,7 +174,8 @@ export default function ReadPage() {
   useEffect(() => speech.subscribe(setVoice), []);
   useEffect(() => {
     if (!article?.contentHtml) return;
-    speech.load(article.contentHtml, article.lang);
+    speech.describe(article.title);
+    speech.load(article.contentHtml, article.lang, article.id);
     // Set the voice up before it is needed. The phone's default engine is
     // often the wrong one for this article's language — on a phone with a
     // German-only neural engine every English article was silent until
@@ -184,7 +185,7 @@ export default function ReadPage() {
       languageAvailable(article.lang).then((ok) => setVoiceMissing(!ok))
     );
     return () => speech.stop();
-  }, [article?.id, article?.contentHtml, article?.lang]);
+  }, [article?.id, article?.title, article?.contentHtml, article?.lang]);
 
   useEffect(() => {
     // The id only exists in the URL of the loaded page, and the article only
@@ -426,7 +427,11 @@ export default function ReadPage() {
         lang={article.lang ?? undefined}
       >
         <header className="reader-header">
-          <h1 data-route-heading tabIndex={-1}>
+          {/* The other half of the shared element: the card's title lands
+              here. Named unconditionally — the name only matters while a
+              transition is running, and a second element with the same name
+              never exists at the same time. */}
+          <h1 data-route-heading tabIndex={-1} style={{ viewTransitionName: "fp-article" }}>
             {article.title}
           </h1>
           <p className="reader-meta">
@@ -459,7 +464,7 @@ export default function ReadPage() {
           </button>
         </p>
         {(voice.error || voiceMissing) && (
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
             {voice.error ??
               "This phone has no voice installed for this article's language."}{" "}
             <button type="button" className="linkbtn" onClick={() => void installVoices()}>
@@ -469,12 +474,31 @@ export default function ReadPage() {
           </p>
         )}
         {voice.playing && (
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
             Reading part {voice.at + 1} of {voice.total}.
           </p>
         )}
+        {!voice.playing && voice.at > 0 && (
+          /* The voice was here when the app was last closed. Offered rather
+             than resumed: a phone that starts talking on its own is a fright.
+             The article's own scroll position is restored separately — this is
+             about where the *ear* was, which is not always the same place. */
+          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+            Reading aloud stopped at part {voice.at + 1} of {voice.total}.{" "}
+            <button
+              type="button"
+              className="linkbtn pressable"
+              onClick={() => {
+                void tap();
+                void speech.play();
+              }}
+            >
+              Continue
+            </button>
+          </p>
+        )}
         {refetchNote && (
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
             {refetchNote}
           </p>
         )}

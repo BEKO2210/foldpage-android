@@ -50,7 +50,7 @@
       "route": "reader",
       "unnamed": [],
       "small": [
-        "button.chip 58x44",
+        "button.chip 68x44",
         "input.input 144x44"
       ],
       "headings": [
@@ -115,7 +115,7 @@
       "firstHeadingLevel": 1,
       "landmarks": {
         "main": 1,
-        "nav": 1,
+        "nav": 2,
         "header": 1
       },
       "liveRegions": 0,
