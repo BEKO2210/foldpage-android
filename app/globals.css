@@ -411,11 +411,72 @@ mark {
   cursor: default;
   opacity: 0.6;
 }
+/* The article's own structure — and it had none.
+ *
+ *  Tailwind's preflight zeroes margins and makes every heading inherit the
+ *  body's size and weight. Nothing here put them back, so on a phone an
+ *  extracted article was one unbroken column: paragraphs with no gap between
+ *  them, and section headings set in body type. Measured on the device before
+ *  believing it: `.reader p` had `margin: 0px`, `.reader h2` came out at
+ *  16.56 px and weight 400 — exactly the body.
+ *
+ *  Everything below is in `em`, so it scales with the four reader sizes
+ *  instead of drifting apart from them. */
 .reader h1,
 .reader h2,
-.reader h3 {
+.reader h3,
+.reader h4 {
   line-height: 1.25;
   text-wrap: balance;
+  font-weight: 700;
+  /* Space above belongs to the heading, and clearly more of it than below:
+     that difference is what says "a new part starts here" rather than "a bold
+     line happens to be here". */
+  margin: 1.7em 0 0.45em;
+}
+.reader h2 {
+  font-size: 1.3em;
+}
+.reader h3 {
+  font-size: 1.12em;
+}
+.reader h4 {
+  font-size: 1em;
+  letter-spacing: 0.01em;
+}
+/* A heading that opens the body has nothing to be separated from. */
+.reader > :first-child,
+.reader-body > :first-child {
+  margin-top: 0;
+}
+.reader p {
+  margin: 0 0 0.85em;
+}
+.reader ul,
+.reader ol {
+  margin: 0 0 1em;
+  padding-left: 1.35em;
+}
+.reader ul {
+  list-style: disc;
+}
+.reader ol {
+  list-style: decimal;
+}
+.reader li {
+  margin: 0 0 0.35em;
+}
+.reader li::marker {
+  color: var(--muted);
+}
+.reader blockquote,
+.reader pre,
+.reader hr {
+  margin: 1.25em 0;
+}
+.reader hr {
+  border: 0;
+  border-top: 1px solid var(--line);
 }
 /* Reader settings, driven entirely by attributes on <html> (see lib/display.ts).
    Every one of them degrades to the default on a WebView that does not know

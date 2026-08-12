@@ -104,21 +104,31 @@ function storedArticle(parsed, entry, id) {
 }
 
 async function seed(page, article) {
+  // Past the welcome screen first: it is what a fresh profile meets, and the
+  // library — which is what creates the database — never mounts behind it.
+  await page.addInitScript(() => localStorage.setItem("fp-welcomed", "1"));
   await page.goto("/");
+  await page.waitForLoadState("networkidle");
   await page.evaluate(async (value) => {
-    const db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open("foldpage", 2);
-      request.onupgradeneeded = () => {
-        const store = request.result.createObjectStore("articles", { keyPath: "id" });
-        store.createIndex("by-state", "state");
-        store.createIndex("by-addedAt", "addedAt");
-        // Same shape as lib/db.ts at schema 2 — a seed that opens version 1
-        // after the app has upgraded would fail outright.
-        request.result.createObjectStore("images", { keyPath: "key" });
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
+    // Opened without a version, and waiting for the store the app creates.
+    // Naming a number here meant editing this file every time lib/db.ts gained
+    // one — and when the app moved to schema 3 this run died outright with
+    // "The requested version (2) is less than the existing version (3)".
+    const open = () =>
+      new Promise((resolve, reject) => {
+        const request = indexedDB.open("foldpage");
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    let db = await open();
+    for (let attempt = 0; attempt < 40 && !db.objectStoreNames.contains("articles"); attempt++) {
+      db.close();
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      db = await open();
+    }
+    if (!db.objectStoreNames.contains("articles")) {
+      throw new Error("the app never created its database — did the page load?");
+    }
     await new Promise((resolve, reject) => {
       const transaction = db.transaction("articles", "readwrite");
       transaction.objectStore("articles").put(value);

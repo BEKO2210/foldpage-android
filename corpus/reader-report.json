@@ -39,7 +39,7 @@
   "renders": 148,
   "tablesChecked": 84,
   "imagesTotal": 1524,
-  "imagesUnloaded": 1348,
+  "imagesUnloaded": 1362,
   "hinweis": "Bildpruefungen (kaputt, zu breit, Zaehlpixel) greifen nur bei geladenen Bildern. Der Korpus ist offline, imagesUnloaded nennt die ungeprueften.",
   "failures": [],
   "results": [
@@ -195,7 +195,7 @@
       "screenshot": null,
       "images": {
         "total": 307,
-        "unloaded": 303,
+        "unloaded": 304,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -789,7 +789,7 @@
       "screenshot": null,
       "images": {
         "total": 1,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -1090,7 +1090,7 @@
       "screenshot": "screenshots/light/docs-python-org-3-library-datetime-html.png",
       "images": {
         "total": 1,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -1134,7 +1134,7 @@
         {
           "tag": "SPAN",
           "className": "",
-          "right": 431,
+          "right": 456,
           "scrollWidth": 0
         }
       ],
@@ -1491,7 +1491,7 @@
       "screenshot": null,
       "images": {
         "total": 307,
-        "unloaded": 303,
+        "unloaded": 304,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -2085,7 +2085,7 @@
       "screenshot": null,
       "images": {
         "total": 1,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -2386,7 +2386,7 @@
       "screenshot": "screenshots/dark/docs-python-org-3-library-datetime-html.png",
       "images": {
         "total": 1,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -2430,7 +2430,7 @@
         {
           "tag": "SPAN",
           "className": "",
-          "right": 431,
+          "right": 456,
           "scrollWidth": 0
         }
       ],
@@ -2818,7 +2818,7 @@
       "screenshot": null,
       "images": {
         "total": 307,
-        "unloaded": 303,
+        "unloaded": 304,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -3686,7 +3686,7 @@
       "screenshot": null,
       "images": {
         "total": 3,
-        "unloaded": 1,
+        "unloaded": 3,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -3713,7 +3713,7 @@
       "screenshot": null,
       "images": {
         "total": 1,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -4145,7 +4145,7 @@
       "screenshot": null,
       "images": {
         "total": 307,
-        "unloaded": 303,
+        "unloaded": 304,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -5013,7 +5013,7 @@
       "screenshot": null,
       "images": {
         "total": 3,
-        "unloaded": 1,
+        "unloaded": 3,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -5040,7 +5040,7 @@
       "screenshot": null,
       "images": {
         "total": 1,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0

@@ -352,3 +352,49 @@ breach, (2) `Appearance` is six segmented controls in a row, (3) settings has
 no live region at rest, (4) perceived latency and rerenders have not been
 measured this session, (5) the reader has not been driven through a full
 read-aloud on the device this run.
+
+### Run 7 — the article gets its own typography back, and the chain is proven
+
+**Found by reading a real article on the phone:** an extracted article had no
+structure at all. Measured through the DevTools protocol rather than guessed:
+
+```
+.reader p   → margin-top 0px, margin-bottom 0px
+.reader h2  → font-size 16.56px, font-weight 400   (body: 16.56px)
+```
+
+Tailwind's preflight zeroes margins and makes headings inherit the body's size
+and weight, and nothing had put them back. So every saved article was one
+unbroken column, with section headings set in body type and no gap between
+paragraphs. On the app's central surface.
+
+**Restored, all in `em` so it scales with the four reader sizes:** paragraphs
+`0.85em` apart; `h2` at `1.3em`/700, `h3` at `1.12em`/700, `1.7em` of air above
+a heading against `0.45em` below — that difference is what says "a new part
+starts here"; lists get their markers and indent back; `blockquote`, `pre` and
+`hr` get room. `npm run reader-render`: **148 renders, 0 failures**, measure
+guard unchanged.
+
+**Two instruments were broken and are fixed:** `reader-render.mjs` opened
+IndexedDB at version 2 and died on the app's schema 3 (`VersionError`), and it
+never dismissed the welcome screen, so the library that creates the database
+never mounted. Both were silent until this run needed them.
+
+**The read-aloud chain, end to end on the S23 Ultra:** a real article saved
+from a link (the 404 path checked first — "Page answered with 404", a plain
+sentence), opened, `Listen` tapped. `dumpsys media_session` shows FoldPage
+`active=true`, `state=PLAYING(3)` with the article title as metadata; the
+in-app control turns into a quiet `Pause`; the live region reads "Reading part
+1 of 13"; the spoken paragraph is tinted (measured 8.4:1 against the dark
+theme, so it stays legible).
+
+**And an open question in `docs/SPEECH.md` is now answered:** tapping **Pause**
+in FoldPage's media notification really does stop the player —
+`PLAYING(3)` → `PAUSED(2)`, and the button in the app follows. What still does
+not arrive is an outside `cmd media_session dispatch pause`, which matches the
+documented consequence of holding transient audio focus.
+
+**Verification:** `npm run lint` silent · `npm test` 57 pass · `npm run build`
+ok · `ui:check` seeded/empty/offline clean · `jargon` clean · `voice:check`
+24/24 · `reader-render` 148/0 · on the device: paragraphs separated, headings
+visibly headings, reading aloud runs and pauses from the notification.

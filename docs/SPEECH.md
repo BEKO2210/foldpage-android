@@ -132,9 +132,14 @@ FoldPage de.ithandwerk.foldpage/FoldPage/149 (userId=0)
    One UI selbst. Die FoldPage-Benachrichtigung ist da (im Log als
    `0|de.ithandwerk.foldpage|4711| ... ACTIONS: Pausieren`), sie liegt im
    Benachrichtigungs-Schatten.
-   **Noch nicht am Gerät geprüft:** ob Pause/Stop aus dieser Benachrichtigung
-   den Player wirklich anhalten — die Kette ist gebaut und der Receiver ist
-   registriert, aber ein Fingerdruck darauf steht aus.
+   **Am Gerät geprüft (13.08.2026):** Ein Fingerdruck auf **Pause** in dieser
+   Benachrichtigung hält den Player wirklich an. `dumpsys media_session` vor
+   dem Tippen `state=PLAYING(3)`, danach `state=PAUSED(2)`, und der Knopf in
+   der App springt von „Pause" zurück auf „Listen" — die Kette
+   Benachrichtigung → `SpeechControlReceiver` → Player → Oberfläche schließt
+   sich also. Was weiterhin **nicht** ankommt, ist
+   `cmd media_session dispatch pause` von aussen: der Zustand blieb
+   unverändert, passend zum Befund über die Fokus-Art eine Zeile weiter oben.
 
 ⚠️ `POST_NOTIFICATIONS` steht auf `granted=false` und die Benachrichtigung
 erschien trotzdem, weil Medien-Benachrichtigungen einen eigenen Weg gehen. Auf
