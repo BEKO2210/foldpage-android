@@ -442,15 +442,35 @@ gut, wird es **nicht veröffentlicht**. Kein „Beta"-Etikett, kein „experimen
 im Einstellungsmenü. Eine falsche Zusammenfassung ist schlimmer als keine, weil
 sie gelesen und geglaubt wird.
 
-### D1 · Vorlesen (der ehrliche Anfang)
-Android bringt TTS mit (`TextToSpeech`, Stimmen je Sprache nachladbar). Kein
-Modell, keine Modellgröße, kein Speicherplatz — es ist eine Systemfunktion.
-Damit ist es der Teil, der sicher funktioniert.
-**Zu klären:** Absatzweises Vorlesen mit Fortschritt, Weiterlesen nach
-Unterbrechung, Sperrbildschirm-Steuerung (Media-Session), Sprache aus
-`article.lang` statt aus der Systemsprache.
-**Abnahme:** ein deutscher und ein englischer Artikel vollständig vorgelesen,
-Anruf dazwischen, Wiederaufnahme an derselben Stelle.
+### D1 · Vorlesen ✅ gebaut (12.08.2026) · Gerätetest offen
+Über Androids eigene Engine (`@capacitor-community/text-to-speech` 8.0.2, Peer
+`@capacitor/core >=8`). Kein Modell, kein Download, nichts verlässt das Telefon.
+
+**Wie es arbeitet:** Der Artikel wird in Blöcke zerlegt — Absätze, Überschriften,
+Listenpunkte, Zitate, Bildunterschriften — und **einzeln** gesprochen. Das ist
+der Kern: Eine Engine, der man zwanzigtausend Zeichen gibt, liefert ein einziges
+undurchsichtiges Versprechen zurück und keine Möglichkeit, anzuhalten, weiter-
+zumachen oder zu sagen, wo sie gerade ist. Blockweise ist all das da, und der
+gerade gesprochene Absatz wird im Text markiert und bei Bedarf in Sicht
+gescrollt.
+
+**Sprache** kommt aus `article.lang`, nicht aus der Systemsprache: „de" wird zu
+`de-DE`, ein unbekanntes Kürzel bleibt bewusst leer — ein deutscher Artikel in
+englischer Stimme ist schlechter als die Stimme, die der Nutzer selbst gewählt
+hat. Fehlt die Stimme, sagt die App das und öffnet auf Wunsch Androids
+Installationsseite.
+
+**Zwei Fallen, beide im Bauen aufgefallen:** Das Plugin fasst `window` beim
+Laden an — als normaler Import bricht damit `npm run build`, weil die
+Reader-Route vorgerendert wird; es wird deshalb erst bei Bedarf geladen. Und
+ein Tag wird beim Entfernen zu einem Leerzeichen, was „den Link ." erzeugt —
+eine Engine liest die Lücke als Pause und den Punkt als eigenen Atemzug.
+
+**Offen:** Sperrbildschirm-Steuerung (Media-Session) und Fortsetzen nach einem
+App-Neustart — heute merkt sich der Player die Stelle nur innerhalb der Sitzung.
+**Abnahme (Gerät):** ein deutscher und ein englischer Artikel vollständig
+vorgelesen, Anruf oder Sperre dazwischen, Verlassen des Artikels beendet die
+Stimme.
 
 ### D2 · Zusammenfassung, wenn das Gerät es kann
 Der Stand der Technik (geprüft 12.08.2026): **Gemini Nano über die ML-Kit-

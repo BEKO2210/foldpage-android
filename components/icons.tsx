@@ -128,3 +128,22 @@ export function SearchIcon({ size }: { size?: number }) {
     </Svg>
   );
 }
+
+/** Filled rather than stroked: at 20px a stroked triangle reads as an outline
+    of nothing, and this is the one control in the reader that has to be
+    unmistakable at a glance. */
+export function PlayIcon({ size }: { size?: number }) {
+  return (
+    <Svg size={size ?? 20}>
+      <path d="M8 5.5l11 6.5-11 6.5z" fill="currentColor" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function PauseIcon({ size }: { size?: number }) {
+  return (
+    <Svg size={size ?? 20}>
+      <path d="M9 5v14M15 5v14" strokeWidth="2.5" />
+    </Svg>
+  );
+}

@@ -9,11 +9,26 @@ import TopBar from "@/components/TopBar";
 import TagEditor from "@/components/TagEditor";
 import DisplaySheet from "@/components/DisplaySheet";
 import { useDisplayPrefs } from "@/components/DisplaySettings";
-import { CheckIcon, SettingsIcon, StarIcon, UndoIcon } from "@/components/icons";
+import {
+  CheckIcon,
+  PauseIcon,
+  PlayIcon,
+  SettingsIcon,
+  StarIcon,
+  UndoIcon,
+} from "@/components/icons";
 import { buzzSuccess, buzzWarning, commit, openExternal, tap, uncommit } from "@/lib/native";
 import { refetchArticle } from "@/lib/articles";
 import { objectUrlFor, storeImagesForArticle } from "@/lib/images";
 import { indexArticle } from "@/lib/search";
+import {
+  installVoices,
+  languageAvailable,
+  speech,
+  spokenBlocks,
+  spokenMinutes,
+  type SpeechState,
+} from "@/lib/speech";
 import { TEXT_SIZES } from "@/lib/display";
 import { IMAGE_KEY_ATTR } from "@/lib/imagePlan";
 
@@ -25,8 +40,11 @@ import { IMAGE_KEY_ATTR } from "@/lib/imagePlan";
     wrappers and reset their native scrollLeft. */
 const ArticleContent = memo(function ArticleContent({
   contentHtml,
+  speakingAt,
 }: {
   contentHtml: string;
+  /** Index of the block being read aloud, or -1. */
+  speakingAt: number;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -108,6 +126,30 @@ const ArticleContent = memo(function ArticleContent({
     };
   }, [contentHtml]);
 
+  // Follow the voice: the block being spoken is marked and kept on screen. The
+  // marking is a class on the existing element rather than a re-render of the
+  // article — the injected HTML must not be rebuilt, or the tables lose their
+  // scroll position (see the memo boundary above).
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const spoken = [
+      ...root.querySelectorAll<HTMLElement>("p, h1, h2, h3, h4, h5, h6, li, blockquote, figcaption"),
+    ].filter((element) => (element.textContent ?? "").trim().length >= 3);
+    spoken.forEach((element, index) => {
+      element.classList.toggle("is-speaking", index === speakingAt);
+    });
+    const current = spoken[speakingAt];
+    if (!current) return;
+    const box = current.getBoundingClientRect();
+    // Only when it has left the comfortable middle of the screen, so a short
+    // paragraph does not yank the page on every sentence.
+    if (box.top < 80 || box.bottom > window.innerHeight - 120) {
+      current.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+    return () => spoken.forEach((element) => element.classList.remove("is-speaking"));
+  }, [speakingAt, contentHtml]);
+
   return <div ref={contentRef} dangerouslySetInnerHTML={{ __html: contentHtml }} />;
 });
 
@@ -120,8 +162,21 @@ export default function ReadPage() {
   const [refetching, setRefetching] = useState(false);
   const [refetchNote, setRefetchNote] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [voice, setVoice] = useState<SpeechState>(speech.state);
+  const [voiceMissing, setVoiceMissing] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sizeIdx = prefs.size;
+
+  // Reading aloud outlives a render, so the player lives outside React and the
+  // component only listens. Leaving the article stops it — speech that keeps
+  // going after the reader has moved on is the worst kind of surprise.
+  useEffect(() => speech.subscribe(setVoice), []);
+  useEffect(() => {
+    if (!article?.contentHtml) return;
+    speech.load(article.contentHtml, article.lang);
+    void languageAvailable(article.lang).then((ok) => setVoiceMissing(!ok));
+    return () => speech.stop();
+  }, [article?.id, article?.contentHtml, article?.lang]);
 
   useEffect(() => {
     // The id only exists in the URL of the loaded page, and the article only
@@ -300,6 +355,22 @@ export default function ReadPage() {
       </button>
       <button
         className="iconbtn pressable"
+        aria-label={
+          voice.playing
+            ? `Stop reading aloud, at part ${voice.at + 1} of ${voice.total}`
+            : `Read aloud, about ${spokenMinutes(spokenBlocks(article.contentHtml))} minutes`
+        }
+        aria-pressed={voice.playing}
+        onClick={() => {
+          void tap();
+          void speech.toggle();
+        }}
+        disabled={!article.contentHtml}
+      >
+        {voice.playing ? <PauseIcon /> : <PlayIcon />}
+      </button>
+      <button
+        className="iconbtn pressable"
         aria-label="Reading settings"
         aria-haspopup="dialog"
         onClick={() => {
@@ -377,6 +448,15 @@ export default function ReadPage() {
             {refetching ? "Reloading…" : "Reload"}
           </button>
         </p>
+        {(voice.error || voiceMissing) && (
+          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+            {voice.error ??
+              "This phone has no voice installed for this article's language."}{" "}
+            <button type="button" className="linkbtn" onClick={() => void installVoices()}>
+              Install voices
+            </button>
+          </p>
+        )}
         {refetchNote && (
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
             {refetchNote}
@@ -386,7 +466,7 @@ export default function ReadPage() {
           <TagEditor tags={article.tags} onChange={(t) => void setTags(t)} />
         </div>
         {article.contentHtml ? (
-          <ArticleContent contentHtml={article.contentHtml} />
+          <ArticleContent contentHtml={article.contentHtml} speakingAt={voice.playing ? voice.at : -1} />
         ) : (
           <p style={{ color: "var(--muted)" }}>
             The content of this article wasn&apos;t downloaded (imported link).{" "}

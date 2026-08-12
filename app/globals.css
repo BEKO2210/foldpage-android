@@ -450,6 +450,17 @@ mark {
   text-decoration-thickness: 2px;
   text-underline-offset: 0.15em;
 }
+/* The block being read aloud. A tinted band rather than a highlighter stripe:
+   it has to be findable at a glance without turning the page into a colouring
+   book, and it sits behind the text so contrast is unaffected. */
+.reader .is-speaking {
+  position: relative;
+  border-radius: 0.35rem;
+  box-shadow: 0 0 0 0.55rem color-mix(in oklab, var(--highlight) 22%, transparent);
+  background: color-mix(in oklab, var(--highlight) 22%, transparent);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
 /* Prose tables stack on a phone: each row becomes a block, each cell keeps
    its column name as a label. Scrolling a four-word column sideways through
    three screens of text is not reading. */
