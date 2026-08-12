@@ -165,28 +165,6 @@ docs/           architecture map and roadmap, release runbook, contrast and
 scripts/        icon/splash generation and the signed release build
 ```
 
-## Status
-
-Version 1.11 — the local-only MVP, now with an allowlist sanitizer for
-everything it stores, reading settings you can change mid-article, an article's
-pictures kept on the device rather than fetched from the publisher on every
-open, and a layout measured on tablets as well as phones. In closed testing on
-Google Play. Sync between devices exists in the web version of FoldPage and is
-deliberately absent here. Where the work goes next is written down in
-[`docs/ROADMAP.md`](docs/ROADMAP.md); how the app is put together, in
-[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-
-The reader is measured against a frozen corpus of 39 real articles from 22
-sites — `npm run corpus` for extraction, `npm run reader-render` for the
-rendered page, both offline and deterministic. Current: 78 renders, 42 table
-checks, no failures. What the corpus cannot see is written down in
-[`docs/READER-LAB.md`](docs/READER-LAB.md) rather than left implied.
-
-Verified on a 412×915 viewport: no interactive element under 44 px, no
-horizontal overflow, every text role above 4.5:1 in both themes, and the bottom
-bar holds its position across a route change. Confirmed on a device: install, saving,
-reading, and that no system scrim sits above the app any more. Still
-unconfirmed there: the share intent and the adaptive icon.
 
 ## License
 
