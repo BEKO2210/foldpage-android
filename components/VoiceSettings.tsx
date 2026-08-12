@@ -13,12 +13,14 @@ import {
   type VoicePrefs,
 } from "@/lib/voice";
 import {
+  languagesInLibrary,
   previewVoice,
   refreshVoices,
   speech,
   speechEngines,
   voiceChoices,
 } from "@/lib/speech";
+import { SPEECH_LANGUAGES } from "@/lib/readAloud";
 import { tap } from "@/lib/native";
 
 /** Same contract as `useDisplayPrefs`: the settings live outside React, two
@@ -95,14 +97,24 @@ function labelOf(
  *  English, which is the language of the app. */
 export default function VoiceSettings({ lang = null }: { lang?: string | null }) {
   const [prefs, update] = useVoicePrefs();
+  // On the settings screen there is no article, so the language is chosen
+  // rather than given. It starts on whatever the library holds most of: a
+  // reader whose articles are German should not have to pick German first.
+  const [picked, setPicked] = useState<string | null>(null);
+  const [inLibrary, setInLibrary] = useState<{ code: string; count: number }[]>([]);
+  const active = lang ?? picked;
   const [voices, setVoices] = useState<EngineVoice[] | null>(null);
   /** False when the list shown is a fallback: the engine has voices, but none
       of them for this article's language. */
   const [matches, setMatches] = useState(true);
   const [busy, setBusy] = useState(false);
+  /** What the engine said when the preview failed. Shown, because the failure
+      is otherwise perfectly silent — which is indistinguishable from a broken
+      button. */
+  const [problem, setProblem] = useState<string | null>(null);
   const [engines, setEngines] = useState<{ packageName: string; label: string }[]>([]);
   const [defaultEngine, setDefaultEngine] = useState<string | null>(null);
-  const key = voiceKey(lang);
+  const key = voiceKey(active);
   const chosenEngine = prefs.engines[key] ?? "";
 
   useEffect(() => {
@@ -119,7 +131,7 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
 
   useEffect(() => {
     let alive = true;
-    void voiceChoices(lang).then((list) => {
+    void voiceChoices(active).then((list) => {
       if (!alive) return;
       setVoices(list.voices);
       setMatches(list.matchesLanguage);
@@ -127,21 +139,91 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
     return () => {
       alive = false;
     };
-  }, [lang, chosenEngine]);
+  }, [active, chosenEngine]);
+
+  // Which languages the reader actually has. Asked once, and only where there
+  // is no article to answer the question: a list of ten languages nobody in
+  // this library reads would be a worse answer than the two that are there.
+  useEffect(() => {
+    if (lang) return;
+    let alive = true;
+    void languagesInLibrary().then((found) => {
+      if (!alive) return;
+      setInLibrary(found);
+      setPicked((current) => current ?? found[0]?.code ?? "en");
+    });
+    return () => {
+      alive = false;
+    };
+  }, [lang]);
 
   async function hear() {
     if (busy) return;
     setBusy(true);
+    setProblem(null);
     void tap();
     try {
-      await previewVoice(lang);
+      await previewVoice(active);
+    } catch (e) {
+      // The common case, and the one that looked like a dead button: the
+      // engine doing the speaking has no voice for this language, so it
+      // rejects at once and nothing is heard. Name it, and say where it is
+      // fixed — the engine picker above, or Android's own screen below.
+      const said = e instanceof Error && e.message ? e.message : String(e);
+      setProblem(
+        matches
+          ? `That engine could not speak it: ${said}`
+          : `This engine has no ${active} voice, so it stayed silent. Pick another engine above, or add a voice in Android's speech settings.`
+      );
     } finally {
       setBusy(false);
     }
   }
 
+  // The languages worth offering: the ones in the library first, named, then
+  // the rest of what the app can pronounce. Every entry the reader might need,
+  // in the order they are likely to need it.
+  const nameOf = (code: string) =>
+    SPEECH_LANGUAGES.find((entry) => entry.code === code)?.label ?? code;
+  const offered = [
+    // The library only decides the *order* — the languages the reader has come
+    // first. It is not written out: a count belongs in the library screen, not
+    // in a control that sets a voice.
+    ...inLibrary.map((entry) => ({ code: entry.code, label: nameOf(entry.code) })),
+    ...SPEECH_LANGUAGES.filter(
+      (entry) => !inLibrary.some((held) => held.code === entry.code)
+    ).map((entry) => ({ code: entry.code, label: entry.label })),
+  ];
+
   return (
     <div>
+      {!lang && (
+        <div className="setting-row">
+          <label className="setting-label" htmlFor="fp-lang">
+            Language
+          </label>
+          <select
+            id="fp-lang"
+            className="voice-select"
+            value={active ?? ""}
+            onChange={(e) => {
+              void tap();
+              setPicked(e.target.value);
+              setVoices(null);
+            }}
+          >
+            {offered.map((entry) => (
+              <option key={entry.code} value={entry.code}>
+                {entry.label}
+              </option>
+            ))}
+          </select>
+          <p className="setting-note">
+            Speed, pitch and pauses are the same everywhere. Engine and voice are
+            kept per language — this is the one being set.
+          </p>
+        </div>
+      )}
       <Segmented
         label="Speed"
         name="fp-rate"
@@ -176,7 +258,7 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
       />
       <div className="setting-row">
         <label className="setting-label" htmlFor="fp-engine">
-          Engine{lang ? ` for ${lang}` : ""}
+          Engine{active ? ` for ${active}` : ""}
         </label>
         <select
           id="fp-engine"
@@ -200,9 +282,11 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
             update({ engines: next, voices });
           }}
         >
-          <option value="">
-            Android&apos;s own choice{defaultEngine ? ` (${labelOf(engines, defaultEngine)})` : ""}
-          </option>
+          {/* The engine name is not appended here: "Android's own choice
+              (Spracherkennung und -Synthese von Google)" is wider than any
+              phone and a <select> clips rather than wraps. It goes in the note
+              below, where it has room. */}
+          <option value="">Android&apos;s own choice</option>
           {engines.map((engine) => (
             <option key={engine.packageName} value={engine.packageName}>
               {engine.label}
@@ -210,13 +294,16 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
           ))}
         </select>
         <p className="setting-note">
-          A phone has one default engine and a library has several languages.
-          Picking one here applies to {lang ? `articles in ${lang}` : "this language"} only.
+          {defaultEngine
+            ? `Android's own choice is ${labelOf(engines, defaultEngine)}. `
+            : ""}
+          A phone has one default engine and a library has several languages, so
+          picking one here applies to {active ? `articles in ${active}` : "this language"} only.
         </p>
       </div>
       <div className="setting-row">
         <label className="setting-label" htmlFor="fp-voice">
-          Voice{lang ? ` for this article (${lang})` : ""}
+          Voice{lang ? ` for this article (${lang})` : active ? ` for ${active}` : ""}
         </label>
         <select
           id="fp-voice"
@@ -248,9 +335,14 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
                   // Saying which language is missing is the difference between
                   // a fault and an errand: it is fixed in Android's own speech
                   // screen, not here.
-                  `No installed voice speaks ${lang}. These ${voices.length} can read other languages — add one for ${lang} in Android's speech settings.`}
+                  `No installed voice speaks ${active}. These ${voices.length} can read other languages — add one for ${active} in Android's speech settings.`}
         </p>
       </div>
+      {problem && (
+        <p className="setting-note voice-problem" role="alert">
+          {problem}
+        </p>
+      )}
       <div className="voice-actions">
         <button type="button" className="btn pressable" onClick={() => void hear()} disabled={busy}>
           {busy ? "Speaking…" : "Hear it"}
@@ -263,7 +355,7 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
             speech.stop();
             setVoices(null);
             void refreshVoices().then(() =>
-              voiceChoices(lang).then((list) => {
+              voiceChoices(active).then((list) => {
                 setVoices(list.voices);
                 setMatches(list.matchesLanguage);
               })

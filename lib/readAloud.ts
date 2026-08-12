@@ -169,6 +169,22 @@ const REGION_FOR: Record<string, string> = {
   ru: "ru-RU",
 };
 
+/** The languages FoldPage can name, in the order a European reader meets them.
+ *  Used by the settings screen so a voice can be chosen for a language before
+ *  the first article in it is saved. */
+export const SPEECH_LANGUAGES: { code: string; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "de", label: "Deutsch" },
+  { code: "fr", label: "Français" },
+  { code: "es", label: "Español" },
+  { code: "it", label: "Italiano" },
+  { code: "nl", label: "Nederlands" },
+  { code: "pt", label: "Português" },
+  { code: "pl", label: "Polski" },
+  { code: "tr", label: "Türkçe" },
+  { code: "ru", label: "Русский" },
+];
+
 export function speechLanguage(lang: string | null): string | null {
   if (!lang) return null;
   const tag = lang.trim().toLowerCase().replace("_", "-");

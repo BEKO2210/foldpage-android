@@ -348,14 +348,37 @@ export async function voiceChoices(
 export const VOICE_SAMPLE: Record<string, string> = {
   de: "So klingt ein Absatz aus deinem Artikel, mit dieser Stimme und diesem Tempo.",
   en: "This is how a paragraph of your article will sound, at this voice and this speed.",
+  fr: "Voici comment sonnera un paragraphe de votre article, avec cette voix et à cette vitesse.",
+  es: "Así sonará un párrafo de tu artículo, con esta voz y a esta velocidad.",
+  it: "Ecco come suonerà un paragrafo del tuo articolo, con questa voce e a questa velocità.",
+  nl: "Zo klinkt een alinea uit je artikel, met deze stem en op deze snelheid.",
+  pt: "É assim que um parágrafo do seu artigo vai soar, com esta voz e a esta velocidade.",
+  pl: "Tak zabrzmi akapit twojego artykułu, tym głosem i w tym tempie.",
+  tr: "Makalendeki bir paragraf bu sesle ve bu hızda böyle duyulacak.",
+  ru: "Так будет звучать абзац вашей статьи этим голосом и в этом темпе.",
 };
 
-export async function previewVoice(lang: string | null): Promise<void> {
-  const tag = speechLanguage(lang);
+/** Speaks the sample **in** the language it is written in.
+ *
+ *  The pair matters: a French sentence read by an English voice tells the
+ *  listener nothing about the French voice, and a French voice reading English
+ *  words is a party trick. So when there is no sample for a language, the
+ *  preview falls back to English text *and* the English tag together, rather
+ *  than sending one language's words to another language's voice. */
+export function sampleFor(tag: string | null): { text: string; lang: string | null } {
   const base = (tag ?? "en").split("-")[0];
+  const text = VOICE_SAMPLE[base];
+  if (text) return { text, lang: tag };
+  return { text: VOICE_SAMPLE.en, lang: "en-US" };
+}
+
+export async function previewVoice(lang: string | null): Promise<void> {
+  const wanted = speechLanguage(lang);
+  const sample = sampleFor(wanted);
+  const tag = sample.lang;
   speech.stop();
   const prefs = getVoicePrefs();
-  const text = VOICE_SAMPLE[base] ?? VOICE_SAMPLE.en;
+  const text = sample.text;
   await holdAudioFocus();
   try {
     if (isNative()) {
@@ -516,6 +539,28 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
   }
   void releaseAudioFocus();
   return steps;
+}
+
+/** The languages the reader actually has articles in, most first.
+ *
+ *  Asked of the library rather than of the engine on purpose: a phone offers
+ *  dozens of languages and a reader has two. The point of the settings screen
+ *  is to set a voice for the languages that will be read, not to browse
+ *  Android's catalogue.
+ *
+ *  Articles that never got a language (`lang: null`) are counted under the app's
+ *  own language, because that is what the engine will fall back to anyway. */
+export async function languagesInLibrary(): Promise<{ code: string; count: number }[]> {
+  const { listArticles } = await import("./db");
+  const counted = new Map<string, number>();
+  for (const article of await listArticles()) {
+    const code = voiceKey(speechLanguage(article.lang) ?? article.lang);
+    const key = code === "default" ? "en" : code;
+    counted.set(key, (counted.get(key) ?? 0) + 1);
+  }
+  return [...counted.entries()]
+    .map(([code, count]) => ({ code, count }))
+    .sort((a, b) => b.count - a.count || a.code.localeCompare(b.code));
 }
 
 /** Opens Android's own "install voice data" screen. */

@@ -1136,6 +1136,13 @@ mark {
   font-size: 0.8rem;
   color: var(--muted);
 }
+.voice-problem {
+  /* A warning, not decoration: --warn carries 4.5:1 in both themes and
+     lib/contrast.test.ts holds it there. The word "silent" does the work as
+     well, so the colour is never the only signal. */
+  color: var(--warn);
+  font-weight: 600;
+}
 .voice-actions {
   display: flex;
   gap: 0.5rem;
