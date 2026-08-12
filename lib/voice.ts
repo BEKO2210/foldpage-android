@@ -192,7 +192,20 @@ export interface EngineVoice {
  *  listener. Android rates them itself (`Voice.getQuality()`), so that rating
  *  decides, and the name breaks the tie to keep the order stable between two
  *  openings of the same screen. */
-function byQuality(a: EngineVoice, b: EngineVoice): number {
+function byQuality(a: EngineVoice, b: EngineVoice, wanted?: string | null): number {
+  // The exact region first, and that is not pedantry: "en" resolves to en-US,
+  // and an American article read by the highest-rated Australian voice on the
+  // phone is a worse answer than a plain American one. Only then the rating,
+  // and the name last so the order does not shuffle between two openings of
+  // the same screen.
+  if (wanted) {
+    const exact = (voice: EngineVoice) =>
+      voice.lang.toLowerCase().replace("_", "-") === wanted.toLowerCase().replace("_", "-")
+        ? 0
+        : 1;
+    const region = exact(a) - exact(b);
+    if (region !== 0) return region;
+  }
   const quality = (b.quality ?? 0) - (a.quality ?? 0);
   return quality !== 0 ? quality : a.name.localeCompare(b.name);
 }
@@ -212,7 +225,7 @@ export function voicesFor(
   const base = (tag: string) => tag.toLowerCase().replace("_", "-").split("-")[0];
   const local = all
     .filter((voice) => voice.localService !== false && voice.voiceURI)
-    .sort(byQuality);
+    .sort((a, b) => byQuality(a, b, lang));
   if (!lang) return { voices: local, matchesLanguage: true };
   const wanted = base(lang);
   const matching = local.filter((voice) => base(voice.lang) === wanted);
@@ -248,4 +261,45 @@ export function voiceIndexFor(
 export function voiceKey(lang: string | null): string {
   if (!lang) return "default";
   return lang.toLowerCase().replace("_", "-").split("-")[0];
+}
+
+/** Everything one engine can offer for a language. */
+export interface EngineOffer {
+  engine: string;
+  label: string;
+  voices: EngineVoice[];
+}
+
+/** The engine and voice to use for a language when nobody has chosen one.
+ *
+ *  This is what makes the app work the moment it is installed: the phone's
+ *  default engine is often the *wrong* one for half the library — on this
+ *  device it is a German-only neural engine, so English articles were silent
+ *  until somebody went and picked an engine by hand. Nobody should have to.
+ *
+ *  Order of preference, and each rule is here because the alternative is
+ *  visibly worse:
+ *   1. Only engines that actually have a local voice for the language. A
+ *      network voice would break the app's one promise; an engine without the
+ *      language is exactly the silence this function exists to prevent.
+ *   2. The device default among those, because it is what the owner chose and
+ *      what every other app uses.
+ *   3. Otherwise the engine with the best-rated voice, which is Android's own
+ *      judgement rather than ours. */
+export function pickBestSetup(
+  offers: EngineOffer[],
+  lang: string | null,
+  defaultEngine: string | null
+): { engine: string; voiceURI: string } | null {
+  const able = offers
+    .map((offer) => {
+      const { voices, matchesLanguage } = voicesFor(offer.voices, lang);
+      return { offer, best: matchesLanguage ? voices[0] : undefined };
+    })
+    .filter((entry): entry is { offer: EngineOffer; best: EngineVoice } => !!entry.best);
+  if (!able.length) return null;
+  const preferred =
+    able.find((entry) => entry.offer.engine === defaultEngine) ??
+    able.sort((a, b) => (b.best.quality ?? 0) - (a.best.quality ?? 0))[0];
+  return { engine: preferred.offer.engine, voiceURI: preferred.best.voiceURI };
 }

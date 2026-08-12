@@ -22,6 +22,7 @@ import { refetchArticle } from "@/lib/articles";
 import { objectUrlFor, storeImagesForArticle } from "@/lib/images";
 import { indexArticle } from "@/lib/search";
 import {
+  autoConfigure,
   installVoices,
   languageAvailable,
   speech,
@@ -174,7 +175,14 @@ export default function ReadPage() {
   useEffect(() => {
     if (!article?.contentHtml) return;
     speech.load(article.contentHtml, article.lang);
-    void languageAvailable(article.lang).then((ok) => setVoiceMissing(!ok));
+    // Set the voice up before it is needed. The phone's default engine is
+    // often the wrong one for this article's language — on a phone with a
+    // German-only neural engine every English article was silent until
+    // somebody went and picked an engine by hand. This picks the engine that
+    // can actually say it, once, and never overrules a choice already made.
+    void autoConfigure(article.lang).then(() =>
+      languageAvailable(article.lang).then((ok) => setVoiceMissing(!ok))
+    );
     return () => speech.stop();
   }, [article?.id, article?.contentHtml, article?.lang]);
 

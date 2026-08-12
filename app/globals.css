@@ -1136,6 +1136,66 @@ mark {
   font-size: 0.8rem;
   color: var(--muted);
 }
+/* Onboarding: language chips, then one line per language with a mark, the
+   voice that was found, and a way to hear it. */
+.lang-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.9rem 0;
+}
+.chip {
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.chip:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+.voice-results {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+}
+.voice-results li {
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--line);
+}
+.voice-results .is-ok {
+  color: var(--ok);
+  font-weight: 700;
+}
+.voice-results .is-missing {
+  color: var(--warn);
+  font-weight: 700;
+}
+.voice-missing {
+  margin-top: 0.9rem;
+}
+.voice-missing .btn {
+  margin-top: 0.5rem;
+}
+.onboarding-title {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
 .voice-problem {
   /* A warning, not decoration: --warn carries 4.5:1 in both themes and
      lib/contrast.test.ts holds it there. The word "silent" does the work as

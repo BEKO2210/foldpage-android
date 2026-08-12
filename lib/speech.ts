@@ -8,6 +8,8 @@ import {
   gapBefore,
   getVoicePrefs,
   sentenceGap,
+  pickBestSetup,
+  saveVoicePrefs,
   voiceIndexFor,
   voiceKey,
   voicesFor,
@@ -539,6 +541,45 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
   }
   void releaseAudioFocus();
   return steps;
+}
+
+/** Choose an engine and a voice for a language, without asking anybody.
+ *
+ *  Runs the first time an article in that language is opened, and again from
+ *  the settings screen. It only ever *fills a gap*: a language the reader has
+ *  already set is never overwritten, because a chosen voice outranks a
+ *  measured one.
+ *
+ *  Returns what it settled on, so a screen can say so rather than change under
+ *  the reader's hands. */
+export async function autoConfigure(
+  lang: string | null
+): Promise<{ engine: string; voiceURI: string; label: string } | null> {
+  if (!isNative()) return null;
+  const key = voiceKey(speechLanguage(lang) ?? lang);
+  const prefs = getVoicePrefs();
+  if (prefs.engines[key]) return null;
+
+  const { engines, defaultEngine } = await speechEngines();
+  if (!engines.length) return null;
+  const offers = await Promise.all(
+    engines.map(async (engine) => ({
+      engine: engine.packageName,
+      label: engine.label,
+      voices: await voicesOfEngine(engine.packageName),
+    }))
+  );
+  const picked = pickBestSetup(offers, speechLanguage(lang) ?? lang, defaultEngine);
+  if (!picked) return null;
+  saveVoicePrefs({
+    ...getVoicePrefs(),
+    engines: { ...getVoicePrefs().engines, [key]: picked.engine },
+    voices: { ...getVoicePrefs().voices, [key]: picked.voiceURI },
+  });
+  return {
+    ...picked,
+    label: offers.find((offer) => offer.engine === picked.engine)?.label ?? picked.engine,
+  };
 }
 
 /** The languages the reader actually has articles in, most first.

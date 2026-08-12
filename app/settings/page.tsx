@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
 import DisplaySettings from "@/components/DisplaySettings";
 import VoiceSettings from "@/components/VoiceSettings";
+import VoiceOnboarding from "@/components/VoiceOnboarding";
 import ActionRow from "@/components/ActionRow";
 import {
   exportHtml,
@@ -318,6 +319,13 @@ export default function SettingsPage() {
             voice is remembered per language, so a German article and an English
             one each keep their own.
           </p>
+          {/* The same setup the app runs on first launch, kept reachable: a
+              voice installed later, or an engine added later, is found by
+              pressing this rather than by knowing where to look. */}
+          <details className="disclosure">
+            <summary>Set up voices</summary>
+            <VoiceOnboarding compact />
+          </details>
           <VoiceSettings />
           <div className="action-list mt-4">
             <ActionRow

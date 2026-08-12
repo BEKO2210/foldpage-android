@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { tap } from "@/lib/native";
+import VoiceOnboarding from "./VoiceOnboarding";
 
 const SEEN_KEY = "fp-welcomed";
 
@@ -10,6 +11,10 @@ const SEEN_KEY = "fp-welcomed";
 export default function Welcome() {
   const [show, setShow] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  /** Two steps, and the second one exists because reading aloud is the one
+      feature that cannot configure itself silently on every phone: the voices
+      belong to Android, not to the app. */
+  const [step, setStep] = useState<"pitch" | "voice">("pitch");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -41,6 +46,7 @@ export default function Welcome() {
           Read it properly.
         </h1>
 
+        {step === "pitch" && (
         <ul className="welcome-list">
           <li style={{ ["--i" as string]: 0 }}>
             <b>Send a link over.</b> Paste it above, or hit Share in any app and
@@ -55,10 +61,21 @@ export default function Welcome() {
             offline, and there is no account to make.
           </li>
         </ul>
+        )}
 
-        <button className="btn pressable welcome-cta" onClick={dismiss}>
-          Start reading
-        </button>
+        {step === "pitch" ? (
+          <button
+            className="btn pressable welcome-cta"
+            onClick={() => {
+              void tap();
+              setStep("voice");
+            }}
+          >
+            Next
+          </button>
+        ) : (
+          <VoiceOnboarding onDone={dismiss} />
+        )}
       </div>
     </div>
   );

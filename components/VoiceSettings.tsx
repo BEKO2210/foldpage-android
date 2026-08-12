@@ -13,6 +13,7 @@ import {
   type VoicePrefs,
 } from "@/lib/voice";
 import {
+  autoConfigure,
   languagesInLibrary,
   previewVoice,
   refreshVoices,
@@ -131,11 +132,15 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
 
   useEffect(() => {
     let alive = true;
-    void voiceChoices(active).then((list) => {
-      if (!alive) return;
-      setVoices(list.voices);
-      setMatches(list.matchesLanguage);
-    });
+    // Same call the reader makes: a language nobody has set up yet gets an
+    // engine and a voice chosen for it before this screen draws its lists.
+    void autoConfigure(active)
+      .then(() => voiceChoices(active))
+      .then((list) => {
+        if (!alive) return;
+        setVoices(list.voices);
+        setMatches(list.matchesLanguage);
+      });
     return () => {
       alive = false;
     };
