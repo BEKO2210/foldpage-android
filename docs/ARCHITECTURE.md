@@ -311,9 +311,12 @@ Dazu kommt Umfeld, das durchgehend deutsch ist: die verlinkten Rechtstexte
 `EDGE_FURNITURE` in `lib/parse.ts` (auf deutsche Consent- und Paywall-Formeln
 getrimmt), die Projektdokumentation und der Play-Eintrag.
 
-Wer einen neuen Text hinzufügt, schreibt ihn **englisch**, solange die
-Sprachentscheidung (`docs/ROADMAP.md`, B7) nicht getroffen ist — sonst wächst
-der Mischzustand weiter.
+**Entschieden am 12.08.2026: die App ist international und bleibt englisch.**
+Jeder neue Oberflächentext wird englisch geschrieben. Deutsch bleiben nur
+Impressum, Datenschutz und die deutschsprachigen Muster in `EDGE_FURNITURE`
+(`lib/parse.ts`) — das sind Erkennungsregeln für deutsche Consent- und
+Paywall-Formeln, kein Oberflächentext. Die drei deutschen Stellen oben werden
+englisch gefasst (`docs/ROADMAP.md`, A4).
 
 ## 8. Qualitätssicherung
 

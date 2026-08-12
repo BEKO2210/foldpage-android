@@ -52,10 +52,9 @@ Zeile 174) und die Fußzeilen-Links „Datenschutz" / „Impressum"
 (`app/settings/page.tsx` Zeile 251/255). Dazu steht `<html lang="en">`
 (`app/layout.tsx`), während die verlinkten Rechtstexte deutsch sind und der
 Play-Eintrag auf ein deutsches Publikum zielt.
-**Ziel dieser Einzelmaßnahme:** den Mischzustand beenden, ohne schon zu
-übersetzen — die drei Stellen englisch fassen („Share export", „Privacy",
-„Legal notice"). Die Grundsatzfrage, welche Sprache die App spricht, steckt in
-**B7** und wird nicht nebenbei entschieden.
+**Ziel:** die drei Stellen englisch fassen („Share export", „Privacy",
+„Legal notice"). Die Sprachfrage ist am 12.08.2026 entschieden — die App ist
+international und spricht Englisch (siehe **B7**).
 **Dateien:** `lib/native.ts`, `app/settings/page.tsx`.
 **Abnahme:** kein Bildschirm mehr mit zwei Sprachen; Export-Sheet und
 Einstellungs-Fußzeile am Gerät gesehen.
@@ -218,37 +217,32 @@ Bedienung mit Systemschriftgröße 200 %.
 | B6.3 | Layout bei 200 % Systemschrift ohne Überlauf | Screenshots bei 412 px, beide Themes |
 | B6.4 | Prüfungen, wo möglich, in `reader-render.mjs` verankern | Lauf schlägt bei Regression fehl |
 
-### B7 · Sprache: Deutsch als erste Sprache
-Heute ist die Oberfläche englisch, die Rechtstexte deutsch, das Zielpublikum
-des Play-Eintrags deutschsprachig. Die Texte stehen als Literale direkt im JSX
-verteilt — es gibt keine Übersetzungsschicht, kein `strings.xml` auf Web-Seite,
-kein `lang`-Handling außer dem festen `<html lang="en">`.
-
-Erst entscheiden, dann bauen: **Deutsch als Standard mit englischem Rückfall**
-ist der Vorschlag, weil Store-Eintrag, Impressum und Datenschutz ohnehin
-deutsch sind und die Möbel-Erkennung in `lib/parse.ts` auf deutschsprachige
-Seiten getrimmt ist. Reines Englisch bleibt vertretbar, wenn die App
-international ausgerichtet werden soll — dann fällt B7 auf A4 zusammen.
+### B7 · Sprache — **entschieden am 12.08.2026: international, Englisch**
+Die App bleibt englisch. Damit ist der große Übersetzungsstrang gestrichen; was
+bleibt, ist der Mischzustand aus **A4** (drei deutsche Stellen englisch fassen)
+und die Folgearbeiten unten. Deutsch bleiben ausschließlich die Dinge, die
+rechtlich oder fachlich deutsch sein müssen: Impressum, Datenschutz und die
+deutschsprachigen Muster in `EDGE_FURNITURE` (`lib/parse.ts`) — Letztere sind
+kein Oberflächentext, sondern Erkennungsregeln für deutsche Consent- und
+Paywall-Formeln und bleiben unangetastet.
 
 | Etappe | Inhalt | Abnahme |
 |---|---|---|
-| B7.1 | Entscheidung festhalten (Deutsch zuerst oder Englisch zuerst) und alle Textstellen inventarisieren — Komponenten, `EMPTY_META`, `TAB_META`, Fehlermeldungen in `lib/parse.ts`, `aria-label`s, `Welcome.tsx` | Liste in `docs/`, Anzahl der Strings bekannt |
-| B7.2 | Dünne Übersetzungsschicht: ein `lib/i18n.ts` mit `t("key")`, Sprache aus `navigator.language`, überschreibbar in den Einstellungen. Kein Framework — es sind wenige hundert Strings | Test: fehlender Schlüssel fällt auf, statt leer zu rendern |
-| B7.3 | Strings umziehen, `<html lang>` dynamisch, Datums- und Zahlenformate mitziehen (`toLocaleString("de-DE")` steckt schon fest verdrahtet in `app/settings/page.tsx`) | `npm run build` grün, beide Sprachen durchgeklickt |
-| B7.4 | `aria-label`s und Bildschirmleser-Texte mitübersetzt, Play-Store-Eintrag und Screenshots in der neuen Sprache | TalkBack-Durchgang (siehe B6) |
-| B7.5 | Reader-Sprache: `article.lang` steht bereits im Datenmodell — Silbentrennung und Anführungszeichen je Artikel korrekt setzen | Reader-Lab-Lauf ohne neue Befunde |
+| B7.1 | ✅ Entscheidung getroffen: Englisch, international | hier festgehalten |
+| B7.2 | Zahlenformat entkoppeln: `toLocaleString("de-DE")` in `app/settings/page.tsx` ist fest verdrahtet und macht aus 12.500 Wörtern „12.500" statt „12,500" | `undefined` als Locale, Anzeige bei englischem Gerät geprüft |
+| B7.3 | Möbel-Erkennung um englischsprachige Muster erweitern („accept cookies", „subscribe to continue", „skip to main content") — die Regex kennt heute fast nur deutsche Seiten | `npm run corpus`: Befunde an den englischen Quellen sinken |
+| B7.4 | Play-Eintrag international ausrichten: englische Beschreibung als Standard, Screenshots ohne deutschen Text | Store-Eintrag geprüft |
+| B7.5 | Reader-Sprache: `article.lang` steht bereits im Datenmodell — Silbentrennung und Anführungszeichen je Artikel setzen, statt alles wie Englisch zu behandeln | Reader-Lab-Lauf ohne neue Befunde |
 
-**Achtung bei B7.3:** die Fehlermeldungen aus `lib/parse.ts` sind derzeit in
-`lib/parse.test.ts` als Regex festgenagelt („came back empty", „private
-addresses"). Werden sie übersetzt, gehören Schlüssel statt Klartext in die
-Tests — sonst bricht der Testlauf bei jeder Textänderung.
+**Bleibt gültig, falls die Entscheidung je gedreht wird:** die Fehlermeldungen
+aus `lib/parse.ts` sind in `lib/parse.test.ts` als Regex festgenagelt („came
+back empty", „private addresses"). Eine Übersetzung bräuchte Schlüssel statt
+Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
 
 ---
 
 ## Reihenfolge, wenn niemand etwas anderes sagt
 
-0. **B7.1** — Sprachentscheidung. Sie hängt A4 und jeden neuen Text davor;
-   ohne sie schreibt der nächste Lauf Strings, die danach wieder umziehen.
 1. **A2, A3, A4** — kleine Korrekturen, sofort erledigt, machen den Rest sauberer.
 2. **B1** — das einzige offene *Versprechen*; bis dahin sind README und Welcome
    in einem Punkt schöner als die Wirklichkeit.
