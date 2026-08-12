@@ -9,6 +9,10 @@
 A read-it-later app that keeps everything on your phone — no account, no cloud,
 no tracking.
 
+[![Coming soon on Google Play](https://img.shields.io/badge/Google%20Play-coming%20soon-1B1F2A?style=for-the-badge&logo=googleplay&logoColor=F4D44D)](https://play.google.com/store/apps/details?id=de.ithandwerk.foldpage)
+[![Signed APK](https://img.shields.io/badge/APK-signed-F4D44D?style=for-the-badge&logo=android&logoColor=1B1F2A)](#verifying-the-download)
+[![Latest release](https://img.shields.io/github/v/release/BEKO2210/foldpage-android?style=for-the-badge&label=latest&color=1B1F2A)](https://github.com/BEKO2210/foldpage-android/releases/latest)
+
 <br>
 
 <img src="docs/screenshots/welcome-light.png" alt="The first-launch welcome: the folded page mark, a headline and three lines explaining the app" width="30%">

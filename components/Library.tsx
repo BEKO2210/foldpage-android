@@ -386,8 +386,8 @@ export default function Library() {
         )}
 
         {!loaded && (
-          <ul className="grid gap-3 list-none p-0 m-0" aria-hidden="true">
-            {[0, 1, 2].map((i) => (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0" aria-hidden="true">
+            {[0, 1, 2, 3].map((i) => (
               <li key={i} className="skeleton-card" />
             ))}
           </ul>
@@ -424,7 +424,7 @@ export default function Library() {
           </div>
         )}
 
-        <ul className="grid gap-3 list-none p-0 m-0">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0">
           {visible.map((a, i) => (
             <li
               key={a.id}

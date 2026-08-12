@@ -62,16 +62,19 @@ if [ "$SKIP_WEB" -eq 0 ]; then
   ( cd "$ROOT" && npm run sync )
 fi
 
-echo "==> Gradle assembleRelease"
-( cd "$ROOT/android" && ./gradlew --no-daemon assembleRelease )
+echo "==> Gradle bundleRelease & assembleRelease"
+( cd "$ROOT/android" && ./gradlew --no-daemon bundleRelease assembleRelease )
 
+AAB="$ROOT/android/app/build/outputs/bundle/release/app-release.aab"
 APK="$ROOT/android/app/build/outputs/apk/release/app-release.apk"
+[ -f "$AAB" ] || { echo "AAB fehlt: $AAB"; exit 1; }
 [ -f "$APK" ] || { echo "APK fehlt: $APK"; exit 1; }
 
-echo "==> apksigner verify"
+echo "==> apksigner verify (APK)"
 BUILD_TOOLS="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
 "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
 
 echo
-echo "APK: $APK"
-ls -lh "$APK"
+echo "AAB (für Play Store): $AAB"
+echo "APK (zum Testen): $APK"
+ls -lh "$AAB" "$APK"

@@ -176,17 +176,19 @@ body {
   position: relative;
   background: var(--card);
   border: 1px solid var(--card-line);
-  border-radius: 0.35rem;
+  border-radius: 0.75rem;
   padding: 1.1rem 1.2rem;
   transition: transform var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out);
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
 }
 .card:active {
   transform: scale(0.985);
 }
 @media (hover: hover) {
   .card:hover {
-    border-color: color-mix(in srgb, var(--muted) 45%, var(--line));
+    border-color: var(--highlight);
+    box-shadow: 0 4px 12px -4px rgba(10, 14, 25, 0.1);
   }
 }
 .card h3 {
@@ -925,7 +927,7 @@ input[type="file"] {
 }
 .skeleton-card {
   height: 6.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   border: 1px solid var(--line);
   background: linear-gradient(
       90deg,
