@@ -97,10 +97,15 @@ apksigner verify --print-certs foldpage-<version>.apk
 Signing certificate SHA-256:
 
 ```
-DE:B2:4E:26:50:42:55:FB:8A:FA:E9:0C:CB:B2:4D:48:DB:2D:59:8E:85:11:3B:19:8B:C3:D6:C6:13:14:85:8F
+84:50:48:E1:19:8E:0C:8C:2C:88:34:68:CD:14:14:46:03:13:76:4A:4A:CB:C7:CE:3A:D0:46:99:B0:A9:72:72
 ```
 
 If that fingerprint does not match, the file is not the one built here.
+
+The key changed with 1.5, which is also the upload key for Google Play. Builds
+up to 1.4 carried a different certificate
+(`DE:B2:4E:26:…:85:8F`), so Android refuses to update a 1.4 install in place —
+uninstall it first. Nothing was published under the old key.
 
 ## How it is built
 
@@ -127,8 +132,8 @@ cd android && ./gradlew assembleDebug
 ```
 
 `npm test` runs the unit tests — article extraction, plus the contrast and
-motion constraints below. `scripts/release-build.sh` produces the signed
-release build, but needs the signing keystore, which is not in this repository.
+motion constraints below. Release builds come from `./gradlew bundleRelease` and
+need the signing keystore, which is not in this repository.
 
 ### Constraints that are tested, not just documented
 
