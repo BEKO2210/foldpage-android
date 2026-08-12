@@ -325,6 +325,27 @@ test("English page furniture is trimmed from the edges too", async () => {
   );
 });
 
+test("a paywall notice is named, not filed as an article", async () => {
+  const { extractArticle } = await load();
+  const wall = `<html lang="de"><head><title>Golem</title></head><body><article>
+      <p>Zu Golem pur Bereits Pur-Leser? Hier anmelden. Kein aktives Abo
+      gefunden. Mit Golem pur ab 3 Euro im Monat lesen Sie ohne Werbung.</p>
+    </article></body></html>`;
+  assert.throws(
+    () => extractArticle(wall, "https://example.test/paywall"),
+    /paywall or cookie notice/
+  );
+
+  // The guard needs both halves: a long article that happens to discuss
+  // paywalls is an article, and a short one without the phrases is just short.
+  const aboutPaywalls = `<html lang="de"><head><title>Analyse</title></head><body><article>
+      <p>${"Der Text untersucht, wie Verlage mit Bezahlschranken umgehen und welche Formulierungen sie waehlen. ".repeat(12)}</p>
+      <p>Cookies zustimmen ist dabei die haeufigste Aufforderung, die Leser zu
+      sehen bekommen, und genau darum geht es in dieser Untersuchung.</p>
+    </article></body></html>`;
+  assert.ok(extractArticle(aboutPaywalls, "https://example.test/a").wordCount > 150);
+});
+
 test("extractArticle reports the failures the UI shows", async () => {
   const { extractArticle } = await load();
 

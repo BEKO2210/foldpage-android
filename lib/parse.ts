@@ -570,6 +570,15 @@ function authorFromMetadata(doc: Document, host = ""): string | null {
 /** The DOM half of the extraction: everything after the bytes have arrived.
     Kept free of the native bridge so it runs — and is tested — anywhere a
     DOMParser exists. */
+/** Phrases that only appear when a page returned its gate instead of its
+    article. Checked against the extracted text, and only when that text is too
+    short to be an article — a real piece may well discuss cookie banners. */
+const WALL_TEXT =
+  /(zu golem pur|golem pur bestellen|bereits pur-leser|cookies? (zustimmen|akzeptieren)|jetzt kostenlos testen|weiterlesen mit|diesen artikel weiterlesen|jetzt abonnieren|subscribe to (read|continue)|already a subscriber|create your free account|enable javascript|activate javascript)/i;
+
+/** Below this a "successful" extraction is usually the gate, not the piece. */
+const WALL_WORD_LIMIT = 150;
+
 export function extractArticle(html: string, finalUrl: string): ParseResult {
   if (!html.trim()) throw new Error("That page came back empty");
   const fallbackHost = new URL(finalUrl).hostname;
@@ -585,6 +594,16 @@ export function extractArticle(html: string, finalUrl: string): ParseResult {
   const cleaned = cleanArticleEdges(article.content, doc);
   const text = cleaned.text;
   const wordCount = text.split(/\s+/).filter(Boolean).length;
+
+  // Saving a twenty-nine word consent notice under the article's headline is
+  // worse than saving nothing: it looks like the article, it is filed like the
+  // article, and the reader finds out only when they open it. Say what came
+  // back instead.
+  if (wordCount < WALL_WORD_LIMIT && WALL_TEXT.test(text)) {
+    throw new Error(
+      "That page returned its paywall or cookie notice instead of the article"
+    );
+  }
   const canonicalRaw = doc
     .querySelector('link[rel="canonical"]')
     ?.getAttribute("href");

@@ -228,8 +228,8 @@ Jede Etappe nimmt **einen** Befund und belegt den Effekt im Diff von
 | B5.1 | `empty-paragraphs` | leere Absätze nach dem Sanitizer entfernen, ohne Abstände zu zerstören | ✅ **15 → 0** (12.08.2026), dazu `last-empty` 5 → 3 |
 | B5.2 | `no-author` | Autor zusätzlich aus JSON-LD und `<meta name="author">` lesen | ⚠️ gebaut, **Befund unverändert 6** — siehe unten |
 | B5.3 | `tables-lost` | Wikipedia-Fall: Readability wirft Tabellenseiten weg — Rückfall auf den größten Tabellencontainer |
-| B5.4 | `image-flood` | Galerie-/Teaser-Reste am Artikelende erkennen |
-| B5.5 | `suspiciously-short` | Paywall erkennen und **benennen**, statt einen 29-Wörter-Artikel zu speichern |
+| B5.4 | `image-flood` | Galerie-/Teaser-Reste am Artikelende erkennen | ⏸ zurückgestellt, Begründung unten |
+| B5.5 | `suspiciously-short` | Paywall erkennen und **benennen** | ✅ **5 → 3** (12.08.2026), `no-author` 6 → 4 |
 
 **B5.2 im Detail, weil „gebaut" hier nicht „besser" heißt:** Die Ergänzung
 liest den Autor jetzt aus JSON-LD (auch verschachtelt in `@graph`), aus
@@ -244,6 +244,30 @@ nennen schlicht niemanden. `twitter:creator` wurde bewusst **nicht** genommen:
 
 **Regel für diesen Strang:** keine Änderung ohne Vorher/Nachher-Zahl aus
 `npm run corpus`.
+
+### B5.5 (12.08.2026): lieber gar nichts als ein falsches Etikett
+
+Die beiden golem-Schnappschüsse wurden bisher als 29-Wörter-„Artikel" unter der
+echten Überschrift gespeichert. Das ist schlimmer als ein Fehlschlag: es sieht
+aus wie der Artikel, wird abgelegt wie der Artikel, und der Leser merkt es erst
+beim Öffnen — womöglich offline. Jetzt bricht die Extraktion mit einer klaren
+Meldung ab: „That page returned its paywall or cookie notice instead of the
+article". Die Bedingung ist bewusst zweiteilig — **unter 150 Wörter *und*
+Wandformel** —, damit eine lange Analyse über Bezahlschranken ein Artikel
+bleibt. Beides ist getestet.
+
+### B5.4 zurückgestellt (12.08.2026): eine Obergrenze wäre Schaden
+
+`image-flood` markiert zwei Artikel: heise mit 307 Bildern (eine Bestenliste,
+deren Teaser Readability mitnimmt) und de.wikipedia mit 42. Die naheliegende
+Lösung — eine Obergrenze für Bilder im Artikel — würde den Wikipedia-Artikel
+beschädigen, dessen 42 Bilder Inhalt sind. Und bei heise stehen die Teaser
+nicht am Ende, sondern zwischen dem Text, sodass „Reste am Artikelende
+erkennen" nicht greift. Eine tragfähige Regel müsste die Teaser-Form selbst
+erkennen (Bild plus Link, kaum Text, in einer Liste) und das ist eine eigene
+Untersuchung mit eigener Messung — nicht etwas, das man nebenbei mit einer Zahl
+erschlägt. **Für die Speicherung ist der Fall bereits entschärft:** es werden
+höchstens 40 Bilder je Artikel abgelegt (`docs/IMAGE-STORAGE.md`).
 
 ### Nachtrag B7.3 (12.08.2026): das Messinstrument war blind
 

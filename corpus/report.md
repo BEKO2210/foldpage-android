@@ -1,16 +1,16 @@
 ## Reader-Korpus
 
-39/39 Artikel extrahiert, 23 davon ohne Befund. Median 587 Woerter. 5 mit Tabelle, 21 mit Bild.
+37/39 Artikel extrahiert, 23 davon ohne Befund. Median 617 Woerter. 5 mit Tabelle, 21 mit Bild.
 
 ### Befunde nach Haeufigkeit
 
 | Flag | Artikel |
 | --- | --- |
-| `no-author` | 6 |
 | `table-wrapped` | 5 |
-| `suspiciously-short` | 5 |
 | `long-cell` | 4 |
+| `no-author` | 4 |
 | `last-empty` | 3 |
+| `suspiciously-short` | 3 |
 | `image-flood` | 2 |
 | `wide-table` | 2 |
 | `tables-lost` | 1 |
@@ -26,8 +26,8 @@
 | the-decoder.de | 204 | DIV: AMD übernimmt das kanadische KI-Startup  | 1 | 0 | 5 | — |
 | heise.de | 19498 | P: Ein Smart Ring ist die diskrete Alternat | 307 | 0 | 370 | image-flood |
 | heise.de | 658 | P: RCS, kurz für Rich Communication Service | 1 | 0 | 5 | — |
-| golem.de | 29 | SECTION: Zu Golem pur Bereits Pur-Leser? Hier anm | 0 | 0 | 2 | suspiciously-short, no-author |
-| golem.de | 29 | SECTION: Zu Golem pur Bereits Pur-Leser? Hier anm | 0 | 0 | 2 | suspiciously-short, no-author |
+| golem.de | — | **FEHLER: That page returned its paywall or cookie notice instead of the article** | — | — | — | — |
+| golem.de | — | **FEHLER: That page returned its paywall or cookie notice instead of the article** | — | — | — | — |
 | spiegel.de | 16 | FIGURE: Linken-Spitzenkandidatin Elif Eralp: »Da | 2 | 0 | 0 | suspiciously-short |
 | spiegel.de | 190 | DIV: Angesichts des »anhaltenden Drucks durch | 0 | 0 | 1 | suspiciously-short |
 | zeit.de | 587 | DIV: Der US-Präsident hat Lisa Cook per Brief | 1 | 0 | 14 | — |
