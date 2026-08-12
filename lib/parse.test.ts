@@ -110,6 +110,75 @@ test("extractArticle strips everything executable", async () => {
   assert.match(contentHtml, /Boeser Link/);
 });
 
+/** The stored HTML is injected into the app's own origin, where anything that
+    runs can read the whole library. So the sanitizer is an allowlist, and this
+    covers the cases a blocklist keeps missing. */
+test("the sanitizer allowlist survives the cases a blocklist misses", async () => {
+  const { extractArticle } = await load();
+  const page = (body: string) => `<html lang="de"><head><title>Probe</title></head><body>
+    <article>
+      <p>Ein erster Absatz mit genug Text, damit Readability den Artikel
+      sicher als Inhalt erkennt und nicht als Navigation wegwirft. Noch ein
+      Satz, damit die Schwelle zuverlässig überschritten wird.</p>
+      ${body}
+      <p>Ein abschließender Absatz, ebenfalls lang genug, damit der Block in
+      jedem Fall als Artikeltext gewertet wird und erhalten bleibt.</p>
+    </article></body></html>`;
+  const html = (body: string) =>
+    extractArticle(page(body), "https://example.test/probe").contentHtml;
+
+  // <base> re-points every relative URL in the app, not just in the article.
+  assert.doesNotMatch(html(`<base href="https://boese.test/">`), /<base/i);
+
+  // SVG parses markup HTML does not: <animate> can set an href after storage.
+  const svg = html(
+    `<p>Diagramm folgt und der Absatz ist lang genug für Readability, damit
+     der Block sicher erhalten bleibt und die Grafik mit ihm.
+     <svg><a href="#x"><animate attributeName="href" values="javascript:alert(1)"/></a></svg></p>`
+  );
+  assert.doesNotMatch(svg, /<svg|animate|javascript:/i);
+
+  // style can cover the app's own UI with a full-screen block.
+  const styled = html(
+    `<p style="position:fixed;inset:0;background:#fff">Ein Absatz mit einem
+     Inline-Style, der nach dem Sanitizing verschwunden sein muss, während
+     sein Text vollständig erhalten bleibt und lesbar ist.</p>`
+  );
+  assert.doesNotMatch(styled, /position:fixed/);
+  assert.match(styled, /Inline-Style/);
+
+  // data:text/html is a document of the author's choosing; data:image is not.
+  const links = html(
+    `<p><a href="data:text/html;base64,PHNjcmlwdD4=">Ein Link</a> in einem
+     Absatz, der lang genug ist, damit Readability ihn als Inhalt wertet und
+     der Sanitizer überhaupt an dem Link vorbeikommt.</p>`
+  );
+  assert.doesNotMatch(links, /data:text\/html/);
+  assert.match(links, /Ein Link/);
+
+  // Source classes cannot collide with the app's own stylesheet …
+  const classes = html(
+    `<p class="toast bottomnav">Ein Absatz, dessen Klassen aus der Quelle
+     stammen und die Namen der App tragen. Der Text bleibt, die Klassen nicht,
+     und der Absatz ist lang genug für die Readability-Schwelle.</p>`
+  );
+  assert.doesNotMatch(classes, /class="toast/);
+  // … while the reader's own classes are added after the scrub and survive.
+  assert.match(
+    html(`<table><tr><td>1</td><td>2</td></tr></table>`),
+    /class="tablewrap"/
+  );
+
+  // A custom element keeps its text and loses its wrapper.
+  const custom = html(
+    `<my-widget data-src="https://boese.test/x"><p>Text aus einem eigenen
+     Element, der erhalten bleiben muss, obwohl das Element selbst nicht in
+     der Allowlist steht. Auch dieser Absatz ist ausreichend lang.</p></my-widget>`
+  );
+  assert.doesNotMatch(custom, /my-widget|data-src/);
+  assert.match(custom, /Text aus einem eigenen\s+Element/);
+});
+
 test("extractArticle removes chrome only from article edges", async () => {
   const { extractArticle } = await load();
   const result = extractArticle(
