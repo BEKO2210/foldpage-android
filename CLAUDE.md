@@ -17,10 +17,23 @@ Dauerhafte Regeln und Kontext fuer diesen Ordner.
 
 ## Regeln
 
+- **`foldpage-product-ux` ist bei Produkt-, UX- und UI-Arbeit Pflicht**, vor
+  jeder Aenderung und vor jeder Rueckfrage. Der Skill liegt in
+  `.claude/skills/foldpage-product-ux/` und traegt die dauerhaften
+  Produktregeln: keine Engine-, Modell- oder Anbieternamen in der Nutzer-
+  Oberflaeche, der Fluss Text → Sprache → Stimme → Vorlesen, nur zur gewaehlten
+  Sprache passende Stimmen, automatische Engine-Wahl mit Rueckfall,
+  schlanke App plus nachladbare Sprachpakete mit eigenem Download-Fluss,
+  der UI-Qualitaetsanspruch und die Playwright-Pflichtpruefung.
+  Ausloeser: alles an Vorlesen, Stimmen, Sprachen, Downloads, Einstellungen,
+  Reader, Navigation, Typografie, Bewegung, Barrierefreiheit oder sichtbarem
+  Text. Widerspricht ein Auftrag einer Regel, den Widerspruch in einem Satz
+  nennen und die regelkonforme Fassung bauen.
 - **Passenden Skill suchen und benutzen**, nicht frei Hand arbeiten:
   `superpowers:systematic-debugging` bei jedem Fehlerbild (Phase 1 zu Ende
   fuehren, bevor etwas geaendert wird), `ui-ux-pro-max` bei allem, was
-  Aussehen, Bedienung oder Bewegung aendert.
+  Aussehen, Bedienung oder Bewegung aendert. `foldpage-product-ux` setzt dabei
+  die Rahmenbedingungen, die anderen Skills arbeiten darin.
 - **Das Messgeraet ist verdaechtig, bevor es der Code ist.** Eine Null im
   Bericht heisst „nichts gefunden", nicht „nichts da".
 - Version nicht pro Lauf erhoehen — ein Release fasst rund fuenf Laeufe
@@ -33,5 +46,10 @@ Dauerhafte Regeln und Kontext fuer diesen Ordner.
   lesen diese Werte.
 - Gerätetest heisst `npm run apk:debug` (enthaelt `cap sync`). `npm run build`
   allein zeigt am Geraet den vorherigen Stand.
+- Jede spuerbare UI-Aenderung: `npm run build` und danach `npm run ui:check`
+  (dazu `-- --empty` und `-- --offline`), plus die Zustaende Laden, Leer,
+  Fehler, Download und Offline von Hand angesehen. Bericht:
+  `corpus/ui-report.json`. Einzelheiten in
+  `.claude/skills/foldpage-product-ux/references/playwright-checks.md`.
 - `capacitor.config.ts`: `androidScheme` und `hostname` nie aendern — IndexedDB
   haengt am Origin, ein Wechsel loescht faktisch die Bibliothek des Nutzers.

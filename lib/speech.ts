@@ -1,7 +1,13 @@
 "use client";
 
 import { FoldPageSpeech, holdAudioFocus, isNative, releaseAudioFocus } from "./native";
-import { speechLanguage, spokenBlocks, wrapEngine, type SpokenBlock } from "./readAloud";
+import {
+  SPEECH_LANGUAGES,
+  speechLanguage,
+  spokenBlocks,
+  wrapEngine,
+  type SpokenBlock,
+} from "./readAloud";
 import {
   PITCHES,
   RATES,
@@ -610,7 +616,10 @@ function withTimeout<T>(work: Promise<T>, ms: number, what: string): Promise<T> 
   return Promise.race([
     work,
     new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`${what} did not answer within ${ms} ms`)), ms)
+      setTimeout(
+        () => reject(new Error(`${what} did not answer within ${Math.round(ms / 1000)} seconds`)),
+        ms
+      )
     ),
   ]);
 }
@@ -621,59 +630,105 @@ export interface DiagnosisStep {
   detail: string;
 }
 
-/** Ask the engine, step by step, and report what it says.
+/** Walk the way a word travels, step by step, and report what stops it.
  *
  *  Exists because "nothing happens" is not a fault report: the speaking runs
- *  through a plugin, a system service and a voice pack, and any of the three
- *  can be missing without a word of explanation. Each step here is one link in
- *  that chain, and the first one that fails is the answer. */
+ *  through several parts, any of which can be missing without a word of
+ *  explanation. Each step here is one of them, and the first one that fails is
+ *  the answer.
+ *
+ *  Every line a reader sees is written as a sentence about *reading aloud*,
+ *  never about the machinery: this is the one screen in the app where a person
+ *  has gone looking for a fault, and even here the answer has to be usable by
+ *  somebody who has never heard the word "engine". */
 export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep[]> {
   const steps: DiagnosisStep[] = [];
   const note = (label: string, ok: boolean, detail = "") =>
     steps.push({ label, ok, detail });
+  /** An exception's own text is the last resort. It is the only place a
+   *  machine word can still get through, so it is kept short and framed. */
+  const because = (e: unknown) =>
+    e instanceof Error && e.message ? e.message : "no reason given";
 
-  note("Running in the app", isNative(), isNative() ? "native" : "browser build");
+  note(
+    "Reading aloud is available here",
+    isNative(),
+    isNative() ? "" : "this is the browser preview, which cannot speak"
+  );
 
   let tts: Awaited<ReturnType<typeof engine>>["tts"] | null = null;
   try {
-    tts = (await withTimeout(engine(), 5000, "Loading the plugin")).tts;
-    note("Speech plugin loaded", true, "");
+    tts = (await withTimeout(engine(), 5000, "The voice")).tts;
+    note("The voice is ready", true, "");
   } catch (e) {
-    note("Speech plugin loaded", false, e instanceof Error ? e.message : String(e));
+    note("The voice is ready", false, because(e));
     return steps;
   }
 
   let languages: string[] = [];
   try {
     languages = (
-      await withTimeout(tts.getSupportedLanguages(), 5000, "The engine")
+      await withTimeout(tts.getSupportedLanguages(), 5000, "The voice")
     ).languages;
-    note("Engine answered", languages.length > 0, `${languages.length} languages`);
+    note(
+      "The voice answered",
+      languages.length > 0,
+      languages.length ? `${languages.length} languages it can read` : "it knows no languages"
+    );
   } catch (e) {
-    note("Engine answered", false, e instanceof Error ? e.message : String(e));
+    note("The voice answered", false, because(e));
     return steps;
   }
 
   if (languages.length) {
-    note("Languages the engine has", true, languages.slice(0, 6).join(", "));
+    // Language tags are for machines. Named languages where the name is known,
+    // and a count for the rest, so the line stays a sentence.
+    const named = [
+      ...new Set(
+        languages
+          .map(
+            (tag) =>
+              SPEECH_LANGUAGES.find((entry) => entry.code === voiceKey(tag))?.label ?? null
+          )
+          .filter((label): label is string => !!label)
+      ),
+    ];
+    const rest = languages.length - named.length;
+    note(
+      "Languages it can read",
+      true,
+      named.length
+        ? `${named.slice(0, 6).join(", ")}${rest > 0 ? ` and ${rest} more` : ""}`
+        : `${languages.length}`
+    );
   }
 
   const wanted = speechLanguage(sampleLang) ?? "en-US";
+  const wantedLabel =
+    SPEECH_LANGUAGES.find((entry) => entry.code === voiceKey(wanted))?.label ?? "this language";
   try {
     const { supported } = await withTimeout(
       tts.isLanguageSupported({ lang: wanted }),
       5000,
-      "The engine"
+      "The voice"
     );
-    note(`Voice for ${wanted}`, supported, supported ? "installed" : "not installed");
+    note(
+      `A voice for ${wantedLabel}`,
+      supported,
+      supported ? "installed on this phone" : "not on this phone yet"
+    );
   } catch (e) {
-    note(`Voice for ${wanted}`, false, e instanceof Error ? e.message : String(e));
+    note(`A voice for ${wantedLabel}`, false, because(e));
   }
 
   // The only step that proves anything: does a word actually come out. With
   // focus held, for the same reason the article needs it.
   const focus = await holdAudioFocus();
-  note("Audio focus", focus, focus ? "held" : "refused — playback will be muted");
+  note(
+    "Sound is allowed to play",
+    focus,
+    focus ? "" : "another app is holding the sound, so nothing would be heard"
+  );
   const started = Date.now();
   try {
     await withTimeout(
@@ -683,16 +738,17 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
     );
     const took = Date.now() - started;
     note(
-      "Spoke a test word",
-      true,
-      // An engine that returns instantly has not spoken; it has given up
-      // quietly, which is exactly the failure this whole check is for.
+      "Said a test word",
+      // Returning instantly is not speaking; it is giving up quietly, which is
+      // exactly the failure this whole check exists for. It was reported as a
+      // success before, which made the check worse than useless.
+      took >= 250,
       took < 250
-        ? `returned after ${took} ms — that is not long enough to say a word, so the engine gave up quietly. Check the media volume and the engine on Android's own speech screen.`
-        : `${took} ms — if you heard nothing, it is the media volume, not the app`
+        ? "it finished too fast to have said anything — turn the media volume up and try again"
+        : "if you heard nothing, it is the media volume rather than the app"
     );
   } catch (e) {
-    note("Spoke a test word", false, e instanceof Error ? e.message : String(e));
+    note("Said a test word", false, because(e));
   }
   void releaseAudioFocus();
   return steps;

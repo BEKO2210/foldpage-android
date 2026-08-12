@@ -10,6 +10,8 @@
     "corpus": "node scripts/corpus.mjs measure",
     "corpus:fetch": "node scripts/corpus.mjs fetch",
     "reader-render": "npm run build && node scripts/reader-render.mjs",
+    "ui:check": "node .claude/skills/foldpage-product-ux/scripts/ui-check.mjs",
+    "jargon": "node scripts/jargon-audit.mjs",
     "sync": "npm run build && npx cap sync android",
     "apk:debug": "npm run sync && cd android && ./gradlew assembleDebug",
     "apk:release": "npm run sync && cd android && ./gradlew assembleRelease",

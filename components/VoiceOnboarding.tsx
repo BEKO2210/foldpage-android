@@ -50,8 +50,10 @@ export default function VoiceOnboarding({
   // A first guess that is right most of the time: the languages already in the
   // library, and otherwise the phone's own language plus English, which is the
   // language of the app itself.
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- setUp is stable
-  // enough to run once: it reads the codes it is handed, not state.
+  // This runs once on purpose. `setUp` reads the codes it is handed rather than
+  // state, so listing it as a dependency would only re-run the search every
+  // time a result comes back — see the disable directive on the dependency
+  // array below, which has to sit on that line to have any effect at all.
   useEffect(() => {
     let alive = true;
     void languagesInLibrary().then((found) => {
@@ -71,6 +73,7 @@ export default function VoiceOnboarding({
     return () => {
       alive = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function setUp(codes: string[] = picked) {

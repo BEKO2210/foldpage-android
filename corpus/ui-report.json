@@ -1,0 +1,82 @@
+{
+  "ranAt": "2026-08-12T22:26:03.540Z",
+  "mode": {
+    "empty": false,
+    "offline": true
+  },
+  "viewports": [
+    {
+      "name": "mobile",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "desktop",
+      "width": 1280,
+      "height": 900
+    }
+  ],
+  "results": [
+    {
+      "route": "library",
+      "viewport": "mobile",
+      "path": "/",
+      "overflowPx": 0,
+      "overflowCulprits": [],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": "reader",
+      "viewport": "mobile",
+      "path": "/read/?id=ui-0",
+      "overflowPx": 0,
+      "overflowCulprits": [],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": "settings",
+      "viewport": "mobile",
+      "path": "/settings/",
+      "overflowPx": 0,
+      "overflowCulprits": [],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": "library",
+      "viewport": "desktop",
+      "path": "/",
+      "overflowPx": 0,
+      "overflowCulprits": [],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": "reader",
+      "viewport": "desktop",
+      "path": "/read/?id=ui-0",
+      "overflowPx": 0,
+      "overflowCulprits": [],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": "settings",
+      "viewport": "desktop",
+      "path": "/settings/",
+      "overflowPx": 0,
+      "overflowCulprits": [],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": []
+    }
+  ],
+  "findings": []
+}

@@ -49,10 +49,7 @@
     {
       "route": "reader",
       "unnamed": [],
-      "small": [
-        "button.chip 68x44",
-        "input.input 144x44"
-      ],
+      "small": [],
       "headings": [
         {
           "level": 1,

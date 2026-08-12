@@ -1,0 +1,19 @@
+{
+  "ranAt": "2026-08-12T22:25:17.864Z",
+  "scanned": [
+    {
+      "route": "library",
+      "lines": 25
+    },
+    {
+      "route": "reader",
+      "lines": 53
+    },
+    {
+      "route": "settings",
+      "lines": 108
+    }
+  ],
+  "findings": [],
+  "coversOnly": "Text a browser build renders. The voice diagnosis only speaks after a native call and is checked by hand."
+}

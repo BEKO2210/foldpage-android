@@ -14,3 +14,4 @@ android/app/release/
 keystore.properties
 .DS_Store
 tsconfig.tsbuildinfo
+corpus/ui-shots/

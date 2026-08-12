@@ -151,7 +151,7 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
       await previewVoice(code);
     } catch {
       setProblem(
-        "That voice would not speak. Voices are installed on Android's own speech screen."
+        "That voice would not speak. Turn the media volume up and try again, or install the voice for this language."
       );
     } finally {
       setBusy(null);

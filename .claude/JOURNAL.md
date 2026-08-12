@@ -3,8 +3,13 @@
 Automatisch gepflegt vom Claude-Code-Hook `~/.claude/hooks/journal.py`. Neueste Sitzung oben.
 Dauerhafte Regeln gehoeren in CLAUDE.md, nicht hierher.
 
+<!-- session:c6b0ecee-85c6-432f-bd93-b267b8c403c4 -->
+## 2026-08-12 22:15 · Branch `main`
+Auftrag: /plugin-dev:create-plugin Create a project-specific FoldPage UX and product engineering skill named foldpage-product-ux. The skill is ONLY for this repository. 
+Geaendert: `.claude/skills/foldpage-product-ux/SKILL.md`, `.claude/skills/foldpage-product-ux/references/voice-and-language.md`, `.claude/skills/foldpage-product-ux/references/ui-quality-bar.md`, `.claude/skills/foldpage-product-ux/scripts/ui-check.mjs`, `.claude/skills/foldpage-product-ux/references/playwright-checks.md`, `package.json`, `CLAUDE.md`
+
 <!-- session:9d281c17-2619-42b9-984f-347144f4090a -->
-## 2026-08-12 20:09 · Branch `main`
+## 2026-08-12 21:40 · Branch `main`
 Auftrag: Weiter an /home/belkis/StudioProjects/foldpage-android. Lies zuerst docs/HANDOFF.md, dann docs/ARCHITECTURE.md Abschnitt 10 („Fallen") und docs/ROADMAP.md. Der 
 Geaendert: `scripts/speech-audit.mjs`, `lib/readAloud.ts`, `lib/voice.ts`, `lib/speech.ts`, `lib/voice.test.ts`, `lib/readAloud.test.ts`, `components/VoiceSettings.tsx`, `app/globals.css`, `components/DisplaySheet.tsx`, `app/read/page.tsx`, `app/settings/page.tsx`, `android/app/src/main/java/de/ithandwerk/foldpage/SpeechPlugin.java`, `... +5 weitere`
 

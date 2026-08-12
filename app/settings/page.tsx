@@ -16,7 +16,12 @@ import { addArticleFromUrl } from "@/lib/articles";
 import { findByUrl, imageBytes, listArticles, newId, saveArticle } from "@/lib/db";
 import { articlesMissingImages, backfillImages, pruneImages } from "@/lib/images";
 import { buildIndex } from "@/lib/search";
-import { diagnose, installVoices, openSpeechSettings, type DiagnosisStep } from "@/lib/speech";
+import {
+  diagnose,
+  installVoices,
+  languagesInLibrary,
+  type DiagnosisStep,
+} from "@/lib/speech";
 import { buzzSuccess } from "@/lib/native";
 
 type ImportStatus =
@@ -65,7 +70,6 @@ export default function SettingsPage() {
     // `status.phase` only, not the whole object: during an import a fresh
     // object is written per link, and this effect re-read the entire library
     // each time — a hundred links meant a hundred full reads.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.phase, pruned]);
 
   async function runImport(rows: ImportRow[]) {
@@ -187,7 +191,11 @@ export default function SettingsPage() {
 
   /** Articles saved before there was a word index. Search still finds them
       without this — it reads them the old way — but each one it has to read is
-      one it cannot answer from the index. */
+      one it cannot answer from the index.
+
+      Said on screen as what the reader gets, not as what the code builds: an
+      index is a data structure, and "prepared for search" is the same fact
+      told to a person. */
   async function runIndex() {
     setIndexing({ phase: "running", done: 0, total: 0 });
     const result = await buildIndex((done, total) =>
@@ -196,16 +204,20 @@ export default function SettingsPage() {
     setIndexing({
       phase: "done",
       text: result.articles
-        ? `${result.articles} article${result.articles === 1 ? "" : "s"} indexed, ${result.terms.toLocaleString()} terms.`
-        : "Every article is already in the index.",
+        ? `${result.articles} article${result.articles === 1 ? "" : "s"} prepared — searching them is instant now.`
+        : "Every article is already prepared.",
     });
   }
 
+  /** Checked in the language the reader actually has articles in. It used to
+      ask about German whatever the library held, so an English-only reader was
+      told about a voice they would never hear. */
   async function runVoiceCheck() {
     setChecking(true);
     setVoiceCheck(null);
     try {
-      setVoiceCheck(await diagnose("de"));
+      const languages = await languagesInLibrary();
+      setVoiceCheck(await diagnose(languages[0]?.code ?? null));
     } finally {
       setChecking(false);
     }
@@ -287,8 +299,8 @@ export default function SettingsPage() {
               busy={backfill.phase === "running" ? `${backfill.done}/${backfill.total}` : undefined}
             />
             <ActionRow
-              label="Index for search"
-              hint="Makes search answer from the index instead of reading"
+              label="Speed up search"
+              hint="Prepares older articles so searching them is instant"
               onClick={() => void runIndex()}
               disabled={indexing.phase === "running"}
               busy={indexing.phase === "running" ? "…" : undefined}
@@ -302,7 +314,7 @@ export default function SettingsPage() {
           </div>
           {indexing.phase === "running" && indexing.total > 0 && (
             <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
-              Indexing article {indexing.done} of {indexing.total} …
+              Preparing article {indexing.done} of {indexing.total} …
             </p>
           )}
           {indexing.phase === "done" && (
@@ -338,42 +350,37 @@ export default function SettingsPage() {
         <section id="s-reading-aloud" className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Reading aloud</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            Android does the speaking, offline, with the voices installed on this
-            phone. Speed, pitch and the length of the pauses are set here; the
-            voice is remembered per language, so a German article and an English
-            one each keep their own.
+            Articles are read out on the phone itself, offline. Speed, pitch and
+            the length of the pauses are set here; each language keeps its own
+            voice, so a German article and an English one never swap accents.
           </p>
           <VoiceSettings />
-          <div className="action-list mt-4">
-            <ActionRow
-              label="Android speech settings"
-              hint="Engine, speed, language — and “Listen to an example”"
-              onClick={() => void openSpeechSettings()}
-            />
-          </div>
           {/* Fault-finding belongs one level down. Kept beside the setting it
               explains rather than on a screen of its own, but not competing
               with it: most people never need this, and the two who do need it
-              at exactly this moment. */}
+              at exactly this moment.
+
+              The row that used to sit here — a second door to the phone's own
+              speech screen — is gone: the voices block already carries that
+              door, and it only appears when a voice is actually missing. */}
           <details className="disclosure">
             <summary>If it stays silent</summary>
             <p className="text-sm" style={{ color: "var(--muted)" }}>
-              Speech plays on the <b>media</b> volume, not the ringer — a phone
-              with the ringer up and media muted is silent here and nowhere
-              else. The voice itself comes from Android: whichever engine the
-              phone is set to use does the speaking.
+              Reading aloud plays on the <b>media</b> volume, not the ringer — a
+              phone with the ringer up and media turned down is silent here and
+              nowhere else.
             </p>
             <div className="action-list">
               <ActionRow
-                label="Check the voice"
-                hint="Walks the chain and names the first link that fails"
+                label="Check reading aloud"
+                hint="Finds the point where the sound stops"
                 onClick={() => void runVoiceCheck()}
                 disabled={checking}
                 busy={checking ? "…" : undefined}
               />
               <ActionRow
-                label="Install voices"
-                hint="Add or repair a language's voice data"
+                label="Repair a voice"
+                hint="Adds or replaces the voice files for a language"
                 onClick={() => void installVoices()}
               />
             </div>
