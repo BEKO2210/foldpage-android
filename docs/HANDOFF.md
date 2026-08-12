@@ -1,56 +1,51 @@
-# Übergabe an die nächste Sitzung — 12. August 2026, abends
+# Übergabe an die nächste Sitzung — 12. August 2026, spät
 
-Stand nach einem langen Tag am Gerät. Diese Datei ist der Einstieg für ein
-frisches Fenster; alles Dauerhafte steht in `docs/ARCHITECTURE.md` (Aufbau),
-`docs/ROADMAP.md` (was ansteht) und `docs/FUTURE-PROOFING.md` (Fristen).
+Stand: **1.11 / versionCode 13**, gebaut, auf GitHub als reguläres Release
+(kein Beta) veröffentlicht, AAB liegt bereit für die Play Console. Alles
+Dauerhafte steht in `docs/ARCHITECTURE.md` (Aufbau), `docs/ROADMAP.md` (was
+ansteht), `docs/SPEECH.md` (Vorlesen, mit Messwerten) und `docs/MOTION.md`.
 
-## Wo wir stehen
+## Wo es steht
 
-- **Version 1.9 (`versionCode 11`)** ist gebaut, im Play-Store-Upload und als
-  GitHub-Release. Seither sind **zwei Läufe** dazugekommen (Suchindex/Liste,
-  Vorlesen) — der Release-Zähler steht bei **2 von ~5**, die Versionsdateien
-  bleiben bis dahin unberührt.
-- **Vorlesen funktioniert am Gerät.** Zwei Fehler, beide gefunden und behoben:
-  1. `registerPlugin()` liefert einen Proxy, bei dem jeder Zugriff ein
-     Brückenaufruf ist — auch `.then`. Aus einer `async`-Funktion zurückgegeben,
-     fragt JavaScript den Rückgabewert nach `.then`, der Proxy hält das für eine
-     native Methode dieses Namens, ruft ins Leere, und das `await` kehrt **nie**
-     zurück. Kein Fehler, keine Ablehnung, keine Logzeile. Gelöst durch
-     `wrapEngine()` in `lib/readAloud.ts`, festgehalten von `lib/speech.test.ts`.
-  2. Seit Android 16 schaltet „Audio Hardening" Wiedergabe stumm, die ein
-     **anderer Prozess** für die App startet — und die Sprach-Engine ist immer
-     ein anderer Prozess. `SystemSettingsPlugin.requestAudioFocus()` hält jetzt
-     Fokus (`USAGE_MEDIA`/`CONTENT_TYPE_SPEECH`, transient mit Ducking) für die
-     Dauer eines Artikels.
-- **Neuronale Stimme installiert.** Auf dem S23 Ultra läuft
-  `com.k2fsa.sherpa.onnx.tts.engine` (Piper `vits-piper-de_DE-thorsten-medium`,
-  85 MB) als **System-Engine**, gesetzt über
-  `settings put secure tts_default_synth`. FoldPage benutzt immer die
-  System-Engine — die App musste dafür **nicht** geändert werden.
+- **Vorlesen richtet sich selbst ein.** Eine Sprache, eine Stimme: `autoConfigure()`
+  wählt über alle installierten Engines die beste lokale Stimme je Sprache
+  (`pickBestSetup` in `lib/voice.ts`). Die Auswahl von Sprache, Engine und
+  Stimme ist **entfernt** — einstellbar bleiben Tempo, Tonhöhe, Pausen.
+- **Eigenes Sprach-Plugin** (`android/.../SpeechPlugin.java`) spricht über eine
+  benannte Engine, weil das Telefon nur *eine* Standard-Engine hat und die
+  Bibliothek mehrere Sprachen. Manifest braucht dafür `<queries>` mit
+  `TTS_SERVICE`.
+- **Sperrbildschirm** über MediaSession + MediaStyle-Benachrichtigung,
+  **Fortsetzen** über eine gemerkte Blockposition (nur als Angebot, nie
+  automatisch).
+- **C6, C7, C3 sind erledigt** (Tiefe aus Zustand, Sprungmarken in den
+  Einstellungen, geteilte Element-Bewegung in den Artikel).
+- **Ein 8-Agenten-Lauf** hat 16 bestätigte Fehler gefunden, alle behoben
+  (Commit `dae8c1b`): Blockindex-Drift zwischen Stimme und Markierung,
+  Sperrbildschirm-Pause, Audio-Fokus, Lesefortschritt, Such-Race, CSV-Import,
+  HTML-Export, `allowBackup`, klebende Kopfzeile, doppelter `.chip`-Block.
 
-## Was am Gerät geprüft ist
+## Was als Nächstes ansteht
 
-`adb` läuft über USB (`SM-S918B`). `bash scripts/device-check.sh` sammelt in
-einem Lauf: Engines, gewählte Engine, Medien-Lautstärke, installierte Version —
-und zieht die **installierte** APK, um hineinzusehen. Das war entscheidend:
-drei Betas trugen denselben `versionCode 11`, und nichts in der Oberfläche sagt,
-welche davon läuft.
+1. **Gerätetest unterwegs** durch Belkis mit der Release-APK. Erst wenn dabei
+   nichts auffällt, geht es an UI-Verbesserungen.
+2. **Nicht per Finger geprüft:** Pause/Stop aus der Medien-Benachrichtigung.
+3. **Bewusst offen:** Hardware-Medientasten erreichen die App nicht, solange sie
+   `AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK` hält (Begründung in `docs/SPEECH.md`).
+4. Danach: C4 (Play-Aufnahmen aus dem Reader-Lab), C5, B7.4, D2/D3.
 
-## Arbeitsweise, die sich heute bewährt hat
+## Arbeitsweise, die sich bewährt hat
 
-1. **Skills zuerst.** `superpowers:systematic-debugging` bei jedem Fehlerbild
-   (Phase 1 zu Ende führen, *bevor* etwas geändert wird),
-   `ui-ux-pro-max` bei allem, was Aussehen, Bedienung oder Bewegung ändert. Der
-   UI-Skill fand eine doppelte Haptik, die niemand gesucht hatte; der
-   Debugging-Skill verhinderte drei weitere Blindschüsse.
-2. **Das Messgerät ist verdächtig, bevor es der Code ist.** Heute dreimal:
-   die Möbel-Erkennung war deutschsprachig und meldete englische Seiten als
-   sauber; der Barrierefreiheits-Prüfer hielt Radio-Knöpfe für namenlos; er
-   klickte vor der Hydration und meldete einen Fokus-Fehler, den es nicht gab.
-   Eine Null im Bericht heißt „nichts gefunden", nicht „nichts da".
-3. **Belege statt Behauptungen.** Jede Zahl in den Dokumenten stammt aus einem
-   Lauf: `npm test`, `npm run corpus`, `npm run reader-render`,
-   `node scripts/library-bench.mjs`, `node scripts/a11y-audit.mjs`.
+1. **Skills zuerst:** `superpowers:systematic-debugging` bei jedem Fehlerbild
+   (Phase 1 zu Ende, bevor etwas geändert wird), `ui-ux-pro-max` bei allem, was
+   Aussehen, Bedienung oder Bewegung ändert.
+2. **Das Messgerät ist verdächtig, bevor es der Code ist.** In diesem Lauf war
+   es dreimal selbst der Fehler (siehe `docs/SPEECH.md`).
+3. **Belege statt Behauptungen:** `npm test`, `npm run corpus`,
+   `node scripts/speech-audit.mjs`, `node scripts/a11y-audit.mjs`,
+   `adb logcat` am Gerät.
+4. **Bauen:** `JAVA_HOME=/opt/android-studio/android-studio/jbr`, dann
+   `npm run sync && cd android && ./gradlew assembleRelease bundleRelease`.
 
 ## Lauf 3 (12.08. abends): die Stimme
 
