@@ -23,7 +23,7 @@
   "renders": 156,
   "tablesChecked": 84,
   "imagesTotal": 1528,
-  "imagesUnloaded": 1345,
+  "imagesUnloaded": 1343,
   "hinweis": "Bildpruefungen (kaputt, zu breit, Zaehlpixel) greifen nur bei geladenen Bildern. Der Korpus ist offline, imagesUnloaded nennt die ungeprueften.",
   "failures": [],
   "results": [
@@ -35,7 +35,7 @@
       "screenshot": "screenshots/light/www-welt-de-politik-deutschland-article6a7665b70e3689919ec747b6-nach-landtagswahl-ansage-a.png",
       "images": {
         "total": 1,
-        "unloaded": 1,
+        "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -902,7 +902,7 @@
       "screenshot": "screenshots/light/de-wikipedia-org-wiki-elektroauto.png",
       "images": {
         "total": 42,
-        "unloaded": 34,
+        "unloaded": 33,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -3745,7 +3745,7 @@
       "screenshot": null,
       "images": {
         "total": 1,
-        "unloaded": 1,
+        "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -4897,7 +4897,7 @@
       "screenshot": null,
       "images": {
         "total": 42,
-        "unloaded": 29,
+        "unloaded": 30,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0

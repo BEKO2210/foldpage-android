@@ -13,13 +13,14 @@ Der Aufbau des Codes steht in `docs/ARCHITECTURE.md`; ohne die gelesen zu haben,
 sollte hier niemand anfangen. Was von außen kommt — Play-Fristen, Android-
 Versionen, Bibliotheks-Majors — steht getrennt in `docs/FUTURE-PROOFING.md`.
 
-Stand: 12. August 2026, Version 1.6 (`versionCode 8`), geschlossener Test bei
+Stand: 12. August 2026, Version 1.7 (`versionCode 9`), geschlossener Test bei
 Google Play.
 
 **Release-Zähler:** seit 1.6 sind **5 von ~5** Läufen erledigt —
 1. A2, A3, A4, A7, B7.2 · 2. B1.1–B1.5 (Bilder mitspeichern) · 3. Schalter und
 Nachladen für Altbestand · 4. A5, A6 · 5. B2.1, B2.2.
-**Damit ist 1.7 / `versionCode 9` fällig.** Der nächste Versionssprung ist 1.7 / `versionCode 9`;
+Daraus wurde **1.7 / `versionCode 9`** (12.08.2026). Der Zähler beginnt für
+1.8 / `versionCode 10` wieder bei null. Der nächste Versionssprung ist 1.7 / `versionCode 9`;
 bis dahin bleiben die Versionsdateien unberührt.
 
 ---

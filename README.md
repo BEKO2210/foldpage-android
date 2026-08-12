@@ -167,9 +167,11 @@ scripts/        icon/splash generation and the signed release build
 
 ## Status
 
-Version 1.6 — the local-only MVP after a full UI/UX pass, an allowlist
-sanitizer for everything it stores, a set of reading settings, and a layout
-measured on tablets as well as phones. In closed testing on Google Play. Sync between devices exists in the web version of FoldPage and is
+Version 1.7 — the local-only MVP, now with an allowlist sanitizer for
+everything it stores, reading settings you can change mid-article, an article's
+pictures kept on the device rather than fetched from the publisher on every
+open, and a layout measured on tablets as well as phones. In closed testing on
+Google Play. Sync between devices exists in the web version of FoldPage and is
 deliberately absent here. Where the work goes next is written down in
 [`docs/ROADMAP.md`](docs/ROADMAP.md); how the app is put together, in
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).

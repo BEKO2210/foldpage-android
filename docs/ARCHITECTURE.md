@@ -8,7 +8,7 @@ Ausliefern), `docs/ROADMAP.md` (was als Nächstes ansteht),
 `docs/READER-LAB.md`, `docs/CONTRAST.md`, `docs/MOTION.md` (Messwerte),
 `docs/FUTURE-PROOFING.md` (Plattformfristen, Versionen, Browsereigenschaften).
 
-Stand: 12. August 2026, App-Version 1.6 (`versionCode 8`), im geschlossenen
+Stand: 12. August 2026, App-Version 1.7 (`versionCode 9`), im geschlossenen
 Test bei Google Play.
 
 ---
