@@ -1226,8 +1226,25 @@ mark {
 .language-remove {
   margin-top: 0.6rem;
 }
+/* A quiet button rather than a link: it does something on this page, it does
+   not go anywhere. The underline of a link promised navigation. */
 .language-add-open {
-  margin-top: 0.8rem;
+  margin-top: 0.9rem;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  border: 1.5px solid var(--line);
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.language-add-open:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 .language-add {
   margin-top: 0.8rem;
@@ -1296,20 +1313,49 @@ mark {
 /* An index for a settings page that had grown five cards long. Chips rather
    than a list: they wrap, they are already a 44px touch target elsewhere in the
    app, and six of them fit in two rows on a phone. */
-.settings-index {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0 0 1.25rem;
-}
-.settings-index .chip {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-}
-.section-card {
+/* A settings section is a section, not an object: a heading, its explanation,
+   its controls, and a hairline before the next one. The five bordered cards
+   this replaces packaged six unequal things as if they were six equal ones,
+   and cost 3300 px of scroll to say it. The rule is enough — a border round
+   each group says "these are separate things you act on", which is true of an
+   article card and false of "Appearance". */
+.settings-section {
   /* The sticky header would otherwise cover the heading an anchor jumps to. */
   scroll-margin-top: 4.5rem;
+  padding-bottom: 1.75rem;
+}
+.settings-section + .settings-section {
+  border-top: 1px solid var(--line);
+  padding-top: 1.75rem;
+}
+/* From a tablet up, the two sections people actually come for sit next to each
+   other. The separator turns with them: a rule between columns rather than
+   above the second one. Document order is unchanged, so a screen reader and a
+   keyboard meet them in the same sequence either way. */
+@media (min-width: 900px) {
+  /* Tailwind's max-w-2xl is 42rem, which is the right measure for one column of
+     prose and half the room two columns need. */
+  .settings-page {
+    max-width: 66rem;
+  }
+  /* Only the two-column block uses the extra width. A segmented control or a
+     line of prose stretched across 66rem is harder to read, not easier — the
+     sections below the grid keep a single column's measure. */
+  .settings-page > .settings-section {
+    max-width: 42rem;
+  }
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 2.25rem;
+    align-items: start;
+  }
+  .settings-grid .settings-section + .settings-section {
+    border-top: none;
+    border-left: 1px solid var(--line);
+    padding-top: 0;
+    padding-left: 2.25rem;
+  }
 }
 
 /* ---------- state transitions ----------
@@ -1632,12 +1678,6 @@ input[type="file"] {
 }
 
 /* Settings sections as cards */
-.section-card {
-  background: var(--card);
-  border: 1px solid var(--card-line);
-  border-radius: 0.5rem;
-  padding: 1.25rem 1.25rem 1.4rem;
-}
 
 /* Quiet legal footer: visually small, with full-size touch targets. */
 .legal-links {

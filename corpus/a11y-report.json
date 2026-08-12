@@ -89,19 +89,11 @@
         },
         {
           "level": 2,
-          "text": "Your library"
-        },
-        {
-          "level": 2,
           "text": "Reading aloud"
         },
         {
           "level": 2,
-          "text": "Import"
-        },
-        {
-          "level": 2,
-          "text": "Export"
+          "text": "Your library"
         },
         {
           "level": 2,
@@ -112,7 +104,7 @@
       "firstHeadingLevel": 1,
       "landmarks": {
         "main": 1,
-        "nav": 2,
+        "nav": 1,
         "header": 1
       },
       "liveRegions": 0,

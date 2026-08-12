@@ -352,7 +352,7 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
       ) : (
         <button
           type="button"
-          className="linkbtn pressable language-add-open"
+          className="pressable language-add-open"
           onClick={() => {
             void tap();
             setAdding(true);

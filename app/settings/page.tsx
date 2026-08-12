@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
-import DisplaySettings from "@/components/DisplaySettings";
+import DisplaySettings, { StorageSetting } from "@/components/DisplaySettings";
 import VoiceSettings from "@/components/VoiceSettings";
 import ActionRow from "@/components/ActionRow";
 import {
@@ -233,7 +233,7 @@ export default function SettingsPage() {
   return (
     <main className="w-full">
       <TopBar back={{ href: "/", label: "Library" }} />
-      <div className="max-w-2xl mx-auto px-4 sm:px-5 content-pad w-full">
+      <div className="settings-page max-w-2xl mx-auto px-4 sm:px-5 content-pad w-full">
         <h1
           className="text-2xl font-semibold mb-5"
           style={{ fontFamily: "var(--serif)" }}
@@ -243,111 +243,21 @@ export default function SettingsPage() {
           Settings
         </h1>
 
-        {/* Five cards long is too long to scroll blind. An index rather than a
-            second screen: the sections stay one page — searchable, linkable and
-            scrollable in one gesture — and this says what is on it. Real
-            anchors, so the back gesture and a screen reader's link list both
-            work; `scroll-margin-top` keeps the heading clear of the sticky
-            header. */}
-        <nav className="settings-index" aria-label="Sections">
-          {[
-            ["s-appearance", "Appearance"],
-            ["s-library", "Your library"],
-            ["s-reading-aloud", "Reading aloud"],
-            ["s-import", "Import"],
-            ["s-export", "Export"],
-            ["s-sharing", "Save from anywhere"],
-          ].map(([id, label]) => (
-            <a key={id} className="chip pressable" href={`#${id}`}>
-              {label}
-            </a>
-          ))}
-        </nav>
-
-        <section id="s-appearance" className="section-card mb-5">
+        {/* The two sections a reader opens on purpose. Side by side from a
+            tablet's width up, because a 1280 px window showing one 672 px
+            column of settings is a phone screen with wallpaper. Below that it
+            is one column and nothing changes. */}
+        <div className="settings-grid">
+        <section id="s-appearance" className="settings-section">
           <h2 className="text-lg font-semibold mb-2">Appearance</h2>
           <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>
             How the app and your articles are set. The same controls sit behind
             the gear in the reader, so you can change them while reading.
           </p>
-          <DisplaySettings storage />
+          <DisplaySettings />
         </section>
 
-        <section id="s-library" className="section-card mb-5">
-          <h2 className="text-lg font-semibold mb-2">Your library</h2>
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
-            {stats
-              ? `${stats.count} article${
-                  stats.count === 1 ? "" : "s"
-                } · ${stats.words.toLocaleString()} words · ${
-                  stats.images
-                } image${stats.images === 1 ? "" : "s"} (${formatBytes(
-                  stats.imageBytes
-                )}) — stored on this phone only.`
-              : "…"}
-          </p>
-          <p className="text-sm mt-2" style={{ color: "var(--muted)" }}>
-            This build has no account and no cloud sync. Nothing leaves the
-            device except the requests that fetch the articles you save.
-          </p>
-          <div className="action-list">
-            <ActionRow
-              label="Fetch missing pictures"
-              hint="For articles saved before pictures were kept"
-              onClick={() => void runBackfill()}
-              disabled={backfill.phase === "running"}
-              busy={backfill.phase === "running" ? `${backfill.done}/${backfill.total}` : undefined}
-            />
-            <ActionRow
-              label="Speed up search"
-              hint="Prepares older articles so searching them is instant"
-              onClick={() => void runIndex()}
-              disabled={indexing.phase === "running"}
-              busy={indexing.phase === "running" ? "…" : undefined}
-            />
-            <ActionRow
-              label="Free up space"
-              hint="Removes pictures no article refers to any more"
-              onClick={() => void freeUpSpace()}
-              disabled={backfill.phase === "running"}
-            />
-          </div>
-          {indexing.phase === "running" && indexing.total > 0 && (
-            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
-              Preparing article {indexing.done} of {indexing.total} …
-            </p>
-          )}
-          {indexing.phase === "done" && (
-            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
-              {indexing.text}
-            </p>
-          )}
-          {backfill.phase === "running" && (
-            <div className="mt-3 text-sm" role="status">
-              <p>
-                Fetching pictures for article {backfill.done + 1} of {backfill.total} …
-              </p>
-              <button
-                className="btn btn-quiet pressable mt-2"
-                onClick={() => (stopBackfill.current = true)}
-              >
-                Stop
-              </button>
-            </div>
-          )}
-          {backfill.phase === "done" && (
-            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
-              {backfill.text}
-            </p>
-          )}
-          {pruned && (
-            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
-              {pruned}
-            </p>
-          )}
-        </section>
-
-        <section id="s-reading-aloud" className="section-card mb-5">
+        <section id="s-reading-aloud" className="settings-section">
           <h2 className="text-lg font-semibold mb-2">Reading aloud</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
             Articles are read out on the phone itself, offline. Speed, pitch and
@@ -399,72 +309,154 @@ export default function SettingsPage() {
             )}
           </details>
         </section>
+        </div>
 
-        <section id="s-import" className="section-card mb-5">
-          <h2 className="text-lg font-semibold mb-2">Import</h2>
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            Bring your library along: a Pocket export (CSV or HTML) or any
-            bookmarks HTML file. Unzip the Pocket ZIP first and pick the CSV
-            inside.
+        <section id="s-library" className="settings-section">
+          <h2 className="text-lg font-semibold mb-2">Your library</h2>
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            {stats
+              ? `${stats.count} article${
+                  stats.count === 1 ? "" : "s"
+                } · ${stats.words.toLocaleString()} words · ${
+                  stats.images
+                } image${stats.images === 1 ? "" : "s"} (${formatBytes(
+                  stats.imageBytes
+                )}) — stored on this phone only.`
+              : "…"}
           </p>
-          <input
-            type="file"
-            accept=".csv,.html,text/csv,text/html"
-            onChange={onFile}
-            disabled={status.phase === "running"}
-            aria-label="Import file"
-          />
-          {status.phase === "running" && (
-            <div className="mt-4 text-sm" role="status">
-              <p>
-                Importing {status.done + 1} of {status.total} … ({status.failed}{" "}
-                failed)
-              </p>
-              <p className="truncate" style={{ color: "var(--muted)" }}>
-                {status.current}
-              </p>
-              <button
-                className="btn btn-quiet pressable mt-2"
-                onClick={() => (cancelRef.current = true)}
-              >
-                Stop
-              </button>
+          <p className="text-sm mt-2 mb-4" style={{ color: "var(--muted)" }}>
+            This build has no account and no cloud sync. Nothing leaves the
+            device except the requests that fetch the articles you save.
+          </p>
+          <StorageSetting />
+          {/* Housekeeping, and it belongs one level down: three actions a
+              reader runs once a year, sitting open above the things they came
+              for, is what made this screen a wall. */}
+          <details className="disclosure">
+            <summary>Repairs and space</summary>
+            <div className="action-list">
+              <ActionRow
+                label="Fetch missing pictures"
+                hint="For articles saved before pictures were kept"
+                onClick={() => void runBackfill()}
+                disabled={backfill.phase === "running"}
+                busy={backfill.phase === "running" ? `${backfill.done}/${backfill.total}` : undefined}
+              />
+              <ActionRow
+                label="Speed up search"
+                hint="Prepares older articles so searching them is instant"
+                onClick={() => void runIndex()}
+                disabled={indexing.phase === "running"}
+                busy={indexing.phase === "running" ? "…" : undefined}
+              />
+              <ActionRow
+                label="Free up space"
+                hint="Removes pictures no article refers to any more"
+                onClick={() => void freeUpSpace()}
+                disabled={backfill.phase === "running"}
+              />
             </div>
-          )}
-          {status.phase === "finished" && (
-            <p className="mt-4 text-sm" role="status">
-              Done: {status.done} imported
-              {status.failed
-                ? `, ${status.failed} saved as link-only (page unreachable)`
-                : ""}
-              .
+            {indexing.phase === "running" && indexing.total > 0 && (
+              <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+                Preparing article {indexing.done} of {indexing.total} …
+              </p>
+            )}
+            {indexing.phase === "done" && (
+              <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+                {indexing.text}
+              </p>
+            )}
+            {backfill.phase === "running" && (
+              <div className="mt-3 text-sm" role="status">
+                <p>
+                  Fetching pictures for article {backfill.done + 1} of {backfill.total} …
+                </p>
+                <button
+                  className="btn btn-quiet pressable mt-2"
+                  onClick={() => (stopBackfill.current = true)}
+                >
+                  Stop
+                </button>
+              </div>
+            )}
+            {backfill.phase === "done" && (
+              <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+                {backfill.text}
+              </p>
+            )}
+            {pruned && (
+              <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+                {pruned}
+              </p>
+            )}
+          </details>
+
+          <details className="disclosure" id="s-import">
+            <summary>Bring a library in</summary>
+            <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
+              Bring your library along: a Pocket export (CSV or HTML) or any
+              bookmarks HTML file. Unzip the Pocket ZIP first and pick the CSV
+              inside.
             </p>
-          )}
+            <input
+              type="file"
+              accept=".csv,.html,text/csv,text/html"
+              onChange={onFile}
+              disabled={status.phase === "running"}
+              aria-label="Import file"
+            />
+            {status.phase === "running" && (
+              <div className="mt-4 text-sm" role="status">
+                <p>
+                  Importing {status.done + 1} of {status.total} … ({status.failed}{" "}
+                  failed)
+                </p>
+                <p className="truncate" style={{ color: "var(--muted)" }}>
+                  {status.current}
+                </p>
+                <button
+                  className="btn btn-quiet pressable mt-2"
+                  onClick={() => (cancelRef.current = true)}
+                >
+                  Stop
+                </button>
+              </div>
+            )}
+            {status.phase === "finished" && (
+              <p className="mt-4 text-sm" role="status">
+                Done: {status.done} imported
+                {status.failed
+                  ? `, ${status.failed} saved as link-only (page unreachable)`
+                  : ""}
+                .
+              </p>
+            )}
+          </details>
+
+          <details className="disclosure" id="s-export">
+            <summary>Take your library out</summary>
+            <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
+              Your library is yours. Files land in <b>Documents</b> and the share
+              sheet opens right after, so you can send them anywhere.
+            </p>
+            <div className="action-list">
+              <ActionRow label="Export as JSON" hint="Everything, exactly as stored" onClick={() => void runExport(exportJson)} />
+              <ActionRow label="Export as HTML" hint="Readable in any browser" onClick={() => void runExport(exportHtml)} />
+              <ActionRow label="Export as Markdown" hint="Plain text with the formatting kept" onClick={() => void runExport(exportMarkdown)} />
+            </div>
+            {exported && (
+              <p
+                className="mt-3 text-sm break-all"
+                style={{ color: "var(--muted)" }}
+                role="status"
+              >
+                Saved to {exported}
+              </p>
+            )}
+          </details>
         </section>
 
-        <section id="s-export" className="section-card mb-5">
-          <h2 className="text-lg font-semibold mb-2">Export</h2>
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            Your library is yours. Files land in <b>Documents</b> and the share
-            sheet opens right after, so you can send them anywhere.
-          </p>
-          <div className="action-list">
-            <ActionRow label="Export as JSON" hint="Everything, exactly as stored" onClick={() => void runExport(exportJson)} />
-            <ActionRow label="Export as HTML" hint="Readable in any browser" onClick={() => void runExport(exportHtml)} />
-            <ActionRow label="Export as Markdown" hint="Plain text with the formatting kept" onClick={() => void runExport(exportMarkdown)} />
-          </div>
-          {exported && (
-            <p
-              className="mt-3 text-sm break-all"
-              style={{ color: "var(--muted)" }}
-              role="status"
-            >
-              Saved to {exported}
-            </p>
-          )}
-        </section>
-
-        <section id="s-sharing" className="section-card">
+        <section id="s-sharing" className="settings-section">
           <h2 className="text-lg font-semibold mb-2">Save from anywhere</h2>
           <ul
             className="text-sm grid gap-2 pl-5"

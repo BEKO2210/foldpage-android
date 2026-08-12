@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-08-12T22:47:43.167Z",
+  "ranAt": "2026-08-12T22:56:59.746Z",
   "scanned": [
     {
       "route": "library",
@@ -11,7 +11,7 @@
     },
     {
       "route": "settings",
-      "lines": 109
+      "lines": 103
     }
   ],
   "findings": [],

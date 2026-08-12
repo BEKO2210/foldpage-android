@@ -224,3 +224,44 @@ product rule, (2) Settings is a 3300 px wall of five cards, (3) desktop
 settings ignores its width, (4) icon-only reader bar, (5) the library's
 tag-filter block, (6) no live regions on the library route, (7) the language
 block's own spacing and its two underlined links read heavier than they should.
+
+### Run 4 — the settings screen stops being a wall
+
+**Hypothesis:** the length was never the controls, it was the packaging and the
+order. Removing both should cut the screen by a third without removing a single
+thing a reader can do.
+
+**Changed:**
+
+| | Before | After |
+|---|---|---|
+| Sections | five bordered cards, all open | four sections, hairline rules, no borders |
+| Order | Appearance, Your library, Reading aloud, Import, Export, Sharing | Appearance, **Reading aloud**, Your library, Save from anywhere |
+| Rare actions | three maintenance rows and two whole sections, always open | three disclosures: "Repairs and space", "Bring a library in", "Take your library out" |
+| Index | a row of six anchor chips above everything | gone — it existed because the page was too long to scroll blind |
+| "Store pictures" | inside Appearance | inside Your library, where the space it costs is reported |
+| Desktop | one 672 px column, 2922 px tall | two columns from 900 px up for the two sections people come for; the rest keeps a single column's measure |
+
+**Measured:**
+
+| | Baseline | Run 4 |
+|---|---:|---:|
+| Settings, mobile 412 px | 3288 px | **2284 px** (−31 %) |
+| Settings, desktop 1280 px | 2922 px | **1505 px** (−49 %) |
+
+**Kept:** every action. Import, export, backfill, index, prune, the voice
+check, the repair path — all still there, one level down where they belong.
+`ui:check` and the a11y audit confirm nothing broke reaching them.
+
+**Verification:** `npm run lint` silent · `npm test` 57 pass · `npm run build`
+ok · `ui:check` seeded/empty/offline clean · `npm run jargon` clean ·
+`npm run voice:check` 15/15 · `a11y-audit` 0 unnamed, 0 heading skips, 3 known
+small targets, no overflow at 200 % font.
+
+**Remaining, re-ranked:** (1) no in-app voice packs — still the one breach of
+the product rule, and it needs native work rather than a screen, (2) the reader
+control bar is six unlabelled glyphs and one of them is the whole read-aloud
+feature, (3) the library's tag-filter block eats the top of the smallest
+screen, (4) no live regions on the library route, (5) `Appearance` is still six
+segmented controls in a row, (6) loading and error states of the language list
+have never been seen by a human — only their code paths.
