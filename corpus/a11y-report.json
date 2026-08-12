@@ -39,7 +39,7 @@
         "nav": 1,
         "header": 1
       },
-      "liveRegions": 0,
+      "liveRegions": 1,
       "langAttribute": "en",
       "largeFont": {
         "overflow": false,
@@ -67,7 +67,7 @@
         "nav": 0,
         "header": 2
       },
-      "liveRegions": 0,
+      "liveRegions": 2,
       "langAttribute": "en",
       "largeFont": {
         "overflow": false,

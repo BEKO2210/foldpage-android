@@ -104,6 +104,26 @@ body {
   padding-left: var(--fp-inset-left, env(safe-area-inset-left));
   padding-right: var(--fp-inset-right, env(safe-area-inset-right));
 }
+/* The strip behind the status bar belongs to the page.
+   We target SDK 36, so Android draws the WebView edge to edge and the top
+   inset is ours to fill. `body` pads its *content* down by that much, but a
+   scrolled page runs straight through the strip — found on a device: the
+   settings screen slid its "Add a language" button up over the clock. The
+   sticky header does not help, because it sticks *below* the inset.
+   z-index sits above the header's 20 for the same reason, and the strip never
+   takes a tap. */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--fp-inset-top, env(safe-area-inset-top, 0px));
+  background: var(--paper);
+  z-index: 30;
+  pointer-events: none;
+}
+
 /* Present to a screen reader, absent to the eye. Not `display: none`, which
    would take it out of the accessibility tree as well. */
 .sr-only {
@@ -606,19 +626,18 @@ mark {
 }
 
 /* Tag chips */
+/* The row exists for the "Clear" button and for the group's name, and the name
+   is now only spoken. With nothing to clear it takes no room at all: a shouted
+   "FILTER BY TAG" above a row of chips that are visibly chips was a caption
+   explaining a picture of itself. */
 .tag-filter-heading {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 2rem;
-  margin-bottom: 0.35rem;
+  justify-content: flex-end;
+  min-height: 0;
 }
-.tag-filter-label {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.tag-filter-heading:has(.tag-filter-clear) {
+  margin-bottom: 0.25rem;
 }
 .tag-filter-clear,
 .tag-filter-toggle {
@@ -1165,6 +1184,13 @@ mark {
   margin-bottom: 0.9rem;
 }
 
+/* A live region that is always in the document and empty most of the time.
+   Empty, it must not leave a gap — but it must stay in the tree, because a
+   region inserted together with its first message is one several screen
+   readers never announce. */
+.status-line:empty {
+  margin: 0;
+}
 .setting-note {
   margin: 0.4rem 0 0;
   font-family: var(--sans);

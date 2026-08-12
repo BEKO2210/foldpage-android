@@ -297,3 +297,58 @@ library's tag-filter block eats the top of the smallest screen, (3) no live
 regions on the library route, (4) `Appearance` is six segmented controls in a
 row, (5) the loading and error states of the language list have never been seen
 by a human, (6) nothing has been run on a device this session.
+
+### Run 6 — the phone answers back
+
+The device was plugged in mid-run, so this iteration is the one the browser
+checks could not do: a real S23 Ultra, real speech engines, real insets.
+
+**Installed side by side, not over the top.** The phone carries the Play test
+build, signed with a different key, so `adb install` refused and the only way
+through would have been uninstalling — which deletes the library, because
+IndexedDB lives in the app's data directory. Instead the debug build now
+carries `applicationIdSuffix ".debug"`: `de.ithandwerk.foldpage.debug` installs
+beside the real app and touches nothing of its.
+
+**Three faults found on the device, none of them visible in a browser:**
+
+1. **The welcome screen printed machine voice names.** "✓ English
+   en-us-x-msm00013-local Hear it" and "✓ Deutsch de Hear it" — exactly what
+   `prettyVoiceName()` exists to prevent, in a build where every banned *word*
+   had already been cleared. `VoiceOnboarding` never called it.
+2. **`prettyVoiceName()` was not enough either.** Stripping "en-us-x-" and
+   "-local" leaves "msm00013", which is not a language code, so it was shown as
+   if it were somebody's name. A leftover containing digits is a serial number:
+   `hasHumanName()` now says so, with the device's own string as a test.
+3. **Scrolled content ran over the status bar.** Found because the "Add a
+   language" button appeared over the clock. Not a compositing artefact — asked
+   the page itself through the DevTools protocol: the button sits at viewport
+   `y = 7` with `position: static`, while the sticky header sticks at
+   `top: 35.7 px`, below the inset. Nothing was painting the strip the app is
+   drawn behind on an edge-to-edge Android. One `body::before` fills it.
+
+**And a fourth fault, in the instrument:** the machine-name patterns were added
+to the jargon audit, where they matched nothing — a browser has no voices, so
+that audit can never see a voice name. They live in `voice:check` now, which
+stubs a phone. Proved by sabotage: with the prettifier removed the run fails on
+exactly those checks; restored, it passes. The stub gained a Dutch voice whose
+*only* name is machine-written, because with a human-named alternative in the
+list the check could pass while doing nothing — which it did, at first.
+
+**Also this run:** the search field no longer sits over an empty library; the
+"FILTER BY TAG" caption is spoken rather than shouted (the chips are visibly
+chips); and the library and reader carry **persistent live regions** — a region
+inserted together with its first message is one several screen readers never
+announce. Library 0 → 1, reader 0 → 2.
+
+**Verification:** `npm run lint` silent · `npm test` 57 pass · `npm run build`
+ok · `ui:check` seeded/empty/offline clean · `npm run jargon` clean ·
+`npm run voice:check` **24/24** · `a11y-audit` 0 unnamed, 0 skips, 3 known
+small targets · and on the device: welcome screen reads "standard German voice"
+/ "standard English voice", the status-bar strip is clean while scrolling.
+
+**Remaining, re-ranked:** (1) in-app voice packs — native work, still the one
+breach, (2) `Appearance` is six segmented controls in a row, (3) settings has
+no live region at rest, (4) perceived latency and rerenders have not been
+measured this session, (5) the reader has not been driven through a full
+read-aloud on the device this run.

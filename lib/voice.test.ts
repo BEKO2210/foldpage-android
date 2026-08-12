@@ -150,6 +150,12 @@ test("a name is either a person's or an honest description, never a code", async
   assert.equal(prettyVoiceName("de", "German"), "standard German voice");
   assert.equal(hasHumanName("Thorsten"), true);
   assert.equal(hasHumanName("de-DE-language"), false);
+  // Found on a device, not in a browser: stripping "en-us-x-" and "-local"
+  // leaves "msm00013", which is nobody's name. A leftover with digits in it is
+  // a serial number.
+  assert.equal(prettyVoiceName("en-us-x-msm00013-local", "English"), "standard English voice");
+  assert.equal(hasHumanName("en-us-x-msm00013-local"), false);
+  assert.equal(prettyVoiceName("Kokoro 2", "English"), "standard English voice");
 });
 
 test("a language the reader added by hand survives a round trip, nonsense does not", async () => {

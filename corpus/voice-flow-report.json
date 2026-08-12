@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-08-12T23:02:25.747Z",
+  "ranAt": "2026-08-12T23:29:31.296Z",
   "voices": [
     {
       "name": "Thorsten",
@@ -49,6 +49,13 @@
       "voiceURI": "de-cloud",
       "localService": false,
       "default": false
+    },
+    {
+      "name": "nl-nl-x-dnb-local",
+      "lang": "nl-NL",
+      "voiceURI": "nl-dnb",
+      "localService": true,
+      "default": false
     }
   ],
   "passed": [
@@ -64,6 +71,10 @@
     "ok: the closed row names the voice it will read with",
     "ok: a language row opens from the keyboard",
     "ok: a language added by hand can be removed again",
+    "ok: no machine voice name on screen (.language-voice) — saw \"Thorsten\"",
+    "ok: the welcome screen reports what it found — saw 1 rows",
+    "ok: the welcome screen prettifies a machine-named voice — saw [\"✓ Nederlands standard Dutch voice Hear it\"]",
+    "ok: the welcome screen names voices for people — saw \"✓ Nederlands standard Dutch voice Hear it\"",
     "ok: the reader offers the article's language only — saw [\"Deutsch\"]",
     "ok: the reader does not offer to add other languages",
     "ok: the reader's language opens on its voices rather than on a row to tap",

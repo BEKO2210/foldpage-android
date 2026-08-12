@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SPEECH_LANGUAGES } from "@/lib/readAloud";
+import { LANGUAGES, languageLabel, languageName } from "@/lib/languages";
 import {
   autoConfigure,
   languagesInLibrary,
@@ -10,7 +10,7 @@ import {
   refreshVoices,
   voiceChoices,
 } from "@/lib/speech";
-import { getVoicePrefs, voiceKey } from "@/lib/voice";
+import { getVoicePrefs, prettyVoiceName, voiceKey } from "@/lib/voice";
 import { tap } from "@/lib/native";
 
 /** What the app found for one language. */
@@ -62,7 +62,7 @@ export default function VoiceOnboarding({
       const guess = found.length
         ? found.map((entry) => entry.code)
         : [...new Set([device, "en"])].filter((code) =>
-            SPEECH_LANGUAGES.some((entry) => entry.code === code)
+            LANGUAGES.some((entry) => entry.code === code)
           );
       const codes = guess.length ? guess : ["en"];
       setPicked(codes);
@@ -90,9 +90,15 @@ export default function VoiceOnboarding({
         const voice = voices.find((entry) => entry.voiceURI === wanted) ?? voices[0];
         found.push({
           code,
-          label: SPEECH_LANGUAGES.find((entry) => entry.code === code)?.label ?? code,
+          label: languageLabel(code),
           engine: chosen,
-          voice: chosen && matchesLanguage ? (voice?.name ?? null) : null,
+          // `matchesLanguage` alone. Requiring a chosen *engine* on top was
+          // belt and braces that cost the truth in the browser build, where
+          // there are no engines at all: the screen then reported "no voice"
+          // even with voices right there. On a phone the two agree — an engine
+          // is only chosen when it has a local voice for the language, which is
+          // the same condition.
+          voice: matchesLanguage ? (voice?.name ?? null) : null,
         });
       }
       setResults(found);
@@ -121,8 +127,9 @@ export default function VoiceOnboarding({
     <div className="voice-onboarding">
       {!compact && <h2 className="onboarding-title">The voice is ready</h2>}
       <p className="setting-note">
-        FoldPage reads articles out loud with the voices on this phone. One
-        language, one voice — the best this phone has for it. Nothing to pick.
+        FoldPage reads your articles out loud, on this phone, offline. It picks
+        the best voice each language has here — you can change it later in
+        Settings.
       </p>
 
       <div className="voice-actions">
@@ -156,7 +163,9 @@ export default function VoiceOnboarding({
               <b>{result.label}</b>{" "}
               {result.voice ? (
                 <>
-                  <span className="setting-note">{result.voice}</span>{" "}
+                  <span className="setting-note">
+                    {prettyVoiceName(result.voice, languageName(result.code))}
+                  </span>{" "}
                   <button
                     type="button"
                     className="linkbtn pressable"
@@ -179,17 +188,16 @@ export default function VoiceOnboarding({
           <p className="setting-note">
             {missing.map((result) => result.label).join(", ")}:{" "}
             {missing.length === 1 ? "this language has" : "these languages have"} no
-            voice installed. Android installs them — its speech screen has the
-            engine, the languages and a “Listen to an example” button. A neural
-            engine installed from there (Piper, Kokoro and the like) shows up here
-            by itself the next time you check.
+            voice on this phone yet. Adding one takes a minute, and it only has
+            to happen once — a voice added this way is picked up here as soon as
+            you check again.
           </p>
           <button
             type="button"
             className="btn btn-quiet pressable"
             onClick={() => void openSpeechSettings()}
           >
-            Android speech settings
+            Add a voice
           </button>
         </div>
       )}

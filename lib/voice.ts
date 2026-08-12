@@ -221,7 +221,13 @@ function bareVoiceName(name: string): string {
  *  same voice to a sorting function and very different to a listener. */
 export function hasHumanName(name: string): boolean {
   const bare = bareVoiceName(name);
-  return !!bare && !/^[a-z]{2,3}( [a-z]{2,8})?$/i.test(bare);
+  if (!bare) return false;
+  // Digits are the giveaway, and it took a device to find it: Google's English
+  // voice is called "en-us-x-msm00013-local". Stripping the language prefix and
+  // the "-local" suffix leaves "msm00013", which is not a language code and was
+  // therefore shown to the reader as if it were somebody's name.
+  if (/\d/.test(bare)) return false;
+  return !/^[a-z]{2,3}( [a-z]{2,8})?$/i.test(bare);
 }
 
 export function prettyVoiceName(name: string, language: string): string {

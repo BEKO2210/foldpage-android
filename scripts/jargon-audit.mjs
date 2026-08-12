@@ -13,9 +13,11 @@
  *  Writes corpus/jargon-report.json. Exits non-zero when anything is found.
  *
  *  What it cannot see: text that only appears after a native call, which in a
- *  browser build never happens. The voice diagnosis is the one such place, and
- *  its wording is checked by hand — the report says so rather than implying
- *  coverage.
+ *  browser build never happens. Two such places, and neither is left to hope:
+ *  the **names of voices** are checked in `scripts/voice-flow-check.mjs`, which
+ *  stubs a phone's voice list — a browser has none, so patterns for machine
+ *  names would sit here matching nothing and reporting clean. The voice
+ *  diagnosis speaks only after a native call and is read by hand.
  */
 
 import fs from "node:fs";
@@ -179,12 +181,16 @@ const routes = [
   { name: "library", path: "/" },
   { name: "reader", path: "/read/?id=jargon-0" },
   { name: "settings", path: "/settings/" },
+  // The first screen a new reader ever sees, and the one this audit missed
+  // until a device run found machine voice names on it.
+  { name: "welcome", path: "/", welcome: true },
 ];
 
 const findings = [];
 const scanned = [];
 
 for (const route of routes) {
+  if (route.welcome) await page.evaluate(() => localStorage.removeItem("fp-welcomed"));
   await page.goto(route.path);
   await page.waitForLoadState("networkidle");
   await page.waitForTimeout(300);
@@ -194,6 +200,13 @@ for (const route of routes) {
   // `:visible`, because the reader carries the same controls twice — once in
   // the bottom bar for the phone, once in the top bar for the desktop — and
   // the hidden copy comes first in the document.
+  if (route.welcome) {
+    const next = page.getByRole("button", { name: "Next" });
+    if (await next.count()) {
+      await next.click();
+      await page.waitForTimeout(1200);
+    }
+  }
   const sheet = page.locator('[aria-label="Reading settings"]:visible').first();
   if (await sheet.count()) {
     await sheet.click();

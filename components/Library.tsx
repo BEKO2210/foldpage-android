@@ -474,21 +474,27 @@ export default function Library() {
           ))}
         </div>
 
-        <div className="library-search mb-3">
-          <SearchIcon size={19} />
-          <input
-            type="search"
-            placeholder="Search your library…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label="Search"
-          />
-        </div>
+        {/* A search field over an empty library is a control for something that
+            does not exist yet. It appears with the first article — and stays
+            while a search is running, so clearing the box never yanks the field
+            out from under the cursor. */}
+        {(articles.length > 0 || query) && (
+          <div className="library-search mb-3">
+            <SearchIcon size={19} />
+            <input
+              type="search"
+              placeholder="Search your library…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="Search"
+            />
+          </div>
+        )}
 
         {tags.length > 0 && (
           <section className="tag-filter mb-4" aria-labelledby="tag-filter-label">
             <div className="tag-filter-heading">
-              <span id="tag-filter-label" className="tag-filter-label">
+              <span id="tag-filter-label" className="sr-only">
                 Filter by tag
               </span>
               {tagFilter && (
@@ -531,13 +537,18 @@ export default function Library() {
           </section>
         )}
 
-        {loaded && query && (
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
-            {visible.length === 0
+        {/* The live region is always here, and only its text changes.
+            A region that is inserted at the same moment as its first message is
+            a region several screen readers never announce — they watch what
+            they were given, not what arrives. Empty, it collapses to nothing
+            (`.status-line:empty`), so the layout is unchanged. */}
+        <p className="status-line text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+          {loaded && query
+            ? visible.length === 0
               ? `Nothing matches “${query}”.`
-              : `${visible.length} match${visible.length === 1 ? "" : "es"} for “${query}”.`}
-          </p>
-        )}
+              : `${visible.length} match${visible.length === 1 ? "" : "es"} for “${query}”.`
+            : ""}
+        </p>
 
         {!loaded && (
           <ul className="state-in grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0" aria-hidden="true">

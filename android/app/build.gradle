@@ -54,6 +54,15 @@ android {
         }
     }
     buildTypes {
+        debug {
+            // Eigener Paketname, damit die Debug-Fassung **neben** der aus dem
+            // Play-Test installierten laeuft. Ohne das scheitert `adb install`
+            // an der Signatur (INSTALL_FAILED_UPDATE_INCOMPATIBLE), und der
+            // einzige Ausweg waere Deinstallieren — was die Bibliothek des
+            // Nutzers loescht, weil IndexedDB im App-Datenverzeichnis liegt.
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
         release {
             minifyEnabled true
             shrinkResources true

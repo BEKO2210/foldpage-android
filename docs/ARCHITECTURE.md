@@ -425,6 +425,32 @@ der heute existiert, und der einzige verbliebene Bruch mit der Produktregel.
 Was dafür nötig wäre, steht in
 `.claude/skills/foldpage-product-ux/references/voice-and-language.md`.
 
+## 7c. Gerätetest ohne Datenverlust (seit 12.08.2026)
+
+Die Debug-Fassung traegt `applicationIdSuffix ".debug"`
+(`android/app/build.gradle`), laeuft also als **`de.ithandwerk.foldpage.debug`**
+neben der aus dem Play-Test installierten App.
+
+Grund: `adb install` scheitert an der Signatur
+(`INSTALL_FAILED_UPDATE_INCOMPATIBLE`), weil die Play-Fassung mit dem
+App-Signing-Key von Google signiert ist. Der einzige andere Weg waere
+Deinstallieren — und das **loescht die Bibliothek**, weil IndexedDB im
+App-Datenverzeichnis liegt. Mit eigenem Paketnamen ist der Gerätetest
+gefahrlos: eigene Daten, eigene Einstellungen, nichts wird angefasst.
+
+Ablauf: `JAVA_HOME=/opt/android-studio/android-studio/jbr npm run apk:debug`
+(oder `cd android && ./gradlew assembleDebug`), dann
+`adb install -r android/app/build/outputs/apk/debug/app-debug.apk`.
+Zum Ansehen: `adb exec-out screencap -p > shot.png`.
+
+Zur Fehlersuche im laufenden WebView:
+`adb shell cat /proc/net/unix | grep webview_devtools_remote_<pid>`,
+`adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>`,
+dann `curl -s localhost:9222/json` und per WebSocket `Runtime.evaluate`. So
+wurde am 12.08. geklaert, dass ein Knopf über der Statusleiste **nicht** falsch
+positioniert war, sondern der Streifen hinter der Statusleiste ungefuellt blieb
+(`body::before`, `app/globals.css`).
+
 ## 8. Qualitätssicherung
 
 | Befehl | Was er tut | Dauer/Bedarf |

@@ -483,45 +483,61 @@ export default function ReadPage() {
             {refetching ? "Reloading…" : "Reload"}
           </button>
         </p>
-        {(voice.error || voiceMissing) && (
-          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
-            {voice.error ??
-              "This phone has no voice installed for this article's language."}{" "}
-            <button type="button" className="linkbtn" onClick={() => void installVoices()}>
-              Install voices
-            </button>{" "}
-            <Link href="/settings">Check the voice</Link>
-          </p>
-        )}
-        {voice.playing && (
-          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
-            Reading part {voice.at + 1} of {voice.total}.
-          </p>
-        )}
-        {!voice.playing && voice.resumeAt > 0 && (
-          /* The voice was here when the app was last closed. Offered rather
-             than resumed: a phone that starts talking on its own is a fright.
-             The article's own scroll position is restored separately — this is
-             about where the *ear* was, which is not always the same place. */
-          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
-            Reading aloud stopped at part {voice.resumeAt + 1} of {voice.total}.{" "}
-            <button
-              type="button"
-              className="linkbtn pressable"
-              onClick={() => {
-                void tap();
-                void speech.continueFrom();
-              }}
-            >
-              Continue
-            </button>
-          </p>
-        )}
-        {refetchNote && (
-          <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
-            {refetchNote}
-          </p>
-        )}
+        {/* One live region for the voice, always in the document.
+            It used to be three paragraphs that each appeared with their first
+            message — and a region inserted together with its content is one
+            several screen readers never read out. They were also mutually
+            exclusive in practice, so this is one place rather than three. */}
+        <p
+          className="status-line state-in text-sm mb-3"
+          style={{ color: "var(--muted)" }}
+          role="status"
+        >
+          {voice.error || voiceMissing ? (
+            <>
+              {voice.error ??
+                "This phone has no voice installed for this article's language."}{" "}
+              <button type="button" className="linkbtn" onClick={() => void installVoices()}>
+                Install voices
+              </button>{" "}
+              <Link href="/settings">Check the voice</Link>
+            </>
+          ) : voice.playing ? (
+            <>
+              Reading part {voice.at + 1} of {voice.total}.
+            </>
+          ) : voice.resumeAt > 0 ? (
+            /* The voice was here when the app was last closed. Offered rather
+               than resumed: a phone that starts talking on its own is a fright.
+               The article's own scroll position is restored separately — this
+               is about where the *ear* was, which is not always the same
+               place. */
+            <>
+              Reading aloud stopped at part {voice.resumeAt + 1} of {voice.total}.{" "}
+              <button
+                type="button"
+                className="linkbtn pressable"
+                onClick={() => {
+                  void tap();
+                  void speech.continueFrom();
+                }}
+              >
+                Continue
+              </button>
+            </>
+          ) : (
+            ""
+          )}
+        </p>
+        {/* Refetching is a separate thread of news from the voice, so it keeps
+            its own region rather than taking turns with it. */}
+        <p
+          className="status-line state-in text-sm mb-3"
+          style={{ color: "var(--muted)" }}
+          role="status"
+        >
+          {refetchNote ?? ""}
+        </p>
         <div className="mb-8" style={{ fontFamily: "var(--sans)" }}>
           <TagEditor tags={article.tags} onChange={(t) => void setTags(t)} />
         </div>
