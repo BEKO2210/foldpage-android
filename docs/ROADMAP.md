@@ -16,6 +16,10 @@ Versionen, Bibliotheks-Majors — steht getrennt in `docs/FUTURE-PROOFING.md`.
 Stand: 12. August 2026, Version 1.6 (`versionCode 8`), geschlossener Test bei
 Google Play.
 
+**Release-Zähler:** seit 1.6 ist **1 von ~5** Läufen erledigt (A2, A3, A4, A7,
+B7.2 am 12.08.2026). Der nächste Versionssprung ist 1.7 / `versionCode 9` — bis
+dahin bleiben die Versionsdateien unberührt.
+
 ---
 
 ## Teil A — Einzelmaßnahmen
@@ -276,4 +280,15 @@ Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
   `docs/MOTION.md` mitziehen — die Tests lesen diese Werte.
 - Gerätetest heißt: `npm run apk:debug`, installieren, den konkreten Fall
   ausprobieren. `npm run build` allein zeigt am Gerät den alten Stand.
-- Ein Release erhöht `versionCode` **und** `versionName` (siehe A12).
+- **Version nicht pro Lauf erhöhen.** Ein Release fasst rund **fünf Läufe**
+  zusammen — erst dann steigen `versionCode` und `versionName` gemeinsam
+  (siehe A12). Ein Lauf endet mit Code, Tests und Doku im Commit; die
+  Versionsdateien (`android/app/build.gradle`, `package.json`) bleiben
+  unangetastet, bis Belkis den Release ansagt. Grund: zwischen zwei Versionen
+  soll sichtbar etwas passiert sein, und jede gebaute Version wird von Hand
+  durchgetestet.
+- **Getestet wird gegen eine echte Bibliothek mit über 100 Artikeln.** Was in
+  einer leeren Bibliothek nicht auffällt — lineare Volltextsuche, vollständiges
+  Neuladen der Liste nach jeder Änderung, Speicherbedarf — ist dort spürbar.
+  Bei jeder Änderung an Bibliothek, Suche oder Speicher gilt das als
+  Abnahmebedingung, nicht als Nebensache (Strang B2).

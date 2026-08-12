@@ -1,3 +1,15 @@
+## Wann ueberhaupt ein Release
+
+Nicht nach jedem Arbeitslauf. Ein Release fasst rund **fuenf Laeufe** zusammen;
+erst dann steigen `versionCode` und `versionName` gemeinsam. Zwischen zwei
+Versionen soll sichtbar etwas passiert sein, und jede gebaute Version wird von
+Hand gegen eine echte Bibliothek mit ueber 100 Artikeln durchgetestet.
+
+`versionCode` ist verbraucht, sobald ein AAB damit in der Play Console liegt —
+ein zweiter Upload unter derselben Nummer wird abgelehnt. Play nimmt ausserdem
+**keine** debuggable Artefakte: fuer den Store `bundleRelease` (AAB), fuer
+GitHub `assembleRelease` (signierte, minifizierte APK).
+
 ## Signierter Release-Build
 
 Ausgeliefert wird ab 1.5 ueber den **Play Store**. Der Build laeuft in Android
