@@ -47,6 +47,14 @@ export interface SpeechState {
   at: number;
   total: number;
   error: string | null;
+  /** Where the voice was when this article was last left, or -1.
+   *
+   *  Deliberately *not* the same field as `at`: the first version restored the
+   *  remembered position into `at`, so pressing play started the voice in the
+   *  middle of the article while the screen showed the top. Audio that does not
+   *  match the screen is worse than no memory at all. The position is offered
+   *  now, and only taken when the reader presses "Continue". */
+  resumeAt: number;
 }
 
 type Listener = (state: SpeechState) => void;
@@ -83,6 +91,18 @@ class Player {
   private blocks: SpokenBlock[] = [];
   private articleId: string | null = null;
   private title = "";
+  /** True only after the reader themselves started this article.
+   *
+   *  The lock screen is not the only thing that can send a "play": Android's
+   *  media resumption offers the last media app a play button of its own, and
+   *  a stray MEDIA_BUTTON broadcast counts too. Either would make the app open
+   *  and immediately start talking, which is exactly what it must never do.
+   *  So a transport command may *resume* what a person began, and may never
+   *  begin anything. */
+  private started = false;
+  /** The remembered position, kept apart from `at` on purpose — see
+      SpeechState.resumeAt. */
+  private resumeAt = -1;
   private lang: string | null = null;
   private at = -1;
   private playing = false;
@@ -101,6 +121,7 @@ class Player {
       at: this.at,
       total: this.blocks.length,
       error: this.error,
+      resumeAt: this.resumeAt,
     };
   }
 
@@ -118,6 +139,7 @@ class Player {
 
   load(contentHtml: string, lang: string | null, articleId: string | null = null) {
     const blocks = spokenBlocks(contentHtml);
+    if (articleId !== this.articleId) this.started = false;
     const same =
       blocks.length === this.blocks.length &&
       blocks.every((block, i) => block.text === this.blocks[i]?.text);
@@ -127,7 +149,10 @@ class Player {
       // *position*, never as playback: a phone that starts talking because it
       // was unlocked is a fright, not a feature.
       const remembered = rememberedPosition(articleId);
-      this.at = remembered >= 0 && remembered < blocks.length ? remembered : -1;
+      this.resumeAt = remembered > 0 && remembered < blocks.length ? remembered : -1;
+      // Play starts at the top of the article, always. Anything else is a
+      // voice reading one thing while the screen shows another.
+      this.at = -1;
     }
     this.blocks = blocks;
     this.articleId = articleId;
@@ -143,7 +168,28 @@ class Player {
 
   async toggle(): Promise<void> {
     if (this.playing) this.stop();
-    else await this.play();
+    else {
+      this.started = true;
+      await this.play();
+    }
+  }
+
+  /** The reader pressing "Continue": the one way the remembered position is
+      ever taken. */
+  async continueFrom(): Promise<void> {
+    if (this.resumeAt < 0) return;
+    this.started = true;
+    const from = this.resumeAt;
+    this.resumeAt = -1;
+    await this.play(from);
+  }
+
+  /** A play that came from outside the app — the lock screen, a headset, the
+      system's media resumption. Ignored unless it continues something the
+      reader started. */
+  async resumeFromControls(): Promise<void> {
+    if (!this.started || this.playing || !this.blocks.length) return;
+    await this.play();
   }
 
   /** Speaks from the current position to the end.
@@ -188,6 +234,7 @@ class Player {
     // Finished: nothing left to continue, so the mark goes away rather than
     // sending the next open back to the last paragraph.
     rememberPosition(this.articleId, 0);
+    this.resumeAt = -1;
     void releaseAudioFocus();
     this.emit();
   }
@@ -288,6 +335,7 @@ class Player {
   stop() {
     this.token += 1;
     this.playing = false;
+    this.started = false;
     void this.controls(false, true);
     void releaseAudioFocus();
     if (isNative()) {
@@ -303,6 +351,7 @@ class Player {
   /** Start at a block the reader tapped. */
   async playFrom(index: number) {
     this.stop();
+    this.started = true;
     await this.play(index);
   }
 }
@@ -318,7 +367,7 @@ export const speech = new Player();
  *  pause button on the lock screen still has to work. */
 if (isNative()) {
   void FoldPageSpeech.addListener("transport", ({ action }) => {
-    if (action === "play") void speech.play();
+    if (action === "play") void speech.resumeFromControls();
     else speech.stop();
   }).catch(() => {
     /* older build without the plugin method */

@@ -367,7 +367,13 @@ export default function ReadPage() {
         aria-label={
           voice.playing
             ? `Stop reading aloud, at part ${voice.at + 1} of ${voice.total}`
-            : `Read aloud, about ${spokenMinutes(spokenBlocks(article.contentHtml))} minutes`
+            : voice.resumeAt > 0
+              ? // The article was left mid-sentence and reopened at the reader's
+                // scroll position, which is rarely where the voice stopped. The
+                // button says so, because the banner explaining it sits at the
+                // top of the article and nobody scrolls back up to read it.
+                `Read aloud from the top; the voice last stopped at part ${voice.resumeAt + 1}`
+              : `Read aloud, about ${spokenMinutes(spokenBlocks(article.contentHtml))} minutes`
         }
         aria-pressed={voice.playing}
         onClick={() => {
@@ -478,19 +484,19 @@ export default function ReadPage() {
             Reading part {voice.at + 1} of {voice.total}.
           </p>
         )}
-        {!voice.playing && voice.at > 0 && (
+        {!voice.playing && voice.resumeAt > 0 && (
           /* The voice was here when the app was last closed. Offered rather
              than resumed: a phone that starts talking on its own is a fright.
              The article's own scroll position is restored separately — this is
              about where the *ear* was, which is not always the same place. */
           <p className="state-in text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
-            Reading aloud stopped at part {voice.at + 1} of {voice.total}.{" "}
+            Reading aloud stopped at part {voice.resumeAt + 1} of {voice.total}.{" "}
             <button
               type="button"
               className="linkbtn pressable"
               onClick={() => {
                 void tap();
-                void speech.play();
+                void speech.continueFrom();
               }}
             >
               Continue
