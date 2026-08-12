@@ -456,7 +456,13 @@ export default function ReadPage() {
               "This phone has no voice installed for this article's language."}{" "}
             <button type="button" className="linkbtn" onClick={() => void installVoices()}>
               Install voices
-            </button>
+            </button>{" "}
+            <Link href="/settings">Check the voice</Link>
+          </p>
+        )}
+        {voice.playing && (
+          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+            Reading part {voice.at + 1} of {voice.total}.
           </p>
         )}
         {refetchNote && (

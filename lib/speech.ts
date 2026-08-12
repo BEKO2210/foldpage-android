@@ -181,6 +181,69 @@ export async function languageAvailable(lang: string | null): Promise<boolean> {
   }
 }
 
+export interface DiagnosisStep {
+  label: string;
+  ok: boolean;
+  detail: string;
+}
+
+/** Ask the engine, step by step, and report what it says.
+ *
+ *  Exists because "nothing happens" is not a fault report: the speaking runs
+ *  through a plugin, a system service and a voice pack, and any of the three
+ *  can be missing without a word of explanation. Each step here is one link in
+ *  that chain, and the first one that fails is the answer. */
+export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep[]> {
+  const steps: DiagnosisStep[] = [];
+  const note = (label: string, ok: boolean, detail = "") =>
+    steps.push({ label, ok, detail });
+
+  note("Running in the app", isNative(), isNative() ? "native" : "browser build");
+
+  let tts: Awaited<ReturnType<typeof engine>> | null = null;
+  try {
+    tts = await engine();
+    note("Speech plugin loaded", true, "");
+  } catch (e) {
+    note("Speech plugin loaded", false, e instanceof Error ? e.message : String(e));
+    return steps;
+  }
+
+  let languages: string[] = [];
+  try {
+    languages = (await tts.getSupportedLanguages()).languages;
+    note("Engine answered", languages.length > 0, `${languages.length} languages`);
+  } catch (e) {
+    note("Engine answered", false, e instanceof Error ? e.message : String(e));
+    return steps;
+  }
+
+  const wanted = speechLanguage(sampleLang) ?? "en-US";
+  try {
+    const { supported } = await tts.isLanguageSupported({ lang: wanted });
+    note(`Voice for ${wanted}`, supported, supported ? "installed" : "not installed");
+  } catch (e) {
+    note(`Voice for ${wanted}`, false, e instanceof Error ? e.message : String(e));
+  }
+
+  // The only step that proves anything: does a word actually come out.
+  const started = Date.now();
+  try {
+    await tts.speak({ text: "FoldPage", lang: wanted, rate: 1, pitch: 1, volume: 1 });
+    const took = Date.now() - started;
+    note(
+      "Spoke a test word",
+      true,
+      // An engine that returns instantly has not spoken; it has given up
+      // quietly, which is exactly the failure this whole check is for.
+      took < 250 ? `returned after ${took} ms — suspiciously fast, likely silent` : `${took} ms`
+    );
+  } catch (e) {
+    note("Spoke a test word", false, e instanceof Error ? e.message : String(e));
+  }
+  return steps;
+}
+
 /** Opens Android's own "install voice data" screen. */
 export async function installVoices(): Promise<void> {
   if (!isNative()) return;

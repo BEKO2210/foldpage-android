@@ -14,6 +14,7 @@ import { addArticleFromUrl } from "@/lib/articles";
 import { findByUrl, imageBytes, listArticles, newId, saveArticle } from "@/lib/db";
 import { articlesMissingImages, backfillImages, pruneImages } from "@/lib/images";
 import { buildIndex } from "@/lib/search";
+import { diagnose, installVoices, type DiagnosisStep } from "@/lib/speech";
 import { buzzSuccess, tap } from "@/lib/native";
 
 type ImportStatus =
@@ -40,6 +41,8 @@ export default function SettingsPage() {
     { phase: "idle" } | { phase: "running"; done: number; total: number } | { phase: "done"; text: string }
   >({ phase: "idle" });
   const stopBackfill = useRef(false);
+  const [voiceCheck, setVoiceCheck] = useState<DiagnosisStep[] | null>(null);
+  const [checking, setChecking] = useState(false);
   const [indexing, setIndexing] = useState<
     { phase: "idle" } | { phase: "running"; done: number; total: number } | { phase: "done"; text: string }
   >({ phase: "idle" });
@@ -195,6 +198,17 @@ export default function SettingsPage() {
     });
   }
 
+  async function runVoiceCheck() {
+    void tap();
+    setChecking(true);
+    setVoiceCheck(null);
+    try {
+      setVoiceCheck(await diagnose("de"));
+    } finally {
+      setChecking(false);
+    }
+  }
+
   async function runExport(fn: () => Promise<string>) {
     void tap();
     setExported(null);
@@ -295,6 +309,38 @@ export default function SettingsPage() {
             <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
               {pruned}
             </p>
+          )}
+        </section>
+
+        <section className="section-card mb-5">
+          <h2 className="text-lg font-semibold mb-2">Reading aloud</h2>
+          <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
+            The voice comes from Android, not from FoldPage. If the reader stays
+            silent, this says which link in the chain is missing.
+          </p>
+          <div className="flex gap-2 flex-wrap">
+            <button
+              className="btn btn-quiet pressable"
+              onClick={() => void runVoiceCheck()}
+              disabled={checking}
+            >
+              {checking ? "Checking…" : "Check the voice"}
+            </button>
+            <button className="btn btn-quiet pressable" onClick={() => void installVoices()}>
+              Install voices
+            </button>
+          </div>
+          {voiceCheck && (
+            <ul className="text-sm mt-3 grid gap-1 pl-0" style={{ listStyle: "none" }} role="status">
+              {voiceCheck.map((step) => (
+                <li key={step.label}>
+                  <span aria-hidden="true">{step.ok ? "✓" : "✗"}</span> {step.label}
+                  {step.detail ? (
+                    <span style={{ color: "var(--muted)" }}> — {step.detail}</span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
           )}
         </section>
 
