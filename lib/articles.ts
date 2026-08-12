@@ -16,12 +16,26 @@ export async function refetchArticle(id: string): Promise<Article | undefined> {
   return updateArticle(id, mergeRefetch(current, parsed));
 }
 
+export class Abandoned extends Error {
+  constructor() {
+    super("Saving was stopped");
+    this.name = "Abandoned";
+  }
+}
+
+/** `abandoned` is asked twice: once before the write, once after the duplicate
+    check. A page that is already on its way cannot be un-requested — the
+    native HTTP bridge has no cancel — so stopping means the answer is thrown
+    away rather than saved. That is an honest cancel: nothing lands in the
+    library, and the only cost is traffic already in flight. */
 export async function addArticleFromUrl(
   url: string,
   source: Article["source"] = "manual",
-  extras: Partial<Article> = {}
+  extras: Partial<Article> = {},
+  abandoned?: () => boolean
 ): Promise<{ article: Article; duplicate: boolean }> {
   const parsed = await parseUrl(url);
+  if (abandoned?.()) throw new Abandoned();
   const existing = await findByUrl(parsed.canonicalUrl);
   if (existing) return { article: existing, duplicate: true };
 

@@ -182,16 +182,40 @@ export async function allTags(): Promise<string[]> {
   return [...tags].sort((a, b) => a.localeCompare(b));
 }
 
+/** Where a search term was found. A hit in the body is why a card can look
+    unrelated to what was typed — the list says so rather than leaving the
+    reader to guess. */
+export type MatchIn = "meta" | "body";
+
+export interface SearchHit {
+  article: Article;
+  where: MatchIn;
+}
+
 /** Naive full-text search over title, excerpt, siteName, tags and content. */
-export async function searchArticles(query: string): Promise<Article[]> {
+export async function searchArticlesDetailed(query: string): Promise<SearchHit[]> {
   const q = query.toLowerCase().trim();
-  if (!q) return listArticles();
   const all = await listArticles();
-  return all.filter((a) => {
-    const haystack = [a.title, a.excerpt, a.siteName ?? "", a.author ?? "", a.tags.join(" ")]
+  if (!q) return all.map((article) => ({ article, where: "meta" as const }));
+  const hits: SearchHit[] = [];
+  for (const article of all) {
+    const meta = [
+      article.title,
+      article.excerpt,
+      article.siteName ?? "",
+      article.author ?? "",
+      article.tags.join(" "),
+    ]
       .join(" ")
       .toLowerCase();
-    if (haystack.includes(q)) return true;
-    return a.contentHtml.toLowerCase().includes(q);
-  });
+    if (meta.includes(q)) hits.push({ article, where: "meta" });
+    else if (article.contentHtml.toLowerCase().includes(q)) {
+      hits.push({ article, where: "body" });
+    }
+  }
+  return hits;
+}
+
+export async function searchArticles(query: string): Promise<Article[]> {
+  return (await searchArticlesDetailed(query)).map((hit) => hit.article);
 }

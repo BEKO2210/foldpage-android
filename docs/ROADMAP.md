@@ -16,9 +16,9 @@ Versionen, Bibliotheks-Majors — steht getrennt in `docs/FUTURE-PROOFING.md`.
 Stand: 12. August 2026, Version 1.6 (`versionCode 8`), geschlossener Test bei
 Google Play.
 
-**Release-Zähler:** seit 1.6 sind **3 von ~5** Läufen erledigt —
+**Release-Zähler:** seit 1.6 sind **4 von ~5** Läufen erledigt —
 1. A2, A3, A4, A7, B7.2 · 2. B1.1–B1.5 (Bilder mitspeichern) · 3. Schalter und
-Nachladen für Altbestand. Der nächste Versionssprung ist 1.7 / `versionCode 9`;
+Nachladen für Altbestand · 4. A5, A6. Der nächste Versionssprung ist 1.7 / `versionCode 9`;
 bis dahin bleiben die Versionsdateien unberührt.
 
 ---
@@ -52,22 +52,23 @@ Zielseiten deutsch bleiben (sie sind die rechtsverbindliche Fassung). Dazu
 B7.2 gleich miterledigt: `toLocaleString("de-DE")` ist auf die Gerätesprache
 umgestellt, ein englisches Telefon liest wieder „12,500" statt „12.500".
 
-### A5 · Abbruch beim Speichern
-Ein hängender Abruf blockiert bis zum Timeout (15 s Connect / 25 s Read) ohne
-Ausweg; der Nutzer sieht nur „Speichern…".
-**Ziel:** Abbrechen-Knopf neben dem Fortschritt, plus ein Hinweis nach 5 s
-(„dauert länger als üblich").
-**Dateien:** `components/Library.tsx`, ggf. `lib/parse.ts` (AbortSignal).
-**Abnahme:** Flugmodus an, Link speichern, abbrechen — Oberfläche bleibt bedienbar.
+### A5 · Abbruch beim Speichern ✅ erledigt (12.08.2026)
+Nach fünf Sekunden sagt die App „This one is taking longer than usual" und
+bietet „Stop waiting". Die native HTTP-Brücke kennt kein Abbrechen — der schon
+laufende Abruf lässt sich nicht zurückrufen —, also wird seine Antwort
+**verworfen** statt gespeichert: `addArticleFromUrl` fragt vor dem Schreiben
+nach, ob abgebrochen wurde, und wirft dann `Abandoned`. In der Bibliothek
+landet nichts, die Oberfläche ist sofort wieder bedienbar.
+Dateien: `lib/articles.ts`, `components/Library.tsx`.
 
-### A6 · Suche hervorheben und zählen
-Die Suche liefert Treffer, zeigt aber nicht, *warum* etwas Treffer ist. Bei
-Volltexttreffern im Artikelkörper wirkt das Ergebnis willkürlich.
-**Ziel:** Trefferzahl über der Liste, gefundener Begriff in Titel/Excerpt
-markiert (`<mark>`), bei reinem Body-Treffer ein Hinweis „im Text gefunden".
-**Dateien:** `components/Library.tsx`, `lib/db.ts` (Suche gibt Fundort zurück),
-`app/globals.css`.
-**Abnahme:** neuer Test für den Fundort in `lib/`, Sichtprüfung.
+### A6 · Suche hervorheben und zählen ✅ erledigt (12.08.2026)
+Über der Liste steht, wie viele Treffer es sind. Der gesuchte Begriff wird in
+Titel und Auszug markiert — als React-Knoten aus geteiltem Text, **nie** als
+zusammengebautes HTML, damit ein Suchbegriff mit spitzen Klammern Text bleibt.
+Artikel, bei denen der Begriff nur im Fließtext steht, tragen den Hinweis
+„Found in the article text" statt wie ein Fehltreffer auszusehen —
+`searchArticlesDetailed()` liefert dafür den Fundort mit.
+Dateien: `lib/db.ts`, `components/Library.tsx`, `app/globals.css`.
 
 ### A7 · Artikel erneut laden ✅ erledigt (12.08.2026)
 „Reload" neben „View original" im Reader. Holt die Seite erneut und ersetzt
@@ -255,7 +256,7 @@ Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
 1. ~~**A2, A3, A4**~~ — erledigt am 12.08.2026.
 2. **B1** — das einzige offene *Versprechen*; bis dahin sind README und Welcome
    in einem Punkt schöner als die Wirklichkeit. **Als Nächstes dran.**
-3. ~~A7~~ erledigt; **A5, A6** — sichtbarer Nutzen im Alltag.
+3. ~~A5, A6, A7~~ — erledigt am 12.08.2026.
 4. **B5** — der Reader ist das Produkt, und er ist messbar.
 5. **A8, A9, B6** — Bedienung und Zugänglichkeit.
 6. **B2** — sobald echte Bibliotheken groß genug werden, dass man es merkt.

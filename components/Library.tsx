@@ -8,10 +8,10 @@ import {
   deleteArticle,
   listArticles,
   restoreArticle,
-  searchArticles,
+  searchArticlesDetailed,
   updateArticle,
 } from "@/lib/db";
-import { addArticleFromUrl } from "@/lib/articles";
+import { Abandoned, addArticleFromUrl } from "@/lib/articles";
 import { storeImagesForArticle } from "@/lib/images";
 import TopBar from "./TopBar";
 import Welcome from "./Welcome";
@@ -79,11 +79,17 @@ export default function Library() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
+  /** Articles the term only appears *inside* — the card shows nothing of the
+      match, so it says where it is instead of looking like a wrong result. */
+  const [bodyOnly, setBodyOnly] = useState<Set<string>>(new Set());
   const [toast, setToast] = useState<{ text: string; undoId: string } | null>(
     null
   );
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const addingRef = useRef(false);
+  const abandonRef = useRef(false);
+  const slowTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [slow, setSlow] = useState(false);
   const tabRef = useRef<Tab>("inbox");
 
   const restoreScroll = useCallback((nextTab: Tab) => {
@@ -110,7 +116,16 @@ export default function Library() {
   );
 
   const refresh = useCallback(async () => {
-    setArticles(query ? await searchArticles(query) : await listArticles());
+    if (query) {
+      const hits = await searchArticlesDetailed(query);
+      setArticles(hits.map((hit) => hit.article));
+      setBodyOnly(
+        new Set(hits.filter((hit) => hit.where === "body").map((hit) => hit.article.id))
+      );
+    } else {
+      setArticles(await listArticles());
+      setBodyOnly(new Set());
+    }
     setTags(await allTags());
     setLoaded(true);
   }, [query]);
@@ -130,10 +145,21 @@ export default function Library() {
       const target = (addUrl ?? url).trim();
       if (!target || addingRef.current) return;
       addingRef.current = true;
+      abandonRef.current = false;
       setBusy(true);
+      setSlow(false);
       setNotice(null);
+      // A page that answers in half a second needs no explanation. One that
+      // takes five is where a reader starts wondering whether anything is
+      // happening at all — so that is when the app says so and offers a way out.
+      slowTimer.current = setTimeout(() => setSlow(true), 5000);
       try {
-        const { article, duplicate } = await addArticleFromUrl(target, source);
+        const { article, duplicate } = await addArticleFromUrl(
+          target,
+          source,
+          {},
+          () => abandonRef.current
+        );
         setUrl("");
         setNotice(
           duplicate ? "Already in your library." : `Saved: ${article.title}`
@@ -151,9 +177,15 @@ export default function Library() {
           });
         }
       } catch (e) {
-        void buzzWarning();
-        setNotice(e instanceof Error ? e.message : "Could not save that page");
+        if (e instanceof Abandoned) {
+          setNotice("Stopped — nothing was saved.");
+        } else {
+          void buzzWarning();
+          setNotice(e instanceof Error ? e.message : "Could not save that page");
+        }
       } finally {
+        if (slowTimer.current) clearTimeout(slowTimer.current);
+        setSlow(false);
         setBusy(false);
         addingRef.current = false;
       }
@@ -311,6 +343,21 @@ export default function Library() {
             {busy ? "Saving…" : "Save"}
           </button>
         </form>
+        {busy && slow && (
+          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+            This one is taking longer than usual.{" "}
+            <button
+              type="button"
+              className="linkbtn"
+              onClick={() => {
+                abandonRef.current = true;
+                setNotice("Stopping…");
+              }}
+            >
+              Stop waiting
+            </button>
+          </p>
+        )}
         {notice && (
           <p
             className="text-sm mb-3"
@@ -398,6 +445,14 @@ export default function Library() {
           </section>
         )}
 
+        {loaded && query && (
+          <p className="text-sm mb-3" style={{ color: "var(--muted)" }} role="status">
+            {visible.length === 0
+              ? `Nothing matches “${query}”.`
+              : `${visible.length} match${visible.length === 1 ? "" : "es"} for “${query}”.`}
+          </p>
+        )}
+
         {!loaded && (
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0" aria-hidden="true">
             {[0, 1, 2, 3].map((i) => (
@@ -459,15 +514,20 @@ export default function Library() {
                   className="cardlink no-underline"
                   style={{ color: "var(--ink)" }}
                 >
-                  {a.title}
+                  <Highlight text={a.title} term={query} />
                 </Link>
               </h3>
               <p
                 className="text-sm m-0 line-clamp-2"
                 style={{ color: "var(--muted)" }}
               >
-                {a.excerpt}
+                <Highlight text={a.excerpt} term={query} />
               </p>
+              {bodyOnly.has(a.id) && (
+                <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
+                  Found in the article text
+                </p>
+              )}
               <div className="actions flex items-center justify-between mt-1">
                 <div className="flex gap-1 flex-wrap">
                   {a.tags.slice(0, 3).map((t) => (
@@ -527,6 +587,27 @@ export default function Library() {
       )}
     </main>
   );
+}
+
+/** Marks the search term without ever building HTML from it: the string is
+    split and rendered as React nodes, so a term containing markup is text and
+    nothing else. */
+function Highlight({ text, term }: { text: string; term: string }) {
+  const needle = term.trim();
+  if (!needle) return <>{text}</>;
+  const parts: React.ReactNode[] = [];
+  const haystack = text.toLowerCase();
+  const lower = needle.toLowerCase();
+  let at = 0;
+  let found = haystack.indexOf(lower, at);
+  while (found !== -1) {
+    if (found > at) parts.push(text.slice(at, found));
+    parts.push(<mark key={found}>{text.slice(found, found + needle.length)}</mark>);
+    at = found + needle.length;
+    found = haystack.indexOf(lower, at);
+  }
+  if (at < text.length) parts.push(text.slice(at));
+  return <>{parts}</>;
 }
 
 function hostnameOf(url: string): string {

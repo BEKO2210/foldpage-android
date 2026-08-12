@@ -85,6 +85,14 @@ body {
   padding-left: var(--fp-inset-left, env(safe-area-inset-left));
   padding-right: var(--fp-inset-right, env(safe-area-inset-right));
 }
+/* Search hits. The yellow is the app's accent used as a fill, which is where
+   it is legible — as a foreground it needs --accent-text instead. */
+mark {
+  background: var(--highlight);
+  color: var(--accent-ink);
+  border-radius: 0.15rem;
+  padding: 0 0.1em;
+}
 ::selection {
   background: var(--highlight);
   color: var(--accent-ink);
