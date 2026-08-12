@@ -24,6 +24,21 @@ const VIEWPORTS = [
   { name: "tablet", width: 1024, height: 768, shots: false },
 ];
 const THEMES = ["light", "dark"];
+
+/** The reader's measure, as a condition rather than a note.
+ *
+ *  Typography puts a comfortable line somewhere between 45 and 75 characters;
+ *  on a 412 px phone the app aims lower and lands around 30–46. What is worth
+ *  guarding is the ceiling: a CSS change that lets the column run wide — a lost
+ *  `max-width`, a font swap — turns the reader into a wall of text, and nothing
+ *  in the test suite would have noticed.
+ *
+ *  Deliberately no floor. Short measures in the corpus are real content, not
+ *  layout faults: MDN's syntax boxes and web.dev's headings produce three
+ *  characters and none, and failing on those would only teach the run to be
+ *  ignored. Only paragraphs long enough to have wrapped at all are judged. */
+const MAX_CHARS_PER_LINE = 75;
+const MIN_CHARS_TO_JUDGE = 200;
 const WORST_BASELINE_SITES = new Set(["welt.de", "golem.de", "the-decoder.de"]);
 
 const slug = (url) =>
@@ -163,6 +178,7 @@ async function measurePage(page, hasTable) {
       }),
       leadPx: firstText && body ? Math.round(firstText.getBoundingClientRect().top - body.getBoundingClientRect().top) : 0,
       charsPerLine,
+      proseChars: prose ? prose.textContent.length : 0,
       textLinks: {
         total: links.length,
         allUnderlined: links.every((link) => getComputedStyle(link).textDecorationLine.includes("underline")),
@@ -200,11 +216,21 @@ globalThis.DOMParser = dom.window.DOMParser;
 globalThis.Node = dom.window.Node;
 const { extractArticle } = await import(path.join(ROOT, "lib/parse.ts"));
 const entries = JSON.parse(fs.readFileSync(path.join(CORPUS, "urls.json"), "utf8"));
+/** Snapshots the extraction refuses — a page that answered with its paywall
+ *  instead of its article. There is nothing to render, and pretending
+ *  otherwise would put a consent notice in the layout report. */
+const notExtracted = [];
 const articles = entries.flatMap((entry, index) => {
   const file = path.join(CORPUS, "snapshots", `${slug(entry.url)}.html.gz`);
   if (!fs.existsSync(file)) return [];
   const html = gunzipSync(fs.readFileSync(file)).toString("utf8");
-  const parsed = extractArticle(html, entry.finalUrl || entry.url);
+  let parsed;
+  try {
+    parsed = extractArticle(html, entry.finalUrl || entry.url);
+  } catch (error) {
+    notExtracted.push({ site: entry.site, url: entry.url, reason: error.message });
+    return [];
+  }
   const hasTable = parsed.contentHtml.includes("<table");
   const hasImage = parsed.contentHtml.includes("<img");
   return [{ entry, hasTable, hasImage, article: storedArticle(parsed, entry, `render-${index}`) }];
@@ -260,6 +286,10 @@ const failures = results.flatMap((result) => {
   const where = `${result.site}/${result.viewport}/${result.theme}`;
   return [
     ...(result.pageOverflow ? [`${where}: page overflow`] : []),
+    ...(result.proseChars >= MIN_CHARS_TO_JUDGE &&
+    result.charsPerLine > MAX_CHARS_PER_LINE
+      ? [`${where}: ${result.charsPerLine} characters per line, over ${MAX_CHARS_PER_LINE}`]
+      : []),
     ...(result.images?.broken ? [`${where}: ${result.images.broken} broken images`] : []),
     ...(result.images?.tooWide ? [`${where}: ${result.images.tooWide} images wider than the column`] : []),
     ...(result.images?.decorative ? [`${where}: ${result.images.decorative} decorative images left`] : []),
@@ -269,9 +299,11 @@ const failures = results.flatMap((result) => {
   ];
 });
 const report = {
+  measure: { maxCharsPerLine: MAX_CHARS_PER_LINE, judgedFromChars: MIN_CHARS_TO_JUDGE },
   viewports: VIEWPORTS.map((v) => ({ ...v, deviceScaleFactor: 2 })),
   themes: THEMES,
   articles: articles.length,
+  notExtracted,
   renders: results.length,
   tablesChecked: results.reduce((sum, result) => sum + result.tables.length, 0),
   imagesTotal: results.reduce((sum, r) => sum + (r.images?.total ?? 0), 0),

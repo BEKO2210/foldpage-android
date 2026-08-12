@@ -9,6 +9,31 @@ Befunde**, keine Seitenüberläufe in beiden Formaten. Screenshots entstehen
 weiterhin nur im Telefonformat. Die Messwerte unten stammen aus dem Lauf vom
 8. August und beschreiben das Telefonformat.
 
+**Nachtrag 12. August 2026, Zeilenlänge:** Der Lab prüft die Zeilenlänge jetzt
+als **Bedingung**, nicht mehr nur als Notiz — über 75 Zeichen ist ein
+Fehlschlag, bewertet werden nur Absätze ab 200 Zeichen (kurze Syntaxkästen bei
+MDN oder Überschriften bei web.dev sind Inhalt, kein Layoutfehler, und ein
+Fehlschlag darauf würde nur dazu führen, dass der Lauf ignoriert wird). Eine
+Untergrenze gibt es aus demselben Grund nicht.
+
+Der erste Lauf dieser Prüfung fand sofort etwas: **auf dem Tablet lag der Median
+bei 93 Zeichen je Zeile, das Maximum bei 141.** `max-width: 39em` unterstellte
+eine Zeichenbreite, die diese Schrift nicht hat — auf dem Telefon fiel das nie
+auf, weil dort die Seitenränder die Breite bestimmen. Behoben mit
+`max-width: min(39em, 56ch)`, also einer Grenze in der Einheit, um die es
+tatsächlich geht:
+
+| | Telefon 412 px | Tablet 1024 px |
+|---|---:|---:|
+| vorher | Median 41, Max 56 | Median **93**, Max **141** |
+| nachher | Median 41, Max 56 | Median **51**, Max 78 |
+
+Die 78 stammen aus einem Absatz unter 200 Zeichen und werden nach der Regel
+oben nicht bewertet. Der Lauf umfasst seither **37 Artikel** — zwei
+golem-Schnappschüsse liefern seit B5.5 gar keinen Artikel mehr, sondern die
+ehrliche Meldung „Paywall statt Artikel", und stehen als `notExtracted` im
+Bericht statt als gerendertes Nichts.
+
 Stand 8. August 2026: 37 von 37 gespeicherten Artikeln wurden offline extrahiert und bei 412 × 915 px, DPR 2, in hellem und dunklem Theme gerendert (74 Renderings). Es gab **0 führende Fremdblöcke**, **0 springende Tabellen** bei 26 Tabellenmessungen und **0 Seitenüberläufe**. Von 748 Bildinstanzen wurden 66 tatsächlich geladen und geprüft; 682 blieben wegen externer, im Offline-Korpus nicht mitgespeicherter Dateien ungeprüft. Bei den geladenen Bildern gab es 0 kaputte und 0 zu breite Bilder.
 
 Die vollständigen Rohdaten stehen in `corpus/report.json` und `corpus/reader-report.json`. Tabellenwerte sind `Spalten/Zeilen/scrollbar/stabil`; L/D steht für hell/dunkel. Bildwerte sind `gesamt/geladen/kaputt/zu breit`.

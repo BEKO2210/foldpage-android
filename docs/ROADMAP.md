@@ -106,14 +106,15 @@ Dateien: `lib/display.ts`, `components/DisplaySettings.tsx`,
 `components/DisplaySheet.tsx`, `app/read/page.tsx`, `app/settings/page.tsx`,
 `app/layout.tsx`, `app/globals.css`, `lib/native.ts`, `lib/*.test.ts`.
 
-### A10 · Zeilenlänge und Rand prüfen lassen
-Der Reader-Lab-Bericht misst Zeichen pro Zeile bereits (3 bis 53 im Korpus),
-aber nichts erzwingt das Fenster. Eine CSS-Änderung kann es unbemerkt sprengen.
-**Ziel:** Grenze (etwa 30–50 Zeichen bei 412 px) als Testbedingung.
-**Dateien:** `scripts/reader-render.mjs`, `docs/READER-LAB.md`.
-**Abnahme:** `npm run reader-render` schlägt bei absichtlich verstellter
-`max-width` fehl. Chromium ist seit 12.08.2026 auf `lenovo` installiert, das
-Lab läuft dort.
+### A10 · Zeilenlänge prüfen ✅ erledigt (12.08.2026)
+Der Reader-Lab prüft die Zeilenlänge als Bedingung: über **75 Zeichen** ist ein
+Fehlschlag, bewertet werden Absätze ab 200 Zeichen, keine Untergrenze (kurze
+Syntaxkästen sind Inhalt, kein Fehler).
+**Der erste Lauf fand einen echten Fehler:** Tablet-Median **93** Zeichen je
+Zeile, Maximum 141. `max-width: 39em` unterstellte eine Zeichenbreite, die die
+Schrift nicht hat; auf dem Telefon war das unsichtbar, weil dort die
+Seitenränder begrenzen. Jetzt `min(39em, 56ch)` — Tablet-Median **51**, Telefon
+unverändert 41. Details in `docs/READER-LAB.md`.
 
 ### A11 · Play-Store-Pflichtangaben nachziehen
 Datenschutz und Impressum liegen auf GitHub Pages und sind aus der App verlinkt.
@@ -123,16 +124,15 @@ oder die Play-Prüfung eine In-App-Ansicht verlangt.
 **Dateien:** `app/settings/`, `docs/datenschutz/`.
 **Abnahme:** Route im Export vorhanden, im Flugmodus lesbar.
 
-### A12 · Versionsnummer aus einer Quelle
-`versionCode`/`versionName` stehen in `android/app/build.gradle`, `package.json`
-hat davon unabhängig `1.0.0`, der README-Status nennt noch 1.4. Bei jedem
-Release driftet das auseinander.
-**Ziel:** ein Skript `npm run version -- 1.6`, das `build.gradle`,
-`package.json` und den README-Status gemeinsam setzt und `versionCode` erhöht.
-**Dateien:** neues `scripts/set-version.mjs`, `package.json`, `docs/RELEASE.md`.
-**Abnahme:** Skript läuft, `git diff` zeigt genau die drei Stellen.
-
----
+### A12 · Versionsnummer aus einer Quelle ✅ erledigt (12.08.2026)
+`npm run set-version -- 1.8` setzt `versionName` und erhöht `versionCode` in
+`android/app/build.gradle`, zieht `package.json` und die Statuszeile im README
+mit. `npm run set-version -- --check` meldet nur, ob die drei übereinstimmen —
+und beendet sich mit Fehlercode, wenn nicht. `versionCode` kann nur steigen:
+eine Nummer, die schon ein Bundle in die Play Console getragen hat, ist
+verbraucht. Genau die beiden Fehler, die uns heute passiert sind.
+**Nicht** `npm version` genannt — das ist ein npm-Lebenszyklus-Hook und würde
+bei jedem `npm version` mitlaufen.
 
 ### A13 · Große Bildschirme ✅ erledigt (12.08.2026)
 Android 17 (API 37, erschienen 16.06.2026) entfernt auf Geräten ab `sw600dp`

@@ -253,8 +253,12 @@ mark {
   font-size: var(--reader-size, 1.15rem);
   line-height: var(--reader-leading, 1.68);
   /* Font-relative width keeps a comfortable measure at all four sizes. At
-     412px the side padding wins, producing roughly 40–46 characters/line. */
-  max-width: 39em;
+     412 px the side padding wins, producing roughly 40–46 characters a line.
+     `ch` is what actually bounds the measure: 39em assumed a character width
+     this typeface does not have, and on a 1024 px tablet the column ran to 93
+     characters — half again past what is comfortable to read. The lab measures
+     both widths since 12.08.2026, which is how that came out at all. */
+  max-width: min(39em, 56ch);
   margin: 0 auto;
   /* Extracted pages can contain intrinsic-width descendants. Tables keep
      their own scrollport below; none of that width may escape to the page. */

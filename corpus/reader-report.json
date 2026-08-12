@@ -1,4 +1,8 @@
 {
+  "measure": {
+    "maxCharsPerLine": 75,
+    "judgedFromChars": 200
+  },
   "viewports": [
     {
       "name": "phone",
@@ -19,11 +23,23 @@
     "light",
     "dark"
   ],
-  "articles": 39,
-  "renders": 156,
+  "articles": 37,
+  "notExtracted": [
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
+      "reason": "That page returned its paywall or cookie notice instead of the article"
+    },
+    {
+      "site": "golem.de",
+      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
+      "reason": "That page returned its paywall or cookie notice instead of the article"
+    }
+  ],
+  "renders": 148,
   "tablesChecked": 84,
-  "imagesTotal": 1528,
-  "imagesUnloaded": 1343,
+  "imagesTotal": 1524,
+  "imagesUnloaded": 1348,
   "hinweis": "Bildpruefungen (kaputt, zu breit, Zaehlpixel) greifen nur bei geladenen Bildern. Der Korpus ist offline, imagesUnloaded nennt die ungeprueften.",
   "failures": [],
   "results": [
@@ -43,6 +59,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 17,
+      "proseChars": 17,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -69,6 +86,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 5,
+      "proseChars": 5,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -95,6 +113,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 41,
+      "proseChars": 248,
       "textLinks": {
         "total": 9,
         "allUnderlined": true
@@ -130,6 +149,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 40,
+      "proseChars": 241,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -156,6 +176,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 44,
+      "proseChars": 567,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -182,6 +203,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 37,
+      "proseChars": 148,
       "textLinks": {
         "total": 370,
         "allUnderlined": true
@@ -208,60 +230,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 40,
+      "proseChars": 439,
       "textLinks": {
         "total": 5,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 412,
-      "documentWidth": 412,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
-      "viewport": "phone",
-      "theme": "light",
-      "screenshot": "screenshots/light/www-golem-de-news-anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14.png",
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 53,
-      "textLinks": {
-        "total": 2,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 412,
-      "documentWidth": 412,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
-      "viewport": "phone",
-      "theme": "light",
-      "screenshot": "screenshots/light/www-golem-de-news-business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-.png",
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 53,
-      "textLinks": {
-        "total": 2,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -286,6 +257,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 536,
       "charsPerLine": 39,
+      "proseChars": 78,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -312,6 +284,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 44,
+      "proseChars": 396,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -338,6 +311,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 52,
+      "proseChars": 209,
       "textLinks": {
         "total": 14,
         "allUnderlined": true
@@ -364,6 +338,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 41,
+      "proseChars": 450,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -390,6 +365,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 303,
       "textLinks": {
         "total": 4,
         "allUnderlined": true
@@ -416,6 +392,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 187,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -442,6 +419,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 187,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -468,6 +446,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 433,
       "textLinks": {
         "total": 17,
         "allUnderlined": true
@@ -494,6 +473,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 39,
+      "proseChars": 195,
       "textLinks": {
         "total": 13,
         "allUnderlined": true
@@ -520,6 +500,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 56,
+      "proseChars": 282,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -546,6 +527,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 50,
+      "proseChars": 250,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -572,6 +554,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 42,
+      "proseChars": 168,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -598,6 +581,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 46,
+      "proseChars": 464,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -624,8 +608,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 39,
+      "proseChars": 79,
       "textLinks": {
-        "total": 11,
+        "total": 10,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -650,8 +635,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 36,
+      "proseChars": 73,
       "textLinks": {
-        "total": 12,
+        "total": 11,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -667,15 +653,16 @@
       "theme": "light",
       "screenshot": null,
       "images": {
-        "total": 1,
+        "total": 0,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 303,
-      "charsPerLine": 28,
+      "leadPx": 0,
+      "charsPerLine": 48,
+      "proseChars": 240,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -702,8 +689,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 345,
       "textLinks": {
-        "total": 6,
+        "total": 5,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -728,6 +716,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 46,
+      "proseChars": 186,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -754,6 +743,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 26,
+      "proseChars": 52,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -780,6 +770,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 42,
+      "proseChars": 252,
       "textLinks": {
         "total": 25,
         "allUnderlined": true
@@ -806,6 +797,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 45,
+      "proseChars": 636,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -832,6 +824,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 389,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -858,6 +851,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 38,
+      "proseChars": 265,
       "textLinks": {
         "total": 11,
         "allUnderlined": true
@@ -884,6 +878,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 41,
+      "proseChars": 288,
       "textLinks": {
         "total": 885,
         "allUnderlined": true
@@ -902,7 +897,7 @@
       "screenshot": "screenshots/light/de-wikipedia-org-wiki-elektroauto.png",
       "images": {
         "total": 42,
-        "unloaded": 33,
+        "unloaded": 32,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
@@ -910,6 +905,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 44,
+      "proseChars": 309,
       "textLinks": {
         "total": 1610,
         "allUnderlined": true
@@ -1008,6 +1004,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 3,
+      "proseChars": 3,
       "textLinks": {
         "total": 183,
         "allUnderlined": true
@@ -1073,9 +1070,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 0,
+      "charsPerLine": 38,
+      "proseChars": 76,
       "textLinks": {
-        "total": 22,
+        "total": 19,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -1100,6 +1098,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 34,
+      "proseChars": 70,
       "textLinks": {
         "total": 581,
         "allUnderlined": true
@@ -1206,6 +1205,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 31,
+      "proseChars": 31,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -1232,6 +1232,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 1,
+      "proseChars": 7,
       "textLinks": {
         "total": 131,
         "allUnderlined": true
@@ -1354,6 +1355,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 17,
+      "proseChars": 17,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -1380,6 +1382,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 5,
+      "proseChars": 5,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -1406,6 +1409,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 41,
+      "proseChars": 248,
       "textLinks": {
         "total": 9,
         "allUnderlined": true
@@ -1441,6 +1445,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 40,
+      "proseChars": 241,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -1467,6 +1472,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 44,
+      "proseChars": 567,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -1493,6 +1499,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 37,
+      "proseChars": 148,
       "textLinks": {
         "total": 370,
         "allUnderlined": true
@@ -1519,60 +1526,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 40,
+      "proseChars": 439,
       "textLinks": {
         "total": 5,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 412,
-      "documentWidth": 412,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
-      "viewport": "phone",
-      "theme": "dark",
-      "screenshot": "screenshots/dark/www-golem-de-news-anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14.png",
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 53,
-      "textLinks": {
-        "total": 2,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 412,
-      "documentWidth": 412,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
-      "viewport": "phone",
-      "theme": "dark",
-      "screenshot": "screenshots/dark/www-golem-de-news-business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-.png",
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 53,
-      "textLinks": {
-        "total": 2,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -1597,6 +1553,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 536,
       "charsPerLine": 39,
+      "proseChars": 78,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -1623,6 +1580,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 44,
+      "proseChars": 396,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -1649,6 +1607,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 52,
+      "proseChars": 209,
       "textLinks": {
         "total": 14,
         "allUnderlined": true
@@ -1675,6 +1634,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 41,
+      "proseChars": 450,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -1701,6 +1661,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 303,
       "textLinks": {
         "total": 4,
         "allUnderlined": true
@@ -1727,6 +1688,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 187,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -1753,6 +1715,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 187,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -1779,6 +1742,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 433,
       "textLinks": {
         "total": 17,
         "allUnderlined": true
@@ -1805,6 +1769,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 39,
+      "proseChars": 195,
       "textLinks": {
         "total": 13,
         "allUnderlined": true
@@ -1831,6 +1796,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 56,
+      "proseChars": 282,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -1857,6 +1823,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 50,
+      "proseChars": 250,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -1883,6 +1850,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 42,
+      "proseChars": 168,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -1909,6 +1877,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 46,
+      "proseChars": 464,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -1935,8 +1904,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 39,
+      "proseChars": 79,
       "textLinks": {
-        "total": 11,
+        "total": 10,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -1961,8 +1931,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 36,
+      "proseChars": 73,
       "textLinks": {
-        "total": 12,
+        "total": 11,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -1978,15 +1949,16 @@
       "theme": "dark",
       "screenshot": null,
       "images": {
-        "total": 1,
+        "total": 0,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 303,
-      "charsPerLine": 28,
+      "leadPx": 0,
+      "charsPerLine": 48,
+      "proseChars": 240,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -2013,8 +1985,9 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 345,
       "textLinks": {
-        "total": 6,
+        "total": 5,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -2039,6 +2012,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 46,
+      "proseChars": 186,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -2065,6 +2039,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 26,
+      "proseChars": 52,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -2091,6 +2066,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 42,
+      "proseChars": 252,
       "textLinks": {
         "total": 25,
         "allUnderlined": true
@@ -2117,6 +2093,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 45,
+      "proseChars": 636,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -2143,6 +2120,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 43,
+      "proseChars": 389,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -2169,6 +2147,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 38,
+      "proseChars": 265,
       "textLinks": {
         "total": 11,
         "allUnderlined": true
@@ -2195,6 +2174,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 41,
+      "proseChars": 288,
       "textLinks": {
         "total": 885,
         "allUnderlined": true
@@ -2221,6 +2201,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 44,
+      "proseChars": 309,
       "textLinks": {
         "total": 1610,
         "allUnderlined": true
@@ -2319,6 +2300,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 3,
+      "proseChars": 3,
       "textLinks": {
         "total": 183,
         "allUnderlined": true
@@ -2384,9 +2366,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 0,
+      "charsPerLine": 38,
+      "proseChars": 76,
       "textLinks": {
-        "total": 22,
+        "total": 19,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -2411,6 +2394,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 34,
+      "proseChars": 70,
       "textLinks": {
         "total": 581,
         "allUnderlined": true
@@ -2517,6 +2501,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 31,
+      "proseChars": 31,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -2543,6 +2528,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 1,
+      "proseChars": 7,
       "textLinks": {
         "total": 131,
         "allUnderlined": true
@@ -2665,6 +2651,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 17,
+      "proseChars": 17,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -2691,6 +2678,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 5,
+      "proseChars": 5,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -2716,7 +2704,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 62,
+      "charsPerLine": 50,
+      "proseChars": 248,
       "textLinks": {
         "total": 9,
         "allUnderlined": true
@@ -2728,31 +2717,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 7295,
+          "right": 7396,
           "scrollWidth": 7322
         },
         {
           "tag": "THEAD",
           "className": "",
-          "right": 7295,
+          "right": 7396,
           "scrollWidth": 7322
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 7295,
+          "right": 7396,
           "scrollWidth": 7322
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 2855,
+          "right": 2957,
           "scrollWidth": 2882
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 6061,
+          "right": 6162,
           "scrollWidth": 3206
         }
       ],
@@ -2782,7 +2771,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 80,
+      "charsPerLine": 48,
+      "proseChars": 241,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -2808,7 +2798,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 81,
+      "charsPerLine": 57,
+      "proseChars": 567,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -2834,7 +2825,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 74,
+      "charsPerLine": 49,
+      "proseChars": 148,
       "textLinks": {
         "total": 370,
         "allUnderlined": true
@@ -2860,61 +2852,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 73,
+      "charsPerLine": 55,
+      "proseChars": 439,
       "textLinks": {
         "total": 5,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 1024,
-      "documentWidth": 1024,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
-      "viewport": "tablet",
-      "theme": "light",
-      "screenshot": null,
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 106,
-      "textLinks": {
-        "total": 2,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 1024,
-      "documentWidth": 1024,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
-      "viewport": "tablet",
-      "theme": "light",
-      "screenshot": null,
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 106,
-      "textLinks": {
-        "total": 2,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -2937,8 +2878,9 @@
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 851,
+      "leadPx": 682,
       "charsPerLine": 78,
+      "proseChars": 78,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -2964,7 +2906,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 79,
+      "charsPerLine": 57,
+      "proseChars": 396,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -2990,7 +2933,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 104,
+      "charsPerLine": 70,
+      "proseChars": 209,
       "textLinks": {
         "total": 14,
         "allUnderlined": true
@@ -3016,7 +2960,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 75,
+      "charsPerLine": 56,
+      "proseChars": 450,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -3042,7 +2987,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 76,
+      "charsPerLine": 50,
+      "proseChars": 303,
       "textLinks": {
         "total": 4,
         "allUnderlined": true
@@ -3067,8 +3013,9 @@
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 320,
+      "leadPx": 232,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -3093,8 +3040,9 @@
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 320,
+      "leadPx": 232,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -3120,7 +3068,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 72,
+      "charsPerLine": 54,
+      "proseChars": 433,
       "textLinks": {
         "total": 17,
         "allUnderlined": true
@@ -3146,7 +3095,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 65,
+      "charsPerLine": 49,
+      "proseChars": 195,
       "textLinks": {
         "total": 13,
         "allUnderlined": true
@@ -3172,7 +3122,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 94,
+      "charsPerLine": 70,
+      "proseChars": 282,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -3198,7 +3149,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 83,
+      "charsPerLine": 62,
+      "proseChars": 250,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -3224,7 +3176,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 84,
+      "charsPerLine": 56,
+      "proseChars": 168,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -3250,7 +3203,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 77,
+      "charsPerLine": 58,
+      "proseChars": 464,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -3276,9 +3230,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 79,
+      "charsPerLine": 39,
+      "proseChars": 79,
       "textLinks": {
-        "total": 11,
+        "total": 10,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -3302,9 +3257,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 73,
+      "charsPerLine": 36,
+      "proseChars": 73,
       "textLinks": {
-        "total": 12,
+        "total": 11,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -3320,15 +3276,16 @@
       "theme": "light",
       "screenshot": null,
       "images": {
-        "total": 1,
+        "total": 0,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 506,
-      "charsPerLine": 28,
+      "leadPx": 0,
+      "charsPerLine": 48,
+      "proseChars": 240,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -3354,9 +3311,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 69,
+      "charsPerLine": 57,
+      "proseChars": 345,
       "textLinks": {
-        "total": 6,
+        "total": 5,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -3380,7 +3338,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 62,
+      "charsPerLine": 46,
+      "proseChars": 186,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -3407,6 +3366,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 52,
+      "proseChars": 52,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -3432,7 +3392,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 84,
+      "charsPerLine": 63,
+      "proseChars": 252,
       "textLinks": {
         "total": 25,
         "allUnderlined": true
@@ -3458,7 +3419,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 79,
+      "charsPerLine": 58,
+      "proseChars": 636,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -3484,7 +3446,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 78,
+      "charsPerLine": 56,
+      "proseChars": 389,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -3510,7 +3473,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 66,
+      "charsPerLine": 53,
+      "proseChars": 265,
       "textLinks": {
         "total": 11,
         "allUnderlined": true
@@ -3536,7 +3500,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 72,
+      "charsPerLine": 58,
+      "proseChars": 288,
       "textLinks": {
         "total": 885,
         "allUnderlined": true
@@ -3555,14 +3520,15 @@
       "screenshot": null,
       "images": {
         "total": 42,
-        "unloaded": 30,
+        "unloaded": 32,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 77,
+      "charsPerLine": 51,
+      "proseChars": 309,
       "textLinks": {
         "total": 1610,
         "allUnderlined": true
@@ -3574,31 +3540,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         },
         {
           "tag": "TBODY",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 346
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         }
       ],
@@ -3615,16 +3581,16 @@
           "columns": 6,
           "rows": 18,
           "scrollbar": true,
-          "before": 165,
-          "after": 165,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 6,
           "rows": 17,
           "scrollbar": true,
-          "before": 165,
-          "after": 165,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
@@ -3661,6 +3627,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 3,
+      "proseChars": 3,
       "textLinks": {
         "total": 183,
         "allUnderlined": true
@@ -3672,31 +3639,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         },
         {
           "tag": "TBODY",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         },
         {
           "tag": "TD",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1272
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         }
       ],
@@ -3719,16 +3686,17 @@
       "screenshot": null,
       "images": {
         "total": 3,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 0,
+      "charsPerLine": 38,
+      "proseChars": 76,
       "textLinks": {
-        "total": 22,
+        "total": 19,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -3752,7 +3720,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 66,
+      "charsPerLine": 34,
+      "proseChars": 70,
       "textLinks": {
         "total": 581,
         "allUnderlined": true
@@ -3764,31 +3733,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1330
         },
         {
           "tag": "THEAD",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1330
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1330
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1004
         },
         {
           "tag": "P",
           "className": "",
-          "right": 1291,
+          "right": 1392,
           "scrollWidth": 979
         }
       ],
@@ -3805,16 +3774,16 @@
           "columns": 2,
           "rows": 6,
           "scrollbar": true,
-          "before": 176,
-          "after": 176,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 2,
           "rows": 6,
-          "scrollbar": false,
-          "before": 0,
-          "after": 0,
+          "scrollbar": true,
+          "before": 124,
+          "after": 124,
           "stable": true
         },
         {
@@ -3859,6 +3828,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 31,
+      "proseChars": 31,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -3885,6 +3855,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 1,
+      "proseChars": 7,
       "textLinks": {
         "total": 131,
         "allUnderlined": true
@@ -3896,31 +3867,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         },
         {
           "tag": "THEAD",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1376
         },
         {
           "tag": "TBODY",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         }
       ],
@@ -3937,24 +3908,24 @@
           "columns": 2,
           "rows": 11,
           "scrollbar": true,
-          "before": 117,
-          "after": 117,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 2,
           "rows": 8,
           "scrollbar": true,
-          "before": 33,
-          "after": 33,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 2,
           "rows": 4,
-          "scrollbar": false,
-          "before": 0,
-          "after": 0,
+          "scrollbar": true,
+          "before": 106,
+          "after": 106,
           "stable": true
         },
         {
@@ -4007,6 +3978,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 17,
+      "proseChars": 17,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -4033,6 +4005,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 5,
+      "proseChars": 5,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -4058,7 +4031,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 62,
+      "charsPerLine": 50,
+      "proseChars": 248,
       "textLinks": {
         "total": 9,
         "allUnderlined": true
@@ -4070,31 +4044,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 7295,
+          "right": 7396,
           "scrollWidth": 7322
         },
         {
           "tag": "THEAD",
           "className": "",
-          "right": 7295,
+          "right": 7396,
           "scrollWidth": 7322
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 7295,
+          "right": 7396,
           "scrollWidth": 7322
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 2855,
+          "right": 2957,
           "scrollWidth": 2882
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 6061,
+          "right": 6162,
           "scrollWidth": 3206
         }
       ],
@@ -4124,7 +4098,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 80,
+      "charsPerLine": 48,
+      "proseChars": 241,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -4150,7 +4125,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 81,
+      "charsPerLine": 57,
+      "proseChars": 567,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -4176,7 +4152,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 74,
+      "charsPerLine": 49,
+      "proseChars": 148,
       "textLinks": {
         "total": 370,
         "allUnderlined": true
@@ -4202,61 +4179,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 73,
+      "charsPerLine": 55,
+      "proseChars": 439,
       "textLinks": {
         "total": 5,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 1024,
-      "documentWidth": 1024,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/anzeige-bosch-ratschenschraubendreher-plus-bits-bei-amazon-fuer-keine-14-euro-2608-211732.html",
-      "viewport": "tablet",
-      "theme": "dark",
-      "screenshot": null,
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 106,
-      "textLinks": {
-        "total": 2,
-        "allUnderlined": true
-      },
-      "pageOverflow": false,
-      "viewportWidth": 1024,
-      "documentWidth": 1024,
-      "overflowElements": [],
-      "tables": []
-    },
-    {
-      "site": "golem.de",
-      "url": "https://www.golem.de/news/business-insight-google-seeks-a-sharper-focus-in-ai-after-hassabis-move-2608-211718.html",
-      "viewport": "tablet",
-      "theme": "dark",
-      "screenshot": null,
-      "images": {
-        "total": 0,
-        "unloaded": 0,
-        "broken": 0,
-        "decorative": 0,
-        "tooWide": 0
-      },
-      "leadingForeignBlocks": 0,
-      "leadPx": 31,
-      "charsPerLine": 106,
-      "textLinks": {
-        "total": 2,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -4279,8 +4205,9 @@
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 851,
+      "leadPx": 682,
       "charsPerLine": 78,
+      "proseChars": 78,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -4306,7 +4233,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 79,
+      "charsPerLine": 57,
+      "proseChars": 396,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -4332,7 +4260,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 104,
+      "charsPerLine": 70,
+      "proseChars": 209,
       "textLinks": {
         "total": 14,
         "allUnderlined": true
@@ -4358,7 +4287,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 75,
+      "charsPerLine": 56,
+      "proseChars": 450,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -4384,7 +4314,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 76,
+      "charsPerLine": 50,
+      "proseChars": 303,
       "textLinks": {
         "total": 4,
         "allUnderlined": true
@@ -4409,8 +4340,9 @@
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 320,
+      "leadPx": 232,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -4435,8 +4367,9 @@
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 320,
+      "leadPx": 232,
       "charsPerLine": 29,
+      "proseChars": 29,
       "textLinks": {
         "total": 1,
         "allUnderlined": true
@@ -4462,7 +4395,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 72,
+      "charsPerLine": 54,
+      "proseChars": 433,
       "textLinks": {
         "total": 17,
         "allUnderlined": true
@@ -4488,7 +4422,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 65,
+      "charsPerLine": 49,
+      "proseChars": 195,
       "textLinks": {
         "total": 13,
         "allUnderlined": true
@@ -4514,7 +4449,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 94,
+      "charsPerLine": 70,
+      "proseChars": 282,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -4540,7 +4476,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 83,
+      "charsPerLine": 62,
+      "proseChars": 250,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -4566,7 +4503,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 84,
+      "charsPerLine": 56,
+      "proseChars": 168,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -4592,7 +4530,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 77,
+      "charsPerLine": 58,
+      "proseChars": 464,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -4618,9 +4557,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 79,
+      "charsPerLine": 39,
+      "proseChars": 79,
       "textLinks": {
-        "total": 11,
+        "total": 10,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -4644,9 +4584,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 73,
+      "charsPerLine": 36,
+      "proseChars": 73,
       "textLinks": {
-        "total": 12,
+        "total": 11,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -4662,15 +4603,16 @@
       "theme": "dark",
       "screenshot": null,
       "images": {
-        "total": 1,
+        "total": 0,
         "unloaded": 0,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
-      "leadPx": 506,
-      "charsPerLine": 28,
+      "leadPx": 0,
+      "charsPerLine": 48,
+      "proseChars": 240,
       "textLinks": {
         "total": 7,
         "allUnderlined": true
@@ -4696,9 +4638,10 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 69,
+      "charsPerLine": 57,
+      "proseChars": 345,
       "textLinks": {
-        "total": 6,
+        "total": 5,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -4722,7 +4665,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 62,
+      "charsPerLine": 46,
+      "proseChars": 186,
       "textLinks": {
         "total": 0,
         "allUnderlined": true
@@ -4749,6 +4693,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 52,
+      "proseChars": 52,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -4774,7 +4719,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 84,
+      "charsPerLine": 63,
+      "proseChars": 252,
       "textLinks": {
         "total": 25,
         "allUnderlined": true
@@ -4800,7 +4746,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 79,
+      "charsPerLine": 58,
+      "proseChars": 636,
       "textLinks": {
         "total": 2,
         "allUnderlined": true
@@ -4826,7 +4773,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 78,
+      "charsPerLine": 56,
+      "proseChars": 389,
       "textLinks": {
         "total": 5,
         "allUnderlined": true
@@ -4852,7 +4800,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 66,
+      "charsPerLine": 53,
+      "proseChars": 265,
       "textLinks": {
         "total": 11,
         "allUnderlined": true
@@ -4878,7 +4827,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 72,
+      "charsPerLine": 58,
+      "proseChars": 288,
       "textLinks": {
         "total": 885,
         "allUnderlined": true
@@ -4897,14 +4847,15 @@
       "screenshot": null,
       "images": {
         "total": 42,
-        "unloaded": 30,
+        "unloaded": 32,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 77,
+      "charsPerLine": 51,
+      "proseChars": 309,
       "textLinks": {
         "total": 1610,
         "allUnderlined": true
@@ -4916,31 +4867,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         },
         {
           "tag": "TBODY",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 346
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1080,
+          "right": 1181,
           "scrollWidth": 1107
         }
       ],
@@ -4957,16 +4908,16 @@
           "columns": 6,
           "rows": 18,
           "scrollbar": true,
-          "before": 165,
-          "after": 165,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 6,
           "rows": 17,
           "scrollbar": true,
-          "before": 165,
-          "after": 165,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
@@ -5003,6 +4954,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 3,
+      "proseChars": 3,
       "textLinks": {
         "total": 183,
         "allUnderlined": true
@@ -5014,31 +4966,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         },
         {
           "tag": "TBODY",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         },
         {
           "tag": "TD",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1272
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1400,
+          "right": 1502,
           "scrollWidth": 1427
         }
       ],
@@ -5061,16 +5013,17 @@
       "screenshot": null,
       "images": {
         "total": 3,
-        "unloaded": 0,
+        "unloaded": 1,
         "broken": 0,
         "decorative": 0,
         "tooWide": 0
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 0,
+      "charsPerLine": 38,
+      "proseChars": 76,
       "textLinks": {
-        "total": 22,
+        "total": 19,
         "allUnderlined": true
       },
       "pageOverflow": false,
@@ -5094,7 +5047,8 @@
       },
       "leadingForeignBlocks": 0,
       "leadPx": 0,
-      "charsPerLine": 66,
+      "charsPerLine": 34,
+      "proseChars": 70,
       "textLinks": {
         "total": 581,
         "allUnderlined": true
@@ -5106,31 +5060,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1330
         },
         {
           "tag": "THEAD",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1330
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1330
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 1304,
+          "right": 1405,
           "scrollWidth": 1004
         },
         {
           "tag": "P",
           "className": "",
-          "right": 1291,
+          "right": 1392,
           "scrollWidth": 979
         }
       ],
@@ -5147,16 +5101,16 @@
           "columns": 2,
           "rows": 6,
           "scrollbar": true,
-          "before": 176,
-          "after": 176,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 2,
           "rows": 6,
-          "scrollbar": false,
-          "before": 0,
-          "after": 0,
+          "scrollbar": true,
+          "before": 124,
+          "after": 124,
           "stable": true
         },
         {
@@ -5201,6 +5155,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 31,
+      "proseChars": 31,
       "textLinks": {
         "total": 3,
         "allUnderlined": true
@@ -5227,6 +5182,7 @@
       "leadingForeignBlocks": 0,
       "leadPx": 0,
       "charsPerLine": 1,
+      "proseChars": 7,
       "textLinks": {
         "total": 131,
         "allUnderlined": true
@@ -5238,31 +5194,31 @@
         {
           "tag": "TABLE",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         },
         {
           "tag": "THEAD",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         },
         {
           "tag": "TR",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         },
         {
           "tag": "TH",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1376
         },
         {
           "tag": "TBODY",
           "className": "",
-          "right": 1798,
+          "right": 1900,
           "scrollWidth": 1825
         }
       ],
@@ -5279,24 +5235,24 @@
           "columns": 2,
           "rows": 11,
           "scrollbar": true,
-          "before": 117,
-          "after": 117,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 2,
           "rows": 8,
           "scrollbar": true,
-          "before": 33,
-          "after": 33,
+          "before": 200,
+          "after": 200,
           "stable": true
         },
         {
           "columns": 2,
           "rows": 4,
-          "scrollbar": false,
-          "before": 0,
-          "after": 0,
+          "scrollbar": true,
+          "before": 106,
+          "after": 106,
           "stable": true
         },
         {
