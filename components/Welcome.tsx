@@ -48,7 +48,7 @@ export default function Welcome() {
           </li>
           <li style={{ ["--i" as string]: 1 }}>
             <b>Get the article back.</b> Ads, banners, newsletter pop-ups and
-            cookie walls stay behind. The text does not.
+            cookie walls stay behind. The text and its pictures do not.
           </li>
           <li style={{ ["--i" as string]: 2 }}>
             <b>It stays yours.</b> Everything lives on this phone, reads

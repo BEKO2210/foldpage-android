@@ -75,10 +75,40 @@ Artikels neu geparst würde. Blobs bleiben Blobs.
 | Etappe | Inhalt | Stand |
 |---|---|---|
 | B1.1 | Messung und diese Entscheidung | ✅ 12.08.2026 |
-| B1.2 | Datenbank auf Version 2, Store `images`, Migration | offen |
-| B1.3 | Bilder beim Speichern holen, Reader zeigt sie aus dem Store | offen |
-| B1.4 | Aufräumen beim Löschen, Speicherbedarf in den Einstellungen, Schalter | offen |
-| B1.5 | Texte einlösen: README, Willkommen, Play-Beschreibung | offen |
+| B1.2 | Datenbank auf Version 2, Store `images`, Migration | ✅ 12.08.2026 |
+| B1.3 | Bilder beim Speichern holen, Reader zeigt sie aus dem Store | ✅ 12.08.2026 |
+| B1.4 | Aufräumen, Speicherbedarf in den Einstellungen | ✅ 12.08.2026 (Schalter offen, siehe unten) |
+| B1.5 | Texte einlösen: README, Willkommen | ✅ 12.08.2026 (Play-Beschreibung beim nächsten Release) |
 
-Erst nach B1.5 darf irgendwo stehen, der Artikel liege mit Bildern auf dem
-Telefon.
+## Wie es umgesetzt wurde
+
+- **Datenbank Version 2.** Zweiter Store `images`, Schlüssel `key`. Die
+  Migration ist rein additiv: sie legt an, was fehlt, und fasst keinen Artikel
+  an. Eine Bibliothek aus Version 1 öffnet unverändert und hat zunächst
+  einfach keine Bilder abgelegt.
+- **Nach dem Speichern, nicht währenddessen.** `storeImagesForArticle(id)`
+  läuft, wenn der Artikel bereits gespeichert und auf dem Schirm ist. Der Text
+  soll nicht auf ein Dutzend Downloads warten. Schlägt ein Bild fehl, bleibt
+  seine Original-URL stehen — der Artikel ist online unverändert vollständig.
+- **Abruf über `CapacitorHttp`**, nicht `fetch`: dieselbe Begründung wie beim
+  Artikel selbst — nativ, also keine CORS-Wand. Antwort kommt als Base64 und
+  wird zu einem Blob.
+- **Anzeige:** der Reader sucht `img[data-fp-img]`, holt den Blob und setzt
+  eine Object-URL. Die gehört dem Dokument, das sie erzeugt hat, und wird beim
+  Verlassen wieder freigegeben.
+- **Aufräumen:** „Free up space" in den Einstellungen entfernt Bilder, auf die
+  **kein** Artikel mehr zeigt — gezählt gegen `listAllRaw()`, also inklusive
+  der Tombstones gelöschter Artikel. Ein Undo, das den Artikel ohne seine
+  Bilder zurückholt, wäre schlimmer als ein paar Kilobyte zu lange gehalten.
+- **Sichtbar:** die Einstellungen zeigen Artikel, Wörter, Bilder und Megabyte.
+
+## Offen
+
+- **Schalter „Bilder mitspeichern"** samt „nur im WLAN". Beides braucht eine
+  Einstellung mehr als Anzeige-Optionen und im WLAN-Fall das Network-Plugin;
+  bis dahin ist das Mitspeichern immer an und durch die Deckel begrenzt.
+- **Nachladen für Altbestand:** Artikel, die vor dieser Version gespeichert
+  wurden, haben keine abgelegten Bilder. „Reload" im Reader holt sie einzeln
+  nach; ein Sammellauf über die ganze Bibliothek fehlt.
+
+Erst wenn beides steht, ist der Strang wirklich fertig.

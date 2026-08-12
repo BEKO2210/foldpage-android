@@ -11,7 +11,8 @@ import {
   type ImportRow,
 } from "@/lib/importExport";
 import { addArticleFromUrl } from "@/lib/articles";
-import { findByUrl, listArticles, newId, saveArticle } from "@/lib/db";
+import { findByUrl, imageBytes, listArticles, newId, saveArticle } from "@/lib/db";
+import { pruneImages } from "@/lib/images";
 import { buzzSuccess, tap } from "@/lib/native";
 
 type ImportStatus =
@@ -27,20 +28,28 @@ type ImportStatus =
 
 export default function SettingsPage() {
   const [status, setStatus] = useState<ImportStatus>({ phase: "idle" });
-  const [stats, setStats] = useState<{ count: number; words: number } | null>(
-    null
-  );
+  const [stats, setStats] = useState<{
+    count: number;
+    words: number;
+    images: number;
+    imageBytes: number;
+  } | null>(null);
+  const [pruned, setPruned] = useState<string | null>(null);
   const [exported, setExported] = useState<string | null>(null);
   const cancelRef = useRef(false);
 
   useEffect(() => {
-    listArticles().then((all) =>
+    void (async () => {
+      const all = await listArticles();
+      const images = await imageBytes();
       setStats({
         count: all.length,
         words: all.reduce((n, a) => n + a.wordCount, 0),
-      })
-    );
-  }, [status]);
+        images: images.count,
+        imageBytes: images.bytes,
+      });
+    })();
+  }, [status, pruned]);
 
   async function runImport(rows: ImportRow[]) {
     cancelRef.current = false;
@@ -120,6 +129,19 @@ export default function SettingsPage() {
     }
   }
 
+  /** Pictures whose article is really gone — not merely in the undo window —
+      are the only thing this removes. */
+  async function freeUpSpace() {
+    void tap();
+    setPruned(null);
+    const { removed, bytes } = await pruneImages();
+    setPruned(
+      removed
+        ? `Removed ${removed} unused image${removed === 1 ? "" : "s"}, ${formatBytes(bytes)} freed.`
+        : "Nothing to free — every stored image still belongs to an article."
+    );
+  }
+
   async function runExport(fn: () => Promise<string>) {
     void tap();
     setExported(null);
@@ -152,13 +174,28 @@ export default function SettingsPage() {
             {stats
               ? `${stats.count} article${
                   stats.count === 1 ? "" : "s"
-                } · ${stats.words.toLocaleString()} words — stored on this phone only.`
+                } · ${stats.words.toLocaleString()} words · ${
+                  stats.images
+                } image${stats.images === 1 ? "" : "s"} (${formatBytes(
+                  stats.imageBytes
+                )}) — stored on this phone only.`
               : "…"}
           </p>
           <p className="text-sm mt-2" style={{ color: "var(--muted)" }}>
             This build has no account and no cloud sync. Nothing leaves the
             device except the requests that fetch the articles you save.
           </p>
+          <button
+            className="btn btn-quiet pressable mt-3"
+            onClick={() => void freeUpSpace()}
+          >
+            Free up space
+          </button>
+          {pruned && (
+            <p className="text-sm mt-2" style={{ color: "var(--muted)" }} role="status">
+              {pruned}
+            </p>
+          )}
         </section>
 
         <section className="section-card mb-5">
@@ -275,6 +312,12 @@ export default function SettingsPage() {
       </div>
     </main>
   );
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function hostnameOf(url: string): string {

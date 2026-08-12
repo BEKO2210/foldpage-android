@@ -44,8 +44,9 @@ text rather than for engagement.
 - **Deleting is undoable** — a toast with _Undo_, not a modal asking twice.
 - **Import and export** — bring a Pocket export (CSV or HTML) or any bookmarks
   file; export to JSON, HTML or Markdown at any time.
-- **Offline by construction** — after saving, nothing needs a network. The
-  entire app ships inside the APK.
+- **Offline by construction** — the article's pictures are downloaded and kept
+  with it, so a saved page needs no network and opening it tells the publisher
+  nothing. The entire app ships inside the APK.
 - **Says what it is** — a one-time welcome on first launch explains how a link
   gets in, what comes back, and where it stays.
 - **Stays where you left it** — switching sections keeps each one's scroll
@@ -119,7 +120,7 @@ onto the device:
 | Fetching a page        | `CapacitorHttp` — native, so no CORS wall and real redirects                                                  |
 | Extracting the article | `@mozilla/readability` against a `DOMParser` document                                                         |
 | Sanitizing             | an allowlist of tags, attributes and URL schemes, applied in an inert document before anything is stored      |
-| Storage                | IndexedDB via `idb`                                                                                           |
+| Storage                | IndexedDB via `idb` — the text, plus each image once, keyed by the SHA-256 of its URL                         |
 | Sharing into the app   | a small Capacitor plugin (`ShareTargetPlugin.java`) that catches `ACTION_SEND`, on cold start as well as warm |
 | Exports                | written to _Documents_, then handed to the Android share sheet                                                |
 

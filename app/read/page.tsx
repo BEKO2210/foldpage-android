@@ -12,7 +12,9 @@ import { useDisplayPrefs } from "@/components/DisplaySettings";
 import { CheckIcon, SettingsIcon, StarIcon, UndoIcon } from "@/components/icons";
 import { buzzSuccess, buzzWarning, commit, openExternal, tap, uncommit } from "@/lib/native";
 import { refetchArticle } from "@/lib/articles";
+import { objectUrlFor, storeImagesForArticle } from "@/lib/images";
 import { TEXT_SIZES } from "@/lib/display";
+import { IMAGE_KEY_ATTR } from "@/lib/imagePlan";
 
 /** Static export has no dynamic route segments, so the article id travels in
     the query string: /read/?id=<uuid>. */
@@ -26,6 +28,38 @@ const ArticleContent = memo(function ArticleContent({
   contentHtml: string;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Images that were saved with the article come out of IndexedDB, not off the
+  // network — that is what makes an article read offline, and it is also why
+  // opening one does not tell its publisher that it is being read again. Each
+  // object URL belongs to this document and is revoked on the way out.
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const created: string[] = [];
+    let cancelled = false;
+    void (async () => {
+      const stored = [
+        ...root.querySelectorAll<HTMLImageElement>(`img[${IMAGE_KEY_ATTR}]`),
+      ];
+      for (const img of stored) {
+        const key = img.getAttribute(IMAGE_KEY_ATTR);
+        if (!key) continue;
+        const url = await objectUrlFor(key);
+        if (!url) continue;
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        created.push(url);
+        img.src = url;
+      }
+    })();
+    return () => {
+      cancelled = true;
+      created.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [contentHtml]);
 
   useEffect(() => {
     // An image that never arrives leaves its reserved box behind as a hole in
@@ -210,6 +244,11 @@ export default function ReadPage() {
         setArticle(next);
         void buzzSuccess();
         setRefetchNote(`Reloaded — ${next.wordCount.toLocaleString()} words.`);
+        // The new extraction carries fresh remote URLs, so the pictures have to
+        // be put on the device again before the article reads offline.
+        void storeImagesForArticle(next.id).then((r) => {
+          if (r.changed) void getArticle(next.id).then((a) => a && setArticle(a));
+        });
       }
     } catch (e) {
       void buzzWarning();

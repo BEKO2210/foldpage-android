@@ -12,6 +12,7 @@ import {
   updateArticle,
 } from "@/lib/db";
 import { addArticleFromUrl } from "@/lib/articles";
+import { storeImagesForArticle } from "@/lib/images";
 import TopBar from "./TopBar";
 import Welcome from "./Welcome";
 import { SECTION_EVENT } from "./AppNav";
@@ -140,6 +141,15 @@ export default function Library() {
         if (duplicate) void buzzWarning();
         else void buzzSuccess();
         await refresh();
+        if (!duplicate) {
+          // The text is saved and on screen; the pictures follow in the
+          // background. Waiting for them would hold the "Saved" line hostage to
+          // a dozen downloads, and an article whose images fail is still an
+          // article — their original URLs stay in place.
+          void storeImagesForArticle(article.id).then((stored) => {
+            if (stored.changed) void refresh();
+          });
+        }
       } catch (e) {
         void buzzWarning();
         setNotice(e instanceof Error ? e.message : "Could not save that page");
