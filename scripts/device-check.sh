@@ -30,10 +30,14 @@ if [ "${1:-}" = "--install" ]; then
 fi
 
 say "Speech engines the system knows"
-# Every installed engine registers an activity for this action; if the list is
-# empty, nothing on this phone can speak and no app can change that.
-$ADB shell "pm query-activities -a android.intent.action.TTS_SERVICE 2>/dev/null | grep -E 'packageName|name=' | sort -u" \
-  || $ADB shell "cmd package query-activities -a android.intent.action.TTS_SERVICE"
+# A speech engine registers a **service** for this action, not an activity —
+# the first version of this check asked for activities and printed an empty
+# list on a phone with two working engines. An empty list here therefore used
+# to look like "nothing can speak" when the truth was "wrong question".
+$ADB shell "cmd package query-services -a android.intent.action.TTS_SERVICE 2>/dev/null | grep -E 'packageName|name=' | sort -u"
+# Belt and braces: the engines are also normal packages, and this line answers
+# even on builds where query-services is restricted.
+$ADB shell "pm list packages | grep -iE 'tts|texttospeech'"
 
 say "The engine the system is set to use"
 $ADB shell settings get secure tts_default_synth
