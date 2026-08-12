@@ -389,6 +389,8 @@ englisch gefasst (`docs/ROADMAP.md`, A4).
 | `npm run corpus` | `extractArticle` über 39 eingefrorene Snapshots, schreibt `corpus/report.{json,md}` | ~1 min, offline, deterministisch |
 | `npm run reader-render` | baut den Export und misst ihn mit Playwright/Chromium in **zwei** Viewports — Telefon 412×915 und Tablet 1024×768 —, DPR 2, hell + dunkel; schreibt `corpus/reader-report.json` + Screenshots (nur Telefon) | mehrere Minuten, braucht Chromium (`npx playwright install`) |
 | `npx eslint` | Lint (eslint-config-next) | schnell |
+| `node scripts/library-bench.mjs` | sät eine synthetische Bibliothek und misst Öffnen, Suche, Stern | ~1 min, braucht Chromium |
+| `node scripts/image-budget.mjs` | misst reale Bildgrößen — **braucht Netz**, gehört nicht in einen Testlauf | mehrere Minuten |
 
 `corpus/report.json` und `report.md` sind **eingecheckt**. Eine Änderung an der
 Extraktion muss ihren Effekt dort im Diff zeigen — Zahlen statt Gefühl.

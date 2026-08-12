@@ -16,9 +16,10 @@ Versionen, Bibliotheks-Majors — steht getrennt in `docs/FUTURE-PROOFING.md`.
 Stand: 12. August 2026, Version 1.6 (`versionCode 8`), geschlossener Test bei
 Google Play.
 
-**Release-Zähler:** seit 1.6 sind **4 von ~5** Läufen erledigt —
+**Release-Zähler:** seit 1.6 sind **5 von ~5** Läufen erledigt —
 1. A2, A3, A4, A7, B7.2 · 2. B1.1–B1.5 (Bilder mitspeichern) · 3. Schalter und
-Nachladen für Altbestand · 4. A5, A6. Der nächste Versionssprung ist 1.7 / `versionCode 9`;
+Nachladen für Altbestand · 4. A5, A6 · 5. B2.1, B2.2.
+**Damit ist 1.7 / `versionCode 9` fällig.** Der nächste Versionssprung ist 1.7 / `versionCode 9`;
 bis dahin bleiben die Versionsdateien unberührt.
 
 ---
@@ -159,19 +160,37 @@ Schalter, Nachladen für Altbestand, Aufräumen und Speicheranzeige.
 Vollständig: `docs/IMAGE-STORAGE.md`. Offen bleibt bewusst nur „nur im WLAN"
 (bräuchte das Network-Plugin).
 
-### B2 · Bibliothek, die auch bei 5.000 Artikeln trägt
+### B2 · Bibliothek, die auch bei tausenden Artikeln trägt
 Heute liest jede Aktion **alle** Artikel aus IndexedDB, filtert im Speicher und
-rendert alle Karten. `searchArticles()` durchsucht zusätzlich jeden
-`contentHtml`-String linear. Bei ein paar hundert Artikeln unauffällig, danach
-nicht mehr — und jede Änderung (Stern setzen) löst ein komplettes `refresh()`
-aus.
+rendert alle Karten. `searchArticlesDetailed()` liest zusätzlich jeden
+`contentHtml`-String linear.
 
-| Etappe | Inhalt | Abnahme |
+| Etappe | Inhalt | Stand |
 |---|---|---|
-| B2.1 | Messen statt raten: Skript erzeugt 2.000 synthetische Artikel, misst Startzeit, Suchzeit, Speicher | Zahlen in `docs/` |
-| B2.2 | Zustandsänderungen lokal statt Vollneuladen (`updateArticle` liefert den Artikel bereits zurück) | Messung besser, Verhalten gleich |
-| B2.3 | Invertierter Wortindex als eigener Store, beim Speichern gepflegt | Test: Suchergebnisse identisch zur linearen Suche |
-| B2.4 | Virtualisierte Liste (nur sichtbare Karten im DOM), Scrollposition bleibt erhalten | Reader-Lab-Lauf ohne neue Befunde |
+| B2.1 | Messen statt raten: `scripts/library-bench.mjs` sät eine synthetische Bibliothek in den gebauten Export und misst in Chromium — Öffnen, Volltextsuche, ein Stern | ✅ 12.08.2026 |
+| B2.2 | Zustandsänderungen lokal statt Vollneuladen | ✅ 12.08.2026 |
+| B2.3 | Invertierter Wortindex als eigener Store, beim Speichern gepflegt | offen |
+| B2.4 | Virtualisierte Liste (nur sichtbare Karten im DOM) | offen |
+
+**Gemessen bei 200 Artikeln à 900 Wörtern** (Chromium auf `lenovo`, kein
+Telefon — als Vorher/Nachher auf derselben Maschine aussagekräftig, nicht als
+absolute Zahl):
+
+| | vorher | nachher |
+|---|---:|---:|
+| Bibliothek öffnen bis erste Karte | 512 ms | 513–517 ms |
+| Volltextsuche, Treffer nur im Fließtext | 319 ms | 322 ms |
+| **Ein Stern setzen** | **411 ms** | **269–283 ms** |
+
+Der Stern war der Punkt: er löste ein vollständiges Neuladen der Bibliothek aus
+— alle Artikel aus IndexedDB, Suche erneut, jede Karte neu. Jetzt liefert der
+Schreibvorgang den aktualisierten Datensatz zurück und die Liste wird an Ort und
+Stelle geflickt. Öffnen und Suche sind unverändert, weil dort tatsächlich alles
+gelesen werden **muss** — das behebt erst B2.3.
+
+Ausnahme mit Absicht: das Rückgängigmachen einer Löschung lädt weiterhin voll
+neu. Der Artikel muss an seine Stelle in der Sortierung zurück, und wo die ist,
+weiß nur die Datenbank.
 
 ### B3 · Verlässlich lesen: Zustand, den man nicht verliert
 Einzelne Bausteine sind da (Fortschritt, Scrollposition je Tab), aber es gibt
@@ -259,7 +278,8 @@ Klartext in den Tests, sonst bricht der Lauf bei jeder Textänderung.
 3. ~~A5, A6, A7~~ — erledigt am 12.08.2026.
 4. **B5** — der Reader ist das Produkt, und er ist messbar.
 5. **A8, A9, B6** — Bedienung und Zugänglichkeit.
-6. **B2** — sobald echte Bibliotheken groß genug werden, dass man es merkt.
+6. **B2.3, B2.4** — Wortindex und virtualisierte Liste, sobald Öffnen und
+   Suche spürbar werden (heute 0,5 s bzw. 0,3 s bei 200 Artikeln).
 7. **B4** — zuletzt, und nur, wenn B4.1 wirklich getragen hat.
 
 ## Arbeitsregeln für jeden Lauf

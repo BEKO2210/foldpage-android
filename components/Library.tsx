@@ -280,18 +280,29 @@ export default function Library() {
         }
       : EMPTY_META[tab];
 
+  /** Every one of these used to end in refresh(), which reads the whole
+      library out of IndexedDB, re-runs the search and rebuilds every card — for
+      a star. With a hundred articles that is felt; the write already returns
+      the updated record, so the list is patched in place instead. Only the tag
+      list still needs a second look, because a change can add or retire one. */
+  const patchLocal = useCallback((id: string, next: Article | undefined) => {
+    if (!next) return;
+    setArticles((current) =>
+      current.map((article) => (article.id === id ? next : article))
+    );
+  }, []);
+
   /** `on` decides the haptic: setting a flag thumps, clearing it answers
       lighter, so favourite and archive are distinguishable by feel alone. */
   async function toggle(a: Article, patch: Partial<Article>, on: boolean) {
     void (on ? commit() : uncommit());
-    await updateArticle(a.id, patch);
-    await refresh();
+    patchLocal(a.id, await updateArticle(a.id, patch));
   }
 
   async function removeWithUndo(a: Article) {
     void discard();
     await deleteArticle(a.id);
-    await refresh();
+    setArticles((current) => current.filter((article) => article.id !== a.id));
     if (toastTimer.current) clearTimeout(toastTimer.current);
     setToast({ text: `Deleted “${truncate(a.title, 40)}”`, undoId: a.id });
     toastTimer.current = setTimeout(() => setToast(null), 6000);
@@ -302,6 +313,8 @@ export default function Library() {
     setToast(null);
     void commit();
     await restoreArticle(id);
+    // The article has to come back in its place in the order, and only the
+    // database knows where that is — the one case where a full read is right.
     await refresh();
   }
 

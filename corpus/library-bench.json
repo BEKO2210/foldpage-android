@@ -1,0 +1,12 @@
+{
+  "articles": 200,
+  "wordsPerArticle": 900,
+  "viewport": {
+    "width": 412,
+    "height": 915
+  },
+  "openLibraryMs": 513,
+  "bodySearchMs": 318,
+  "favouriteToggleMs": 269,
+  "note": "Chromium on a development machine, not a phone. Useful as a before/after on the same machine, not as an absolute number."
+}

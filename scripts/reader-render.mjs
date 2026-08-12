@@ -92,11 +92,14 @@ async function seed(page, article) {
   await page.goto("/");
   await page.evaluate(async (value) => {
     const db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open("foldpage", 1);
+      const request = indexedDB.open("foldpage", 2);
       request.onupgradeneeded = () => {
         const store = request.result.createObjectStore("articles", { keyPath: "id" });
         store.createIndex("by-state", "state");
         store.createIndex("by-addedAt", "addedAt");
+        // Same shape as lib/db.ts at schema 2 — a seed that opens version 1
+        // after the app has upgraded would fail outright.
+        request.result.createObjectStore("images", { keyPath: "key" });
       };
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error);
