@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ChevronLeftIcon } from "./icons";
+import { markNavigation } from "./RouteFocus";
 
 /** The app icon, small. It used to be a bare yellow triangle, which was the
     fold without the page it is folded from — the one thing the name is about,
@@ -31,7 +32,7 @@ export default function TopBar({
   return (
     <header className="flex items-center justify-between px-4 sm:px-5 py-1 max-w-5xl mx-auto w-full">
       {back ? (
-        <Link href={back.href} className="backlink">
+        <Link href={back.href} className="backlink" onClick={markNavigation}>
           <ChevronLeftIcon />
           {back.label}
         </Link>

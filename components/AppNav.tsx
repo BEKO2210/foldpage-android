@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ArchiveIcon, InboxIcon, SettingsIcon, StarIcon } from "./icons";
 import { tap } from "@/lib/native";
+import { markNavigation } from "./RouteFocus";
 
 export type NavSection = "inbox" | "archived" | "favorites" | "settings";
 
@@ -49,6 +50,7 @@ export default function AppNav() {
 
   function go(section: NavSection) {
     void tap();
+    markNavigation();
     if (section === "settings") {
       if (!pathname.startsWith("/settings")) router.push("/settings");
       return;

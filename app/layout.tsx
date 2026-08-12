@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import NativeShell from "@/components/NativeShell";
 import AppNav from "@/components/AppNav";
+import RouteFocus from "@/components/RouteFocus";
 
 export const metadata: Metadata = {
   title: "FoldPage",
@@ -48,6 +49,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <AppNav />
+        <RouteFocus />
         <NativeShell />
       </body>
     </html>

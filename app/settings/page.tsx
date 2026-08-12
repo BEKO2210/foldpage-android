@@ -208,6 +208,8 @@ export default function SettingsPage() {
         <h1
           className="text-2xl font-semibold mb-5"
           style={{ fontFamily: "var(--serif)" }}
+          data-route-heading
+          tabIndex={-1}
         >
           Settings
         </h1>

@@ -339,7 +339,7 @@ die Commit-Nachricht.
 | Etappe | Inhalt | Stand |
 |---|---|---|
 | B6.1 | Bestandsaufnahme, Fundliste in `docs/A11Y.md` | ✅ 12.08.2026, **3 Befunde gefunden und behoben** |
-| B6.2 | Fokus nach Routenwechsel setzen, TalkBack-Durchgang am Gerät | offen — braucht ein Gerät |
+| B6.2 | Fokus nach Routenwechsel setzen | ✅ 12.08.2026 — TalkBack-Durchgang am Gerät bleibt offen |
 | B6.3 | Layout bei 200 % Systemschrift | ✅ mit B6.1 erledigt und als Prüfung verankert |
 | B6.4 | Prüfungen dauerhaft verankern | ✅ `node scripts/a11y-audit.mjs` |
 

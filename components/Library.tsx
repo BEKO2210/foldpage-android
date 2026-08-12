@@ -16,6 +16,7 @@ import { Abandoned, addArticleFromUrl } from "@/lib/articles";
 import { storeImagesForArticle } from "@/lib/images";
 import TopBar from "./TopBar";
 import SwipeRow from "./SwipeRow";
+import { markNavigation } from "./RouteFocus";
 import Welcome from "./Welcome";
 import { SECTION_EVENT } from "./AppNav";
 import {
@@ -385,6 +386,13 @@ export default function Library() {
         }
       />
       <div className="max-w-5xl mx-auto px-4 sm:px-5 content-pad w-full">
+        {/* The library had no heading at all: its cards started at h3, under
+            nothing. Visually the tabs and the bottom bar already say where you
+            are, so this says it only to a screen reader — and gives focus
+            somewhere to land after a route change. */}
+        <h1 className="sr-only" data-route-heading tabIndex={-1}>
+          {query ? `Search results for ${query}` : `${TAB_META[tab].label} — your library`}
+        </h1>
         <form
           className="flex gap-2 mb-3"
           onSubmit={(e) => {
@@ -582,15 +590,16 @@ export default function Library() {
                   ? ` · ${Math.round(a.progress * 100)}%`
                   : ""}
               </p>
-              <h3 className="text-lg font-semibold leading-snug m-0 mb-1">
+              <h2 className="text-lg font-semibold leading-snug m-0 mb-1">
                 <Link
                   href={`/read/?id=${a.id}`}
                   className="cardlink no-underline"
                   style={{ color: "var(--ink)" }}
+                  onClick={markNavigation}
                 >
                   <Highlight text={a.title} term={query} />
                 </Link>
-              </h3>
+              </h2>
               <p
                 className="text-sm m-0 line-clamp-2"
                 style={{ color: "var(--muted)" }}

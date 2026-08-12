@@ -139,6 +139,7 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ baseURL: origin, viewport: VIEWPORT });
 const page = await context.newPage();
+page.on("console", (m) => { if (m.text().includes("RouteFocus")) console.error(m.text()); });
 await page.addInitScript(() => localStorage.setItem("fp-welcomed", "1"));
 
 /** An empty library has no cards and therefore no headings, which would make
@@ -230,8 +231,22 @@ try {
   // Where does focus sit after a route change? A screen reader that is left on
   // <body> makes the reader hunt for the article every time.
   await page.goto("/");
-  await page.click('a[href="/settings"], nav button:has-text("Settings")').catch(() => {});
-  await page.waitForTimeout(400);
+  // Wait for the library to be alive before touching it. Clicking during
+  // hydration navigates through the anchor rather than through the router, and
+  // a full document load is not a route change — the first measurement of this
+  // reported a focus fault that was an artefact of clicking too early.
+  await page.waitForSelector(".card");
+  await page.waitForTimeout(300);
+  // The bottom bar, which is what a phone actually offers: it routes inside the
+  // app. The desktop link next to it is a plain anchor and reloads the whole
+  // document — measuring that would only ever show a fresh page, where focus
+  // belongs at the top anyway.
+  await page.click('.bottomnav button:has-text("Settings")');
+  await page.waitForSelector("h1:has-text('Settings')");
+  // Focus is moved a frame after the new route commits, and the route itself
+  // arrives after the client bundle has done its work — 400ms read the old
+  // document and reported a fault that was not there.
+  await page.waitForTimeout(1200);
   const focusAfterNavigation = await page.evaluate(() => ({
     tag: document.activeElement?.tagName ?? null,
     label: (document.activeElement?.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40),

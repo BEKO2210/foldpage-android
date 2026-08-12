@@ -16,20 +16,24 @@
       ],
       "headings": [
         {
-          "level": 3,
+          "level": 1,
+          "text": "Inbox — your library"
+        },
+        {
+          "level": 2,
           "text": "An article with a reasonably long headli"
         },
         {
-          "level": 3,
+          "level": 2,
           "text": "An article with a reasonably long headli"
         },
         {
-          "level": 3,
+          "level": 2,
           "text": "An article with a reasonably long headli"
         }
       ],
       "headingSkips": [],
-      "firstHeadingLevel": 3,
+      "firstHeadingLevel": 1,
       "landmarks": {
         "main": 1,
         "nav": 1,
@@ -45,7 +49,10 @@
     {
       "route": "reader",
       "unnamed": [],
-      "small": [],
+      "small": [
+        "button.chip 58x44",
+        "input.input 144x44"
+      ],
       "headings": [
         {
           "level": 1,
@@ -116,8 +123,8 @@
     }
   ],
   "focusAfterNavigation": {
-    "tag": "BODY",
-    "label": "LibrarySettingsAppearanceHow the app and"
+    "tag": "H1",
+    "label": "Settings"
   },
   "coversOnly": "Structural faults a browser can see. Announcement order, gesture reachability and TalkBack behaviour need a device."
 }

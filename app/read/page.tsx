@@ -418,7 +418,9 @@ export default function ReadPage() {
         lang={article.lang ?? undefined}
       >
         <header className="reader-header">
-          <h1>{article.title}</h1>
+          <h1 data-route-heading tabIndex={-1}>
+            {article.title}
+          </h1>
           <p className="reader-meta">
             {article.siteName} · {article.readingMin} min
             {article.author ? ` · ${article.author}` : ""}
