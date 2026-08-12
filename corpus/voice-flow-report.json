@@ -1,0 +1,72 @@
+{
+  "ranAt": "2026-08-12T22:47:51.537Z",
+  "voices": [
+    {
+      "name": "Thorsten",
+      "lang": "de-DE",
+      "voiceURI": "de-thorsten",
+      "localService": true,
+      "default": true
+    },
+    {
+      "name": "de-DE-language",
+      "lang": "de-DE",
+      "voiceURI": "de-language",
+      "localService": true,
+      "default": false
+    },
+    {
+      "name": "Aria",
+      "lang": "en-US",
+      "voiceURI": "en-aria",
+      "localService": true,
+      "default": false
+    },
+    {
+      "name": "en-us-x-sfg-local",
+      "lang": "en-US",
+      "voiceURI": "en-sfg",
+      "localService": true,
+      "default": false
+    },
+    {
+      "name": "Daniel",
+      "lang": "en-GB",
+      "voiceURI": "en-daniel",
+      "localService": true,
+      "default": false
+    },
+    {
+      "name": "Elsa",
+      "lang": "it-IT",
+      "voiceURI": "it-elsa",
+      "localService": true,
+      "default": false
+    },
+    {
+      "name": "Cloud Voice",
+      "lang": "de-DE",
+      "voiceURI": "de-cloud",
+      "localService": false,
+      "default": false
+    }
+  ],
+  "passed": [
+    "ok: an empty library offers exactly one language row",
+    "ok: searching \"deutsch\" offers German first",
+    "ok: the chosen language appears as a row",
+    "ok: German offers at least one voice",
+    "ok: German shows only German voices — saw [\"Thorsten\",\"standard German voice\"]",
+    "ok: a voice that needs the network is never offered",
+    "ok: a machine-named voice is renamed for a person — saw [\"Thorsten\",\"standard German voice\"]",
+    "ok: Italian shows exactly its own voice — saw [\"Elsa\"]",
+    "ok: the choice is remembered per language — stored {\"de\":\"de-thorsten\"}",
+    "ok: the closed row names the voice it will read with",
+    "ok: a language row opens from the keyboard",
+    "ok: a language added by hand can be removed again",
+    "ok: the reader offers the article's language only — saw [\"Deutsch\"]",
+    "ok: the reader does not offer to add other languages",
+    "ok: the reader's language opens on its voices rather than on a row to tap"
+  ],
+  "failures": []
+}

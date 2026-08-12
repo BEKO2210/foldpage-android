@@ -156,3 +156,71 @@ the audit cannot see it; it was rewritten and read by hand. A device run
 packs, (2) Settings is still a 3165 px wall of five cards, (3) desktop settings
 ignores its width, (4) icon-only reader bar, (5) the library's tag-filter block,
 (6) no live regions on the library route.
+
+### Run 3 — language first, then that language's voices
+
+**Hypothesis:** the decision has an order — a reader knows their language and
+does not know what a speech engine is — and a screen built in that order can
+offer *more* choice than the current one while asking for less knowledge.
+
+**Built:**
+
+- `lib/languages.ts` — a catalogue of **60** languages with the endonym, the
+  English name and a right-to-left flag, plus `searchLanguages()` matching
+  either name or the code, accent-insensitively ("francais" finds Français) and
+  prefix before substring ("en" offers English before Slovenian). 9 tests.
+- `lib/speech.ts` — `voicesForLanguage()` merges **every installed engine's**
+  voices for one language into one list, local voices only, best first;
+  `chooseVoice()` stores the voice and, silently, the engine it belongs to;
+  `previewVoice(lang, voiceURI)` speaks one named voice so a person can hear
+  before keeping.
+- `components/VoiceLanguages.tsx` — a row per language, and inside it the
+  voices **for that language only**, each with "Hear it" and a radio. A
+  language with none says so and offers the one action that exists. "Add a
+  language" opens a search over the catalogue. Languages added by hand can be
+  removed. In the reader's sheet (`only={lang}`) exactly one language is shown,
+  already open, with no picker furniture.
+- `VoicePrefs.languages` — the languages a reader asked for beyond what the
+  library holds, normalised on the way out of storage like every other field.
+
+**Instrument built:** `npm run voice:check` (`scripts/voice-flow-check.mjs`).
+A headless browser has no voices, so it stubs a believable phone — two German
+voices, three English, one Italian, one network-only — and then checks the
+product rule itself: **15 checks, all passing**, including "German shows only
+German voices", "a voice that needs the network is never offered", "the reader
+offers the article's language only", and "a language row opens from the
+keyboard".
+
+**Two faults found by that instrument, both fixed:**
+
+1. **The machine-named voice was winning.** With every voice rated the same —
+   the normal case — the order fell back to the alphabet, so `de-DE-language`
+   ("standard German voice") was offered *and automatically chosen* ahead of
+   `Thorsten`. `voicesFor()` now ranks a voice somebody named above one a build
+   script named, after Android's own rating rather than before it. Two tests.
+2. **The way out of the reading sheet could scroll away.** The longer voice
+   panel made the sheet scroll, taking "Done" with it. `.sheet-head` is sticky
+   now.
+
+**And the third instrument fault of the project:** `scripts/a11y-audit.mjs`
+measured mid-animation and reported two 44 px touch targets as too small in
+roughly every second run. It now waits for `document.getAnimations()`, raced
+against a clock because the skeleton shimmer never finishes. Four consecutive
+runs then gave the same three known findings.
+
+**Verification:** `npm run lint` silent · `npm test` 44 → **57 pass** ·
+`npm run build` ok · `ui:check` seeded/empty/offline all clean ·
+`npm run jargon` clean · `npm run voice:check` 15/15 · `a11y-audit` 0 unnamed,
+0 heading skips, 3 known small targets, focus on the new `h1`.
+
+**Not verified:** anything native. The stub is a browser's `speechSynthesis`,
+not Android's engines; the merge across several engines and `chooseVoice()`
+writing the engine have never run on a phone. A device pass is the first thing
+a later run should do.
+
+**Remaining, re-ranked:** (1) no in-app voice packs — "Get a voice" still
+leaves for the phone's own screen, which is the last standing breach of the
+product rule, (2) Settings is a 3300 px wall of five cards, (3) desktop
+settings ignores its width, (4) icon-only reader bar, (5) the library's
+tag-filter block, (6) no live regions on the library route, (7) the language
+block's own spacing and its two underlined links read heavier than they should.

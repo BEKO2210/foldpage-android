@@ -12,6 +12,7 @@
     "reader-render": "npm run build && node scripts/reader-render.mjs",
     "ui:check": "node .claude/skills/foldpage-product-ux/scripts/ui-check.mjs",
     "jargon": "node scripts/jargon-audit.mjs",
+    "voice:check": "node scripts/voice-flow-check.mjs",
     "sync": "npm run build && npx cap sync android",
     "apk:debug": "npm run sync && cd android && ./gradlew assembleDebug",
     "apk:release": "npm run sync && cd android && ./gradlew assembleRelease",

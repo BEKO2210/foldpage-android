@@ -113,3 +113,51 @@ test("a phone that nobody has configured still speaks the right language", async
     null
   );
 });
+
+test("a voice with a real name is offered before a machine-named one", async () => {
+  const { voicesFor } = await load();
+  // Both unrated, which is the normal case on a phone: the engine gives every
+  // voice the same number and the order would otherwise be alphabetical, which
+  // puts "de-DE-language" ahead of "Thorsten" for no reason a listener would
+  // recognise.
+  const { voices } = voicesFor(
+    [
+      { name: "de-DE-language", lang: "de-DE", voiceURI: "b", localService: true, default: false },
+      { name: "Thorsten", lang: "de-DE", voiceURI: "a", localService: true, default: false },
+    ],
+    "de-DE"
+  );
+  assert.equal(voices[0].name, "Thorsten");
+});
+
+test("Android's own rating still outranks a pretty name", async () => {
+  const { voicesFor } = await load();
+  const { voices } = voicesFor(
+    [
+      { name: "Thorsten", lang: "de-DE", voiceURI: "a", localService: true, default: false, quality: 100 },
+      { name: "de-DE-language", lang: "de-DE", voiceURI: "b", localService: true, default: false, quality: 400 },
+    ],
+    "de-DE"
+  );
+  assert.equal(voices[0].voiceURI, "b");
+});
+
+test("a name is either a person's or an honest description, never a code", async () => {
+  const { prettyVoiceName, hasHumanName } = await load();
+  assert.equal(prettyVoiceName("Thorsten", "German"), "Thorsten");
+  assert.equal(prettyVoiceName("de-DE-language", "German"), "standard German voice");
+  assert.equal(prettyVoiceName("en-us-x-sfg-local", "English"), "standard English voice");
+  assert.equal(prettyVoiceName("de", "German"), "standard German voice");
+  assert.equal(hasHumanName("Thorsten"), true);
+  assert.equal(hasHumanName("de-DE-language"), false);
+});
+
+test("a language the reader added by hand survives a round trip, nonsense does not", async () => {
+  const { normalizeVoicePrefs } = await load();
+  assert.deepEqual(normalizeVoicePrefs({ languages: ["it", "de-DE", "it", 7] }).languages, [
+    "it",
+    "de",
+  ]);
+  assert.deepEqual(normalizeVoicePrefs({ languages: "it" }).languages, []);
+  assert.deepEqual(normalizeVoicePrefs({}).languages, []);
+});

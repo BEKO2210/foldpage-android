@@ -531,7 +531,14 @@ export function sampleFor(tag: string | null): { text: string; lang: string | nu
   return { text: VOICE_SAMPLE.en, lang: "en-US" };
 }
 
-export async function previewVoice(lang: string | null): Promise<void> {
+/** Speak the sample for a language — optionally in one particular voice.
+ *
+ *  `voiceURI` is what makes a *list* of voices choosable: hearing one before
+ *  keeping it is the only way a person can tell them apart, and asking somebody
+ *  to save a choice in order to hear it is asking them to guess. When it is
+ *  left out, the voice already remembered for the language speaks, which is
+ *  what the speed and pitch controls need. */
+export async function previewVoice(lang: string | null, voiceURI?: string): Promise<void> {
   // A preview while an article is being read would stop the article and then
   // hand back the focus the article still needs — the reader would be left
   // with a silent play button. The article wins.
@@ -542,6 +549,8 @@ export async function previewVoice(lang: string | null): Promise<void> {
   speech.stop();
   const prefs = getVoicePrefs();
   const text = sample.text;
+  const remembered = prefs.voices[voiceKey(tag)];
+  const useVoice = voiceURI ?? remembered;
   await holdAudioFocus();
   try {
     if (isNative()) {
@@ -552,7 +561,7 @@ export async function previewVoice(lang: string | null): Promise<void> {
             text,
             engine: chosen,
             ...(tag ? { lang: tag } : {}),
-            ...(prefs.voices[voiceKey(tag)] ? { voice: prefs.voices[voiceKey(tag)] } : {}),
+            ...(useVoice ? { voice: useVoice } : {}),
             rate: RATES[prefs.rate],
             pitch: PITCHES[prefs.pitch],
           }),
@@ -561,7 +570,11 @@ export async function previewVoice(lang: string | null): Promise<void> {
         );
         return;
       }
-      const voice = voiceIndexFor(await installedVoices(), tag, prefs);
+      // The plugin takes an index into its own list, so a named voice is
+      // resolved the same way a remembered one is — freshly, every time.
+      const all = await installedVoices();
+      const named = voiceURI ? all.findIndex((entry) => entry.voiceURI === voiceURI) : -1;
+      const voice = named >= 0 ? named : voiceIndexFor(all, tag, prefs);
       await withTimeout(
         (await engine()).tts.speak({
           text,
@@ -577,6 +590,12 @@ export async function previewVoice(lang: string | null): Promise<void> {
     } else {
       const utterance = new SpeechSynthesisUtterance(text);
       if (tag) utterance.lang = tag;
+      if (useVoice) {
+        const match = (globalThis.speechSynthesis?.getVoices() ?? []).find(
+          (entry) => entry.voiceURI === useVoice
+        );
+        if (match) utterance.voice = match;
+      }
       utterance.rate = RATES[prefs.rate];
       utterance.pitch = PITCHES[prefs.pitch];
       globalThis.speechSynthesis?.speak(utterance);
@@ -791,6 +810,73 @@ export async function autoConfigure(
     ...picked,
     label: offers.find((offer) => offer.engine === picked.engine)?.label ?? picked.engine,
   };
+}
+
+/** One voice offered for one language, with the machinery it happens to belong
+ *  to carried alongside — never shown, only used to route the speaking. */
+export interface VoiceChoice extends EngineVoice {
+  /** The engine package this voice comes from. `""` in the browser preview. */
+  engine: string;
+}
+
+/** Every voice on this phone that can read this language, as one list.
+ *
+ *  This is the whole point of the language-first screen: a phone can have two
+ *  or three speech engines installed, each with its own voices, and asking a
+ *  reader to know which is which is asking them to do the app's job. So all of
+ *  them are asked, the answers are merged, and what comes back is simply "the
+ *  voices that can read German" — best first, local only, never one giant list
+ *  of every language at once.
+ *
+ *  Duplicates are real: two engines can carry a voice with the same identity.
+ *  The first one wins, which is the better-rated one, because the list is
+ *  already sorted by then. */
+export async function voicesForLanguage(lang: string | null): Promise<VoiceChoice[]> {
+  const tag = speechLanguage(lang) ?? lang;
+  if (!isNative()) {
+    const { voices, matchesLanguage } = voicesFor(await installedVoices(), tag);
+    return matchesLanguage ? voices.map((voice) => ({ ...voice, engine: "" })) : [];
+  }
+  const { engines } = await speechEngines();
+  const lists = await Promise.all(
+    engines.map(async (entry) => {
+      const { voices, matchesLanguage } = voicesFor(
+        await voicesOfEngine(entry.packageName),
+        tag
+      );
+      return matchesLanguage
+        ? voices.map((voice) => ({ ...voice, engine: entry.packageName }))
+        : [];
+    })
+  );
+  const seen = new Set<string>();
+  const merged: VoiceChoice[] = [];
+  for (const voice of lists.flat()) {
+    const key = `${voice.voiceURI}|${voice.name}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(voice);
+  }
+  // Android's own rating decides the order, then the name so two openings of
+  // the same screen agree.
+  return merged.sort(
+    (a, b) => (b.quality ?? 0) - (a.quality ?? 0) || a.name.localeCompare(b.name)
+  );
+}
+
+/** Keep a voice for a language: the voice the reader picked, and quietly the
+ *  engine it belongs to, so the next article in that language speaks in it
+ *  without anybody being asked which machinery to use. */
+export function chooseVoice(lang: string | null, voice: VoiceChoice): void {
+  const key = voiceKey(speechLanguage(lang) ?? lang);
+  const prefs = getVoicePrefs();
+  saveVoicePrefs({
+    ...prefs,
+    voices: { ...prefs.voices, [key]: voice.voiceURI },
+    engines: voice.engine
+      ? { ...prefs.engines, [key]: voice.engine }
+      : prefs.engines,
+  });
 }
 
 /** The languages the reader actually has articles in, most first.

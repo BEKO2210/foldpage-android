@@ -70,6 +70,14 @@ export interface VoicePrefs {
   pace: PaceChoice;
   /** BCP 47 tag → the `voiceURI` of the chosen voice. */
   voices: Record<string, string>;
+  /** Languages the reader has asked FoldPage to be ready for, beyond the ones
+   *  their library already holds.
+   *
+   *  Saving an article in a new language adds that language on its own — this
+   *  is for the other direction: setting up a voice for Italian *before* the
+   *  first Italian article arrives, which is exactly when a download would want
+   *  to happen, on wifi, rather than at the moment somebody wants to listen. */
+  languages: string[];
   /** Language → the speech engine package that reads it.
    *
    *  The reason this exists at all: a phone has one default engine, and a
@@ -87,6 +95,7 @@ export const DEFAULT_VOICE_PREFS: VoicePrefs = {
   pace: "natural",
   voices: {},
   engines: {},
+  languages: [],
 };
 
 export const VOICE_STORAGE_KEY = "fp-voice";
@@ -121,6 +130,18 @@ export function normalizeVoicePrefs(raw: unknown): VoicePrefs {
         : DEFAULT_VOICE_PREFS.pace,
     voices: stringMap(input.voices),
     engines: stringMap(input.engines),
+    // Same rule as the maps above: whatever is not a list of plain language
+    // codes is dropped rather than shown as a row nobody can explain.
+    languages: Array.isArray(input.languages)
+      ? [
+          ...new Set(
+            (input.languages as unknown[])
+              .filter((code): code is string => typeof code === "string")
+              .map((code) => voiceKey(code))
+              .filter((code) => code !== "default")
+          ),
+        ]
+      : [],
   };
 }
 
@@ -175,6 +196,38 @@ export function sentenceGap(pace: PaceChoice): number {
   return Math.round(SENTENCE_GAP * PACE_FACTOR[pace]);
 }
 
+/** A voice's name, as a person should read it.
+ *
+ *  Engines name their voices for machines: "de-DE-language",
+ *  "en-us-x-sfg-local", sometimes just "de". None of that tells a reader
+ *  anything, so the machine parts come off and what is left is either a real
+ *  name or the honest answer — the phone's standard voice for that language.
+ *
+ *  `language` is the word to put in that honest answer, and it is passed in
+ *  rather than looked up so this stays a pure function of two strings. */
+function bareVoiceName(name: string): string {
+  return name
+    .replace(/[-_](language|local|network)$/i, "")
+    .replace(/^[a-z]{2,3}([-_][a-z0-9]{2,8})?[-_]x[-_]/i, "")
+    .replace(/[-_]/g, " ")
+    .trim();
+}
+
+/** Whether a voice was given a name by a person or by a build script.
+ *
+ *  Used for more than the label: between two voices an engine rates equally,
+ *  the one somebody bothered to name is the better answer, both to offer first
+ *  and to choose automatically. "Thorsten" and "standard German voice" are the
+ *  same voice to a sorting function and very different to a listener. */
+export function hasHumanName(name: string): boolean {
+  const bare = bareVoiceName(name);
+  return !!bare && !/^[a-z]{2,3}( [a-z]{2,8})?$/i.test(bare);
+}
+
+export function prettyVoiceName(name: string, language: string): string {
+  return hasHumanName(name) ? bareVoiceName(name) : `standard ${language} voice`;
+}
+
 export interface EngineVoice {
   name: string;
   lang: string;
@@ -207,7 +260,13 @@ function byQuality(a: EngineVoice, b: EngineVoice, wanted?: string | null): numb
     if (region !== 0) return region;
   }
   const quality = (b.quality ?? 0) - (a.quality ?? 0);
-  return quality !== 0 ? quality : a.name.localeCompare(b.name);
+  if (quality !== 0) return quality;
+  // Android's rating first, because it is the engine's own judgement; a real
+  // name second. On a phone where every voice is rated the same — which is
+  // most phones — this is what stops "standard German voice" from being
+  // offered ahead of, and automatically chosen over, "Thorsten".
+  const named = Number(hasHumanName(b.name)) - Number(hasHumanName(a.name));
+  return named !== 0 ? named : a.name.localeCompare(b.name);
 }
 
 /** The voices worth offering for an article in `lang`.

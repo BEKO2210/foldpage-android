@@ -389,17 +389,49 @@ Impressum, Datenschutz und die deutschsprachigen Muster in `EDGE_FURNITURE`
 Paywall-Formeln, kein Oberflächentext. Die drei deutschen Stellen oben werden
 englisch gefasst (`docs/ROADMAP.md`, A4).
 
+## 7b. Sprachen und Stimmen (seit 12.08.2026)
+
+Der Weg ist **Sprache zuerst, dann Stimme** — nie umgekehrt, nie beides in
+einer Liste.
+
+| Datei | Rolle |
+|---|---|
+| `lib/languages.ts` | Katalog von 60 Sprachen mit Eigenname, englischem Namen und RTL-Flag; `searchLanguages()` findet über beide Namen und den Code, akzentunempfindlich |
+| `lib/voice.ts` | Einstellungen je Sprache (`voices`, `engines`, neu `languages`), Sortierung (`voicesFor`), Namensaufbereitung (`prettyVoiceName`, `hasHumanName`) |
+| `lib/speech.ts` | `voicesForLanguage()` fasst **alle installierten Engines** zu einer Liste je Sprache zusammen; `chooseVoice()` merkt Stimme **und** Engine; `previewVoice(lang, voiceURI?)` spricht eine bestimmte Stimme zur Probe |
+| `components/VoiceLanguages.tsx` | die Oberfläche: Sprachzeile, darin nur deren Stimmen, Vorhören je Stimme, „Add a language" mit Suche, Entfernen |
+| `components/VoiceSettings.tsx` | Tempo, Tonhöhe, Pausen — und darunter `VoiceLanguages`. Mit `lang` (Reader-Sheet) genau **eine** Sprache, aufgeklappt |
+
+Die Engine wird nie benannt. Sie wird beim Auswählen einer Stimme still
+mitgespeichert und beim Sprechen benutzt; fehlt eine Wahl, entscheidet
+`pickBestSetup()`. Netzstimmen (`localService === false`) sind ausgeschlossen —
+die App verspricht Offline-Betrieb.
+
+Gemessen wird das mit `npm run voice:check` (siehe Abschnitt 8): keine fremde
+Sprache in einer Sprachliste, keine Netzstimme, Auswahl bleibt gemerkt,
+Tastaturbedienung, und im Reader nur die Artikelsprache.
+
+**Offen (kein Code, bewusst benannt):** In-App-Sprachpakete mit Größe,
+Fortschritt, Abbrechen, Wiederholen und Verwaltung. Solange es die nicht gibt,
+führt „Get a voice" auf den Installationsweg des Telefons — der einzige Weg,
+der heute existiert, und der einzige verbliebene Bruch mit der Produktregel.
+Was dafür nötig wäre, steht in
+`.claude/skills/foldpage-product-ux/references/voice-and-language.md`.
+
 ## 8. Qualitätssicherung
 
 | Befehl | Was er tut | Dauer/Bedarf |
 |---|---|---|
-| `npm test` | 14 Tests: Extraktion, Sanitizer-Allowlist, Kontrast, Motion, 6 Fixtures | ~15 s, offline |
+| `npm test` | 57 Tests: Extraktion, Sanitizer-Allowlist, Kontrast, Motion, Sprachkatalog, Stimmnamen, 6 Fixtures | ~20 s, offline |
 | `npm run corpus` | `extractArticle` über 39 eingefrorene Snapshots, schreibt `corpus/report.{json,md}` | ~1 min, offline, deterministisch |
 | `npm run reader-render` | baut den Export und misst ihn mit Playwright/Chromium in **zwei** Viewports — Telefon 412×915 und Tablet 1024×768 —, DPR 2, hell + dunkel; schreibt `corpus/reader-report.json` + Screenshots (nur Telefon) | mehrere Minuten, braucht Chromium (`npx playwright install`) |
 | `npx eslint` | Lint (eslint-config-next) | schnell |
 | `node scripts/library-bench.mjs` | sät eine synthetische Bibliothek und misst Öffnen, Suche, Stern | ~1 min, braucht Chromium |
 | `node scripts/a11y-audit.mjs` | strukturelle Barrierefreiheit über drei Routen, dazu 200 % Systemschrift | ~1 min, braucht Chromium |
 | `node scripts/image-budget.mjs` | misst reale Bildgrößen — **braucht Netz**, gehört nicht in einen Testlauf | mehrere Minuten |
+| `npm run ui:check` | Konsolenfehler, Seitenfehler, tote Requests und waagerechter Überlauf auf drei Routen in **zwei** Viewports (412×915 und 1280×900); Flags `--empty`, `--offline`, `--shots` | ~1 min, braucht Chromium |
+| `npm run jargon` | sucht Entwicklerwörter im gerenderten Text aller Routen (auch in aufgeklappten `<details>` und im Lese-Sheet) | ~30 s, braucht Chromium |
+| `npm run voice:check` | prüft die Produktregel selbst: eine Sprache zeigt **nur** ihre eigenen Stimmen, Suche, Auswahl, Merken, Tastatur, Reader-Sheet — mit einer gestellten Stimmenliste, weil ein Headless-Browser keine hat | ~1 min, braucht Chromium |
 
 `corpus/report.json` und `report.md` sind **eingecheckt**. Eine Änderung an der
 Extraktion muss ihren Effekt dort im Diff zeigen — Zahlen statt Gefühl.

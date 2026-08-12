@@ -204,6 +204,25 @@ try {
   for (const route of routes) {
     await page.goto(route.path);
     await page.waitForTimeout(300);
+    // Measure a still page. Entry animations run for 250 ms and a box measured
+    // half way through one is a few tenths of a pixel short of where it ends
+    // up — which is enough to report a 44 px touch target as too small, on
+    // some runs and not others. Three runs of this audit gave two different
+    // answers for the same build before this wait existed.
+    //
+    // Raced against a clock, because one animation in this app never finishes:
+    // the skeleton shimmer loops for as long as something is loading. Waiting
+    // on that one would hang the audit rather than delay it.
+    await page.evaluate(
+      (limit) =>
+        Promise.race([
+          Promise.all(
+            document.getAnimations().map((animation) => animation.finished.catch(() => {}))
+          ),
+          new Promise((resolve) => setTimeout(resolve, limit)),
+        ]),
+      1000
+    );
     const audit = await page.evaluate(AUDIT);
 
     // A large system font must not tear the layout apart. 32px is roughly
