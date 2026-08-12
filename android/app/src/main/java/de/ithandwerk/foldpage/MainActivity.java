@@ -21,6 +21,7 @@ public class MainActivity extends BridgeActivity {
         // Registered before super.onCreate so the plugin's load() sees the
         // launch intent — a share that cold-starts the app must not be lost.
         registerPlugin(ShareTargetPlugin.class);
+        registerPlugin(SystemSettingsPlugin.class);
         super.onCreate(savedInstanceState);
         forwardInsetsToCss();
     }

@@ -23,6 +23,25 @@ export interface ShareTargetPlugin {
 
 export const ShareTarget = registerPlugin<ShareTargetPlugin>("ShareTarget");
 
+/** Screens the app can point at but not replace — see SystemSettingsPlugin. */
+export interface SystemSettingsPlugin {
+  openTextToSpeech(): Promise<void>;
+}
+
+export const SystemSettings = registerPlugin<SystemSettingsPlugin>("SystemSettings");
+
+/** Android's own text-to-speech screen: engine, speed, language, and the
+    "Listen to an example" button that settles whether a silent reader is the
+    app's fault or the phone's. */
+export async function openSpeechSettings(): Promise<void> {
+  if (!isNative()) return;
+  try {
+    await SystemSettings.openTextToSpeech();
+  } catch {
+    /* no such screen on this build */
+  }
+}
+
 export const isNative = () => Capacitor.isNativePlatform();
 
 /* ---------- haptics ---------- */

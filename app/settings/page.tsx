@@ -14,7 +14,7 @@ import { addArticleFromUrl } from "@/lib/articles";
 import { findByUrl, imageBytes, listArticles, newId, saveArticle } from "@/lib/db";
 import { articlesMissingImages, backfillImages, pruneImages } from "@/lib/images";
 import { buildIndex } from "@/lib/search";
-import { diagnose, installVoices, type DiagnosisStep } from "@/lib/speech";
+import { diagnose, installVoices, openSpeechSettings, type DiagnosisStep } from "@/lib/speech";
 import { buzzSuccess, tap } from "@/lib/native";
 
 type ImportStatus =
@@ -315,8 +315,14 @@ export default function SettingsPage() {
         <section className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Reading aloud</h2>
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            The voice comes from Android, not from FoldPage. If the reader stays
-            silent, this says which link in the chain is missing.
+            The voice comes from Android, not from FoldPage: whichever engine the
+            phone is set to use does the speaking. If the reader stays silent,
+            this says which link in the chain is missing — and two of them are
+            outside the app.
+          </p>
+          <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
+            Speech plays on the <b>media</b> volume, not the ringer. A phone with
+            the ringer up and media muted is silent here and nowhere else.
           </p>
           <div className="flex gap-2 flex-wrap">
             <button
@@ -325,6 +331,9 @@ export default function SettingsPage() {
               disabled={checking}
             >
               {checking ? "Checking…" : "Check the voice"}
+            </button>
+            <button className="btn btn-quiet pressable" onClick={() => void openSpeechSettings()}>
+              Android speech settings
             </button>
             <button className="btn btn-quiet pressable" onClick={() => void installVoices()}>
               Install voices

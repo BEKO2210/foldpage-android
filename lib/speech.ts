@@ -4,6 +4,7 @@ import { isNative } from "./native";
 import { speechLanguage, spokenBlocks, type SpokenBlock } from "./readAloud";
 
 export { spokenBlocks, spokenMinutes, speechLanguage } from "./readAloud";
+export { openSpeechSettings } from "./native";
 export type { SpokenBlock } from "./readAloud";
 
 /** The plugin is loaded on demand, never at module scope.
@@ -218,6 +219,10 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
     return steps;
   }
 
+  if (languages.length) {
+    note("Languages the engine has", true, languages.slice(0, 6).join(", "));
+  }
+
   const wanted = speechLanguage(sampleLang) ?? "en-US";
   try {
     const { supported } = await tts.isLanguageSupported({ lang: wanted });
@@ -236,7 +241,9 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
       true,
       // An engine that returns instantly has not spoken; it has given up
       // quietly, which is exactly the failure this whole check is for.
-      took < 250 ? `returned after ${took} ms — suspiciously fast, likely silent` : `${took} ms`
+      took < 250
+        ? `returned after ${took} ms — that is not long enough to say a word, so the engine gave up quietly. Check the media volume and the engine on Android's own speech screen.`
+        : `${took} ms — if you heard nothing, it is the media volume, not the app`
     );
   } catch (e) {
     note("Spoke a test word", false, e instanceof Error ? e.message : String(e));
