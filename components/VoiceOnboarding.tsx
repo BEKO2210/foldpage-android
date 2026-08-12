@@ -50,6 +50,8 @@ export default function VoiceOnboarding({
   // A first guess that is right most of the time: the languages already in the
   // library, and otherwise the phone's own language plus English, which is the
   // language of the app itself.
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- setUp is stable
+  // enough to run once: it reads the codes it is handed, not state.
   useEffect(() => {
     let alive = true;
     void languagesInLibrary().then((found) => {
@@ -60,20 +62,23 @@ export default function VoiceOnboarding({
         : [...new Set([device, "en"])].filter((code) =>
             SPEECH_LANGUAGES.some((entry) => entry.code === code)
           );
-      setPicked(guess.length ? guess : ["en"]);
+      const codes = guess.length ? guess : ["en"];
+      setPicked(codes);
+      // Run it straight away. Asking "shall I look?" is a question with one
+      // sensible answer, which is not a question.
+      void setUp(codes);
     });
     return () => {
       alive = false;
     };
   }, []);
 
-  async function setUp() {
+  async function setUp(codes: string[] = picked) {
     setBusy(true);
-    void tap();
     try {
       await refreshVoices();
       const found: Result[] = [];
-      for (const code of picked) {
+      for (const code of codes) {
         await autoConfigure(code);
         const key = voiceKey(code);
         const chosen = getVoicePrefs().engines[key] ?? null;
@@ -111,45 +116,23 @@ export default function VoiceOnboarding({
 
   return (
     <div className="voice-onboarding">
-      {!compact && <h2 className="onboarding-title">Which languages do you read?</h2>}
+      {!compact && <h2 className="onboarding-title">The voice is ready</h2>}
       <p className="setting-note">
-        FoldPage reads articles out loud with the voices on this phone. Pick the
-        languages and it sets the rest up itself.
+        FoldPage reads articles out loud with the voices on this phone. One
+        language, one voice — the best this phone has for it. Nothing to pick.
       </p>
-
-      <div className="lang-chips" role="group" aria-label="Languages you read">
-        {SPEECH_LANGUAGES.map((entry) => {
-          const on = picked.includes(entry.code);
-          return (
-            <button
-              key={entry.code}
-              type="button"
-              className="chip pressable"
-              aria-pressed={on}
-              onClick={() => {
-                void tap();
-                setPicked((current) =>
-                  on
-                    ? current.filter((code) => code !== entry.code)
-                    : [...current, entry.code]
-                );
-                setResults(null);
-              }}
-            >
-              {entry.label}
-            </button>
-          );
-        })}
-      </div>
 
       <div className="voice-actions">
         <button
           type="button"
           className="btn pressable"
-          onClick={() => void setUp()}
+          onClick={() => {
+            void tap();
+            void setUp();
+          }}
           disabled={busy || picked.length === 0}
         >
-          {busy ? "Looking…" : results ? "Check again" : "Set up the voice"}
+          {busy ? "Looking…" : "Check again"}
         </button>
         {onDone && (
           <button type="button" className="btn btn-quiet pressable" onClick={onDone}>
