@@ -148,12 +148,37 @@ function scrubTree(el: Element): void {
     live WebView document would fetch every <img> and fire its onerror
     handler while the attributes are still on the element — i.e. run the
     page's script before we get to remove it. */
+/** Blocks that hold nothing at all, once everything has been cleaned.
+ *
+ *  Source pages are full of them — spacer paragraphs, the leftovers of a
+ *  removed ad slot, an emptied wrapper — and each one renders as a gap in the
+ *  middle of the article. They are dropped last, after the media pass, because
+ *  that is what turns a paragraph holding one counting pixel into an empty one.
+ *
+ *  Only paragraph-like blocks are considered, and only when they hold neither
+ *  text nor anything that draws. A `<br>` is a deliberate line break and keeps
+ *  its paragraph; a `<hr>` is a rule and stays. */
+const EMPTIABLE = new Set(["P", "DIV", "SECTION", "FIGURE", "BLOCKQUOTE"]);
+const DRAWS = "img, picture, video, audio, table, hr, br, iframe, canvas, svg";
+
+function dropEmptyBlocks(container: HTMLElement): void {
+  // Deepest first: emptying a child can leave its parent empty in turn.
+  const blocks = [...container.querySelectorAll("*")].reverse();
+  for (const el of blocks) {
+    if (!EMPTIABLE.has(el.tagName)) continue;
+    if ((el.textContent ?? "").trim()) continue;
+    if (el.querySelector(DRAWS)) continue;
+    el.remove();
+  }
+}
+
 function sanitize(html: string, doc: Document): string {
   const container = doc.createElement("div");
   container.innerHTML = html;
   scrubTree(container);
   prepareTables(container, doc);
   prepareMedia(container, doc);
+  dropEmptyBlocks(container);
   return container.innerHTML;
 }
 
@@ -435,6 +460,105 @@ export function assertFetchable(url: string): URL {
   return parsed;
 }
 
+/** An author line Readability did not find.
+ *
+ *  Its byline heuristic looks at the article body, which leaves every page that
+ *  states its author only in the head without one — six of the corpus's 39.
+ *  The structured data is right there, so it is read: JSON-LD first, because a
+ *  publisher who ships it means it, then the meta tags.
+ *
+ *  What is rejected matters as much as what is taken: a company name that is
+ *  just the site again ("web.dev"), or a whole paragraph that ended up in a
+ *  meta tag, is worse in the header than an empty slot. */
+function looksLikeName(value: string): boolean {
+  if (!/\p{L}/u.test(value)) return false;
+  // A byline can legitimately be long — thirteen names on one investigative
+  // piece is real, and cutting it to the first author would quietly drop the
+  // others. What is never real is a single word of sixty characters, which is
+  // what a page dumps into the author tag when it means something else.
+  if (value.length > 300) return false;
+  return !value.split(/\s+/).some((word) => word.length > 40);
+}
+
+/** `strict` is for values taken from the head, where a publisher's own domain
+    is a placeholder rather than an author. A byline Readability found is not
+    held to that: "WELT" and "tagesschau.de" are how those newsrooms sign their
+    pieces, and an empty header would be the worse answer. */
+function cleanAuthor(
+  raw: string,
+  siteHost: string,
+  { strict = false }: { strict?: boolean } = {}
+): string | null {
+  const value = raw.replace(/\s+/g, " ").trim();
+  if (!value || !looksLikeName(value)) return null;
+  if (strict) {
+    if (value.length > 80) return null;
+    const bare = value.toLowerCase().replace(/^www\./, "");
+    const host = siteHost.toLowerCase().replace(/^www\./, "");
+    if (bare === host || bare === host.split(".")[0]) return null;
+  }
+  return value;
+}
+
+function authorFromJsonLd(doc: Document, host: string): string | null {
+  const blocks = [...doc.querySelectorAll('script[type="application/ld+json"]')];
+  for (const block of blocks) {
+    let data: unknown;
+    try {
+      data = JSON.parse(block.textContent ?? "");
+    } catch {
+      continue; // Half-written JSON-LD is common; it is not worth a failure.
+    }
+    const queue: unknown[] = [data];
+    while (queue.length) {
+      const node = queue.shift();
+      if (Array.isArray(node)) {
+        queue.push(...node);
+        continue;
+      }
+      if (!node || typeof node !== "object") continue;
+      const record = node as Record<string, unknown>;
+      const author = record.author;
+      if (typeof author === "string") {
+        const name = cleanAuthor(author, host, { strict: true });
+        if (name) return name;
+      }
+      for (const candidate of Array.isArray(author) ? author : [author]) {
+        if (candidate && typeof candidate === "object") {
+          const named = (candidate as Record<string, unknown>).name;
+          if (typeof named === "string") {
+            const name = cleanAuthor(named, host, { strict: true });
+            if (name) return name;
+          }
+        }
+      }
+      if (record["@graph"]) queue.push(record["@graph"]);
+    }
+  }
+  return null;
+}
+
+function authorFromMetadata(doc: Document, host = ""): string | null {
+  const fromLd = authorFromJsonLd(doc, host);
+  if (fromLd) return fromLd;
+  const selectors = [
+    'meta[name="author"]',
+    'meta[property="article:author"]',
+    'meta[name="citation_author"]',
+    // twitter:creator holds an @handle, not a name — worse in a byline slot
+    // than nothing, so it is deliberately absent.
+  ];
+  for (const selector of selectors) {
+    const content = doc.querySelector(selector)?.getAttribute("content") ?? "";
+    // article:author is often a profile URL rather than a name — a link in the
+    // byline slot helps nobody.
+    if (/^https?:/i.test(content.trim())) continue;
+    const name = cleanAuthor(content, host, { strict: true });
+    if (name) return name;
+  }
+  return null;
+}
+
 /** The DOM half of the extraction: everything after the bytes have arrived.
     Kept free of the native bridge so it runs — and is tested — anywhere a
     DOMParser exists. */
@@ -467,7 +591,12 @@ export function extractArticle(html: string, finalUrl: string): ParseResult {
 
   return {
     title: article.title || fallbackHost,
-    author: article.byline || null,
+    // Readability's byline is taken first but not taken on trust: it copies a
+    // meta author verbatim, and a page that puts a whole sentence — or its own
+    // domain — in that tag would otherwise print it in the header.
+    author:
+      cleanAuthor(article.byline ?? "", fallbackHost) ??
+      authorFromMetadata(doc, fallbackHost),
     siteName: article.siteName || fallbackHost.replace(/^www\./, ""),
     excerpt: (article.excerpt || text.slice(0, 300)).trim().slice(0, 500),
     contentHtml: sanitize(cleaned.html, doc),

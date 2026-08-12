@@ -179,6 +179,87 @@ test("the sanitizer allowlist survives the cases a blocklist misses", async () =
   assert.match(custom, /Text aus einem eigenen\s+Element/);
 });
 
+test("empty blocks are dropped, deliberate ones are not", async () => {
+  const { extractArticle } = await load();
+  const page = `<html lang="de"><head><title>Luecken</title></head><body><article>
+      <p>Ein Absatz mit genug Text, damit Readability den Artikel sicher als
+      Inhalt erkennt und nicht als Navigation verwirft. Noch ein Satz dazu.</p>
+      <p></p>
+      <p>   </p>
+      <div><p></p></div>
+      <p>Ein zweiter Absatz, ebenfalls lang genug, damit er die Schwelle nimmt
+      und im Ergebnis erhalten bleibt, samt allem, was zwischen ihm steht.</p>
+      <p>Ein Absatz mit einem gewollten Zeilenumbruch:<br>so hier, und noch
+      genug Text dahinter, damit der Block als Inhalt zaehlt und bleibt.</p>
+      <hr>
+      <p>Ein dritter Absatz, wieder mit ausreichend Text fuer die Heuristik,
+      damit der Block als Artikelinhalt gewertet wird und stehen bleibt.</p>
+    </article></body></html>`;
+  const { contentHtml } = extractArticle(page, "https://example.test/luecken");
+
+  assert.doesNotMatch(contentHtml, /<p>\s*<\/p>/, "no empty paragraph survives");
+  // A <br> inside a real paragraph is a line break somebody meant, and <hr>
+  // draws a rule — neither counts as empty.
+  assert.match(contentHtml, /<br>/);
+  assert.match(contentHtml, /<hr>/);
+  assert.match(contentHtml, /dritter Absatz/);
+});
+
+test("the author is read from structured data when the byline is not in the text", async () => {
+  const { extractArticle } = await load();
+  const body = `<article>
+      <p>Der Artikel selbst nennt keinen Autor, weil die Redaktion ihn nur im
+      Kopf der Seite auszeichnet. Genug Text, damit der Block als Inhalt gilt.</p>
+      <p>Ein zweiter Absatz mit ausreichend Fuelltext, damit die Extraktion
+      diesen Artikel sicher als lesbaren Inhalt erkennt und behaelt.</p>
+    </article>`;
+  const page = (head: string) =>
+    `<html lang="de"><head><title>Kopfdaten</title>${head}</head><body>${body}</body></html>`;
+
+  assert.equal(
+    extractArticle(page('<meta name="author" content="B. Aslani">'), "https://example.test/a").author,
+    "B. Aslani"
+  );
+  assert.equal(
+    extractArticle(
+      page('<script type="application/ld+json">{"@type":"Article","author":{"name":"K. Mustermann"}}</script>'),
+      "https://example.test/a"
+    ).author,
+    "K. Mustermann"
+  );
+  // Nested in a @graph, which is how most publishers ship it.
+  assert.equal(
+    extractArticle(
+      page(
+        '<script type="application/ld+json">{"@graph":[{"author":[{"name":"Erste Autorin"}]}]}</script>'
+      ),
+      "https://example.test/a"
+    ).author,
+    "Erste Autorin"
+  );
+  // Where a meta author exists, Readability already reports it as the byline
+  // and this fallback never runs — worth pinning, so nobody later "fixes" a
+  // precedence that is not ours to decide.
+  assert.equal(
+    extractArticle(
+      page(
+        '<script type="application/ld+json">{"author":{"name":"Aus JSON-LD"}}</script><meta name="author" content="Aus Meta">'
+      ),
+      "https://example.test/a"
+    ).author,
+    "Aus Meta"
+  );
+  // A URL, a wall of text, or broken JSON leaves the slot empty rather than
+  // putting nonsense in the header.
+  for (const head of [
+    '<meta property="article:author" content="https://example.test/profile/42">',
+    `<meta name="author" content="${"x".repeat(120)}">`,
+    '<script type="application/ld+json">{ not json </script>',
+  ]) {
+    assert.equal(extractArticle(page(head), "https://example.test/a").author, null, head.slice(0, 40));
+  }
+});
+
 test("extractArticle removes chrome only from article edges", async () => {
   const { extractArticle } = await load();
   const result = extractArticle(

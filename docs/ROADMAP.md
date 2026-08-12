@@ -223,13 +223,24 @@ Der Korpus nennt die offenen Befunde beim Namen: `empty-paragraphs` 15,
 Jede Etappe nimmt **einen** Befund und belegt den Effekt im Diff von
 `corpus/report.json`.
 
-| Etappe | Befund | Angriffspunkt |
-|---|---|---|
-| B5.1 | `empty-paragraphs` | leere Absätze nach dem Sanitizer entfernen, ohne Abstände zu zerstören |
-| B5.2 | `no-author` | Autor zusätzlich aus JSON-LD und `<meta name="author">` lesen |
+| Etappe | Befund | Angriffspunkt | Stand |
+|---|---|---|---|
+| B5.1 | `empty-paragraphs` | leere Absätze nach dem Sanitizer entfernen, ohne Abstände zu zerstören | ✅ **15 → 0** (12.08.2026), dazu `last-empty` 5 → 3 |
+| B5.2 | `no-author` | Autor zusätzlich aus JSON-LD und `<meta name="author">` lesen | ⚠️ gebaut, **Befund unverändert 6** — siehe unten |
 | B5.3 | `tables-lost` | Wikipedia-Fall: Readability wirft Tabellenseiten weg — Rückfall auf den größten Tabellencontainer |
 | B5.4 | `image-flood` | Galerie-/Teaser-Reste am Artikelende erkennen |
 | B5.5 | `suspiciously-short` | Paywall erkennen und **benennen**, statt einen 29-Wörter-Artikel zu speichern |
+
+**B5.2 im Detail, weil „gebaut" hier nicht „besser" heißt:** Die Ergänzung
+liest den Autor jetzt aus JSON-LD (auch verschachtelt in `@graph`), aus
+`meta[name=author]`, `article:author` und `citation_author`, und sie weist
+Unsinn zurück, den Readability bisher ungeprüft in die Kopfzeile schrieb — ein
+Wort mit sechzig Zeichen ist kein Name. **Am Korpus ändert das nichts:** alle
+sechs Seiten ohne Autor führen nachweislich *keine* Autorenangabe, weder als
+Meta-Tag noch als JSON-LD (geprüft: golem ×2, MDN, web.dev, docs.python.org,
+github). Der Befund bleibt bei 6, und das ist die richtige Zahl — die Seiten
+nennen schlicht niemanden. `twitter:creator` wurde bewusst **nicht** genommen:
+„@MozDevNet" hätte die Zahl gesenkt und die Kopfzeile verschlechtert.
 
 **Regel für diesen Strang:** keine Änderung ohne Vorher/Nachher-Zahl aus
 `npm run corpus`. Sinkt ein Befund, während ein anderer steigt, gehört das in
