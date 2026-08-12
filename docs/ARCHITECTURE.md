@@ -291,6 +291,55 @@ Alles in `app/globals.css`, Tailwind v4 nur als Utility-Ergänzung.
 
 ---
 
+## 6a. Anzeige-Einstellungen (seit 12.08.2026)
+
+Fünf Einstellungen, eine Quelle: `lib/display.ts`.
+
+| Einstellung | Werte | Wirkung |
+|---|---|---|
+| `theme` | `system` · `light` · `dark` | Farbpalette, dazu `color-scheme` und die native Statusleiste |
+| `size` | 0–3 | `--reader-size`, die vier Textgrößen |
+| `font` | `serif` · `sans` | `--reader-family` |
+| `align` | `left` · `justify` | Blocksatz mit `hyphens: auto` |
+| `leading` | `cozy` · `airy` | `--reader-leading` (1.68 / 1.95) |
+
+**Wie es zusammenhängt:**
+
+- Gespeichert wird ein einziges Objekt unter `localStorage["fp-display"]`.
+  `normalizePrefs()` repariert jeden Wert, der nicht passt — eine kaputte Zeile
+  im Speicher darf die App nicht unlesbar machen. Die alte Größe aus
+  `fp-reader-size` wird einmalig übernommen.
+- `applyPrefs()` schreibt die Werte als **Attribute auf `<html>`**
+  (`data-theme`, `data-align`, `data-font`, `data-leading`) plus die
+  CSS-Variable `--reader-size`. Danach macht die Arbeit ausschließlich das
+  Stylesheet; keine Komponente reicht Werte durch.
+- **Kein Flackern:** `app/layout.tsx` enthält ein kleines Inline-Skript
+  (`APPLY_DISPLAY_PREFS`), das dieselben Attribute **vor dem ersten Paint**
+  setzt. Ohne das zeigte jeder Start kurz das Systemtheme. Es ist bewusst eine
+  zweite Umsetzung derselben Defaults — deshalb prüft `lib/display.test.ts`,
+  dass Skript und Modul dieselben Werte kennen.
+- React abonniert über **`useSyncExternalStore`** (`useDisplayPrefs()` in
+  `components/DisplaySettings.tsx`), nicht über State plus Effekt: die
+  Einstellungen leben außerhalb von React. `getPrefs()` gibt dasselbe Objekt
+  zurück, solange sich nichts ändert — ein frisch gebautes Objekt pro Aufruf
+  würde React in eine Endlosschleife schicken.
+- Dieselbe Komponente erscheint an zwei Stellen: als Abschnitt „Appearance" in
+  den Einstellungen und als Bottom-Sheet hinter dem Zahnrad im Reader.
+- Das Sheet ist ein echtes `<dialog>` (`showModal`) — Fokusfalle, Esc und
+  Inertheit der Seite dahinter gibt es damit geschenkt. Die **Hardware-Zurück-
+  Taste** schließt es: `wireBackButton()` prüft zuerst auf `dialog[open]`.
+- Jede Typografie-Änderung reflowt den Artikel. Der Reader merkt sich die
+  **relative** Leseposition und stellt sie nach zwei `requestAnimationFrame`
+  wieder her (`layoutKey`-Effekt in `app/read/page.tsx`).
+- Der Reader setzt `lang` aus `article.lang`, damit die Silbentrennung im
+  Blocksatz nach den Regeln der Artikelsprache bricht.
+
+**Farbtokens:** `:root` hält Hell, die Media Query bedient „System", zwei
+explizite Blöcke `:root[data-theme="light"|"dark"]` gewinnen über
+Spezifität (0,2,0 gegen 0,1,0). Die dunklen Werte stehen zwangsläufig zweimal
+im Stylesheet — `lib/contrast.test.ts` prüft, dass beide Fassungen identisch
+sind.
+
 ## 7a. Sprache der Oberfläche
 
 **Die App spricht Englisch.** Jeder sichtbare String steht als Literal direkt

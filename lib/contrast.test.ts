@@ -19,6 +19,16 @@ const darkBlock =
 const light = tokens(lightBlock);
 const dark = { ...light, ...tokens(darkBlock) };
 
+/** The theme can also be forced, independently of the system setting. Those
+    two blocks repeat the palettes, because CSS cannot pass one rule's custom
+    properties to another. The repetition is only safe while it is checked. */
+const forcedLight = tokens(
+  css.match(/:root\[data-theme="light"\]\s*{([\s\S]*?)}/)?.[1] ?? ""
+);
+const forcedDark = tokens(
+  css.match(/:root\[data-theme="dark"\]\s*{([\s\S]*?)}/)?.[1] ?? ""
+);
+
 function luminance(hex: string): number {
   const channels = [1, 3, 5].map((offset) =>
     Number.parseInt(hex.slice(offset, offset + 2), 16) / 255
@@ -49,6 +59,26 @@ const textRoles = [
   ["toast copy", "toast-text", "toast-bg"],
   ["toast action", "highlight", "toast-bg"],
 ] as const;
+
+test("the forced themes repeat the automatic palettes exactly", () => {
+  const automatic = tokens(darkBlock);
+  const names = Object.keys(automatic).sort();
+  assert.ok(names.length > 0, "the dark palette was not found");
+  assert.deepEqual(
+    Object.keys(forcedDark).sort(),
+    names,
+    "data-theme=dark redefines a different set of tokens than the media query"
+  );
+  assert.deepEqual(
+    Object.keys(forcedLight).sort(),
+    names,
+    "data-theme=light must restore exactly the tokens the dark theme overrides"
+  );
+  for (const name of names) {
+    assert.equal(forcedDark[name], automatic[name], `forced dark --${name}`);
+    assert.equal(forcedLight[name], light[name], `forced light --${name}`);
+  }
+});
 
 for (const [theme, palette] of [
   ["light", light],

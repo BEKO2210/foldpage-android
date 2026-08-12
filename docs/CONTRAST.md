@@ -4,6 +4,13 @@ Ratios are calculated from the colour tokens in `app/globals.css` and enforced
 by `lib/contrast.test.ts`. Normal text must meet WCAG AA at 4.5:1; card
 boundaries use the 3:1 non-text threshold.
 
+The theme has three states: follow the system, forced light, forced dark
+(`data-theme` on `<html>`, written by `lib/display.ts`). A forced theme repeats
+its palette in its own rule, because CSS cannot hand one rule's custom
+properties to another. The test asserts that the repeated blocks are identical
+to the automatic ones, so the ratios below hold in all three states and a drift
+fails the run instead of shipping a half-dark theme.
+
 | Role | Light | Dark |
 | --- | ---: | ---: |
 | Body on page | 15.97:1 | 14.36:1 |

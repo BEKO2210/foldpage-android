@@ -16,10 +16,15 @@ All motion is defined in `app/globals.css`. The two duration tokens are
 | `.page-push` | `fp-page-push` | 250ms | 0 | backwards |
 | `.reader-in` | `fp-page-in` | 250ms | 40ms | backwards |
 | active bottom-nav underline | `fp-nav-underline` | 150ms | 0 | backwards |
+| `.sheet` | `fp-sheet-in` | 250ms | 0 | backwards |
+| `.segmented label` | background and colour transition | 150ms | 0 | n/a |
 | `.skeleton-card` | `fp-shimmer` | 1.4s per loop | 0 | none, infinite |
 
 Page wrappers use `backwards`, so their transforms are removed when their
 animations finish and they cannot remain containing blocks for fixed children.
+The reading-settings sheet is a `<dialog>` and follows the same rule: it holds
+a `translateY` while entering, and a lingering transform would make it the
+containing block for anything fixed inside it.
 The card stagger is capped at 100ms; including its 250ms animation, even the
 last card settles at 350ms.
 

@@ -93,12 +93,19 @@ Undo-Toast), mit `prefers-reduced-motion`-Rücksicht.
 `lib/motion.test.ts` (neue Animation dokumentieren und prüfen).
 **Abnahme:** Motion-Test grün, Gerätetest inklusive Fehlgriff-Rückweg.
 
-### A9 · Schriftwahl im Reader
-Vier Größen gibt es, aber nur eine Schriftfamilie. Serif ist für viele Leser
-richtig, für manche nicht — und für Code-lastige Artikel selten.
-**Ziel:** Umschalter Serif/Sans im Reader, Speicherung wie `fp-reader-size`.
-**Dateien:** `app/read/page.tsx`, `app/globals.css`.
-**Abnahme:** Kontrast-Test grün, beide Schriften bei allen vier Größen gesehen.
+### A9 · Anzeige-Einstellungen ✅ erledigt (12.08.2026)
+Aus „Schriftwahl im Reader" wurde ein vollständiger Satz Einstellungen: Theme
+(System/Hell/Dunkel), Textgröße, Schriftart (Serif/Sans), Ausrichtung
+(Flattersatz/Blocksatz mit Silbentrennung) und Zeilenabstand. Erreichbar über
+das Zahnrad im Reader (Bottom-Sheet) und den Abschnitt „Appearance" in den
+Einstellungen — eine Komponente, zwei Orte.
+**Ergebnis:** 18/18 Tests grün, davon vier neue (Reparatur ungültiger
+Speicherwerte, Gleichlauf von Inline-Skript und Modul, Stylesheet-Regeln je
+Einstellung, Farbgleichheit der erzwungenen Themes). Kein Flackern beim Start,
+weil `app/layout.tsx` die Attribute vor dem ersten Paint setzt.
+Dateien: `lib/display.ts`, `components/DisplaySettings.tsx`,
+`components/DisplaySheet.tsx`, `app/read/page.tsx`, `app/settings/page.tsx`,
+`app/layout.tsx`, `app/globals.css`, `lib/native.ts`, `lib/*.test.ts`.
 
 ### A10 · Zeilenlänge und Rand prüfen lassen
 Der Reader-Lab-Bericht misst Zeichen pro Zeile bereits (3 bis 53 im Korpus),
@@ -125,6 +132,25 @@ Release driftet das auseinander.
 `package.json` und den README-Status gemeinsam setzt und `versionCode` erhöht.
 **Dateien:** neues `scripts/set-version.mjs`, `package.json`, `docs/RELEASE.md`.
 **Abnahme:** Skript läuft, `git diff` zeigt genau die drei Stellen.
+
+---
+
+### A13 · Große Bildschirme, weil Android 17 es erzwingt
+Android 17 (API 37, erschienen 16.06.2026) **entfernt die Opt-outs** für
+Orientierung und Größenänderung auf Geräten ab `sw600dp`: `screenOrientation`,
+`setRequestedOrientation()`, `resizeableActivity`, `minAspectRatio` und
+`maxAspectRatio` werden dort ignoriert. Pflicht wird `targetSdk 37` bei Google
+Play im **August 2027**; die App steht heute auf 36, das reicht bis
+**31.08.2026** und danach weiterhin, solange nicht auf 37 gehoben wird.
+Betroffen ist die App als Tablet-/Faltgerät-Layout: Bibliothek und Reader sind
+auf 412 px vermessen, breite Fenster sind nie geprüft worden.
+**Ziel:** Reader und Bibliothek bei 600–1400 px Breite und im Querformat ohne
+gestreckte Zeilen, unerreichbare Knöpfe oder Sprünge; Scrollposition übersteht
+den Konfigurationswechsel.
+**Dateien:** `app/globals.css` (Breakpoints), `scripts/reader-render.mjs`
+(zweites Viewport-Paar messen), `android/variables.gradle` beim späteren Sprung
+auf 37.
+**Abnahme:** Reader-Lab-Lauf bei 412×915 **und** 1024×768 ohne neue Befunde.
 
 ---
 

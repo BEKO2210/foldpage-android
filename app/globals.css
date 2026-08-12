@@ -19,6 +19,16 @@
   --dur-med: 250ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
+/* Three theme states, and the order of these blocks is what makes them work.
+   `:root` holds the light palette. The media query below serves the "system"
+   setting. The two explicit blocks come last and win on specificity — (0,2,0)
+   against (0,1,0) — so a user who forces light keeps light inside a dark
+   system, and the other way round.
+
+   The dark values appear twice on purpose: CSS cannot hand one block's custom
+   properties to another without a wrapper element. `lib/contrast.test.ts`
+   asserts the two copies are identical, so a drift fails the test run instead
+   of shipping a half-dark theme. */
 @media (prefers-color-scheme: dark) {
   :root {
     --ink: #e8e6df;
@@ -30,9 +40,32 @@
     --accent-text: #f5d547;
   }
 }
+:root[data-theme="light"] {
+  --ink: #1a1e26;
+  --paper: #fafaf7;
+  --muted: #5a6472;
+  --line: #e3e4de;
+  --card-line: #8f928c;
+  --card: #ffffff;
+  --accent-text: #806b00;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --ink: #e8e6df;
+  --paper: #14171e;
+  --muted: #9aa3b0;
+  --line: #2a2f3a;
+  --card-line: #626b7a;
+  --card: #1b1f28;
+  --accent-text: #f5d547;
+  color-scheme: dark;
+}
 
 html {
   background: var(--paper);
+  /* Scrollbars, form controls and the WebView's own overscroll glow follow the
+     theme the user picked, not the one the system reports. */
+  color-scheme: light dark;
 }
 body {
   margin: 0;
@@ -208,9 +241,9 @@ body {
 
 /* Reader typography — the product */
 .reader {
-  font-family: var(--serif);
+  font-family: var(--reader-family, var(--serif));
   font-size: var(--reader-size, 1.15rem);
-  line-height: 1.68;
+  line-height: var(--reader-leading, 1.68);
   /* Font-relative width keeps a comfortable measure at all four sizes. At
      412px the side padding wins, producing roughly 40–46 characters/line. */
   max-width: 39em;
@@ -248,6 +281,30 @@ body {
 .reader h3 {
   line-height: 1.25;
   text-wrap: balance;
+}
+/* Reader settings, driven entirely by attributes on <html> (see lib/display.ts).
+   Every one of them degrades to the default on a WebView that does not know
+   the property, which is why they are set here and not measured in JS. */
+:root[data-font="sans"] {
+  --reader-family: var(--sans);
+}
+:root[data-leading="airy"] {
+  --reader-leading: 1.95;
+}
+/* Justified text on a 39em measure needs hyphenation, otherwise German
+   compounds tear rivers of white space into the column. `hyphens` follows the
+   `lang` attribute, which the reader sets from the article's own language. */
+:root[data-align="justify"] .reader p,
+:root[data-align="justify"] .reader li {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+/* Avoids the single-word last line. Ignored where unsupported, so it costs
+   nothing to ask for. */
+.reader p,
+.reader li {
+  text-wrap: pretty;
 }
 /* Deliberately no reserved ratio for images of unknown size. Reserving 3/2
    turned every breadcrumb icon into half a screen of emptiness — a permanent
@@ -756,6 +813,136 @@ body {
     opacity: 1;
     transform: translate(-50%, 0);
   }
+}
+
+/* ---------- display settings ----------
+   A segmented control, because these are three or four exclusive choices and a
+   dropdown would hide the current one behind a tap. Rendered as real radio
+   inputs so a screen reader announces the group, the position and the state. */
+.segmented {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+}
+.segmented label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  /* 44px including the surrounding padding — the same floor as every other
+     touch target in the app. */
+  min-height: 40px;
+  padding: 0 0.5rem;
+  border-radius: 0.45rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: center;
+  transition: background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.segmented label:has(input:checked) {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(10, 14, 25, 0.12);
+}
+.segmented label:has(input:focus-visible) {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 1px;
+}
+.setting-row + .setting-row {
+  margin-top: 1rem;
+}
+.setting-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+/* A specimen line, so the effect of a setting is visible where it is chosen
+   instead of two taps away in the article. */
+.setting-preview {
+  margin: 0.9rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px dashed var(--line);
+  border-radius: 0.5rem;
+  font-family: var(--reader-family, var(--serif));
+  font-size: var(--reader-size, 1.15rem);
+  line-height: var(--reader-leading, 1.68);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+:root[data-align="justify"] .setting-preview {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* The reader's own settings live in a bottom sheet: <dialog> brings the focus
+   trap, the Esc key and inertness of the page behind it for free. The hardware
+   back button is routed to it in lib/native.ts. */
+.sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1rem 1.15rem calc(1.15rem + env(safe-area-inset-bottom));
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: 0.9rem 0.9rem 0 0;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 -10px 40px -20px rgba(10, 14, 25, 0.8);
+  animation: fp-sheet-in var(--dur-med) var(--ease-out) backwards;
+}
+.sheet::backdrop {
+  background: rgba(10, 14, 25, 0.45);
+}
+@keyframes fp-sheet-in {
+  from {
+    transform: translateY(1.5rem);
+    opacity: 0;
+  }
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+.sheet-head h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.sheet-close {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  min-height: 44px;
+  padding: 0 0.5rem;
+  cursor: pointer;
 }
 
 /* Settings sections as cards */

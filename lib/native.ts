@@ -8,6 +8,7 @@ import { StatusBar, Style } from "@capacitor/status-bar";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 import { Share } from "@capacitor/share";
+import { isDarkNow } from "./display";
 
 /** Bridge to the Kotlin side that catches Android's ACTION_SEND share intent.
     Cold start: the text is queued and picked up by consume().
@@ -103,7 +104,9 @@ export const discard = () => buzzWarning();
     hence the inverted-looking mapping. */
 export async function applyStatusBar() {
   if (!isNative()) return;
-  const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  // The user's own choice wins over the system's: a forced light theme with a
+  // dark status bar would leave a black strip above a white page.
+  const dark = isDarkNow();
   const paper = dark ? "#14171e" : "#fafaf7";
   try {
     await StatusBar.setOverlaysWebView({ overlay: false });
@@ -217,6 +220,14 @@ export function wireExternalLinks(): () => void {
 export async function wireBackButton(): Promise<() => void> {
   if (!isNative()) return () => {};
   const handle = await App.addListener("backButton", ({ canGoBack }) => {
+    // An open sheet is the innermost layer: back closes it rather than leaving
+    // the article underneath it. <dialog> handles Esc itself, but Android's
+    // back button never reaches that path.
+    const sheet = document.querySelector<HTMLDialogElement>("dialog[open]");
+    if (sheet) {
+      sheet.close();
+      return;
+    }
     const atInitialLibraryEntry =
       isHome() && !window.history.state?.foldPageSection;
     if (!canGoBack || atInitialLibraryEntry) {

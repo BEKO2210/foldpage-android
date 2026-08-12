@@ -16,7 +16,7 @@ test("state-change durations and card completion stay within the audit limits", 
 });
 
 test("transforming entry animations do not fill forwards", () => {
-  for (const selector of ["page-enter", "card-in", "page-push", "reader-in"]) {
+  for (const selector of ["page-enter", "card-in", "page-push", "reader-in", "sheet"]) {
     const rule = css.match(new RegExp(`\\.${selector}\\s*\\{([^}]*)\\}`));
     assert.ok(rule, `missing .${selector}`);
     assert.match(rule[1], /animation:[^;]*backwards/);

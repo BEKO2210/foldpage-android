@@ -7,20 +7,14 @@ import type { Article } from "@/lib/types";
 import { getArticle, updateArticle } from "@/lib/db";
 import TopBar from "@/components/TopBar";
 import TagEditor from "@/components/TagEditor";
-import { CheckIcon, StarIcon, UndoIcon } from "@/components/icons";
+import DisplaySheet from "@/components/DisplaySheet";
+import { useDisplayPrefs } from "@/components/DisplaySettings";
+import { CheckIcon, SettingsIcon, StarIcon, UndoIcon } from "@/components/icons";
 import { buzzSuccess, commit, openExternal, tap, uncommit } from "@/lib/native";
+import { TEXT_SIZES } from "@/lib/display";
 
 /** Static export has no dynamic route segments, so the article id travels in
     the query string: /read/?id=<uuid>. */
-const SIZES = ["1rem", "1.15rem", "1.3rem", "1.5rem"];
-
-function storedSizeIndex(value: string | null): number {
-  if (value === null) return 1;
-  const index = Number(value);
-  return Number.isInteger(index) && index >= 0 && index < SIZES.length
-    ? index
-    : 1;
-}
 
 /** Reading progress updates on every vertical scroll. Keep the injected HTML
     behind a memo boundary so those parent renders cannot recreate its table
@@ -85,9 +79,11 @@ export default function ReadPage() {
   const router = useRouter();
   const [id, setId] = useState<string | null>(null);
   const [article, setArticle] = useState<Article | null | undefined>(undefined);
-  const [sizeIdx, setSizeIdx] = useState(1);
+  const [prefs, updatePrefs] = useDisplayPrefs();
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sizeIdx = prefs.size;
 
   useEffect(() => {
     // The id only exists in the URL of the loaded page, and the article only
@@ -103,7 +99,6 @@ export default function ReadPage() {
       setArticle(a ?? null);
       if (a) setProgress(a.progress);
     });
-    setSizeIdx(storedSizeIndex(localStorage.getItem("fp-reader-size")));
   }, []);
 
   // restore scroll position once content is rendered
@@ -114,6 +109,32 @@ export default function ReadPage() {
     window.scrollTo({ top: target });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [article?.id]);
+
+  // Every typography setting reflows the article: a larger size, a different
+  // typeface, wider line spacing, justified text. Holding the scroll offset
+  // would drop the reader paragraphs away from where they were, so the
+  // *relative* position is restored instead — two frames later, because the
+  // first commits the new layout and the second paints it.
+  const progressRef = useRef(progress);
+  useEffect(() => {
+    progressRef.current = progress;
+  }, [progress]);
+  const layoutKey = `${prefs.size}|${prefs.font}|${prefs.leading}|${prefs.align}`;
+  const firstLayout = useRef(true);
+  useEffect(() => {
+    if (firstLayout.current) {
+      firstLayout.current = false;
+      return;
+    }
+    const target = progressRef.current;
+    const raf = requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        window.scrollTo({ top: Math.max(0, target * max) });
+      })
+    );
+    return () => cancelAnimationFrame(raf);
+  }, [layoutKey]);
 
   // track reading progress, persist (debounced)
   useEffect(() => {
@@ -144,20 +165,8 @@ export default function ReadPage() {
   // would open every tapped link twice.
 
   function setSize(idx: number) {
-    if (idx < 0 || idx >= SIZES.length || idx === sizeIdx) return;
-    const el = document.documentElement;
-    const oldMax = el.scrollHeight - window.innerHeight;
-    const readingPosition = oldMax > 0 ? window.scrollY / oldMax : progress;
-    setSizeIdx(idx);
-    localStorage.setItem("fp-reader-size", String(idx));
-    // Font changes reflow the article. Keep the same relative reading point
-    // instead of leaving the reader several paragraphs away from it.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const newMax = el.scrollHeight - window.innerHeight;
-        window.scrollTo({ top: Math.max(0, readingPosition * newMax) });
-      });
-    });
+    if (idx < 0 || idx >= TEXT_SIZES.length || idx === sizeIdx) return;
+    updatePrefs({ size: idx });
     void tap();
   }
 
@@ -201,7 +210,7 @@ export default function ReadPage() {
     <>
       <button
         className="iconbtn pressable"
-        aria-label={`Smaller text, current size ${sizeIdx + 1} of ${SIZES.length}`}
+        aria-label={`Smaller text, current size ${sizeIdx + 1} of ${TEXT_SIZES.length}`}
         disabled={sizeIdx === 0}
         onClick={() => setSize(sizeIdx - 1)}
       >
@@ -209,11 +218,22 @@ export default function ReadPage() {
       </button>
       <button
         className="iconbtn pressable"
-        aria-label={`Larger text, current size ${sizeIdx + 1} of ${SIZES.length}`}
-        disabled={sizeIdx === SIZES.length - 1}
+        aria-label={`Larger text, current size ${sizeIdx + 1} of ${TEXT_SIZES.length}`}
+        disabled={sizeIdx === TEXT_SIZES.length - 1}
         onClick={() => setSize(sizeIdx + 1)}
       >
         A+
+      </button>
+      <button
+        className="iconbtn pressable"
+        aria-label="Reading settings"
+        aria-haspopup="dialog"
+        onClick={() => {
+          void tap();
+          setSheetOpen(true);
+        }}
+      >
+        <SettingsIcon />
       </button>
       <button
         className="iconbtn pressable"
@@ -248,7 +268,9 @@ export default function ReadPage() {
       />
       <article
         className="reader reader-in px-5 pb-28 w-full"
-        style={{ ["--reader-size" as string]: SIZES[sizeIdx] }}
+        /* The article's own language, so hyphenation under justified text
+           breaks German words by German rules and English by English ones. */
+        lang={article.lang ?? undefined}
       >
         <header className="reader-header">
           <h1>{article.title}</h1>
@@ -293,6 +315,7 @@ export default function ReadPage() {
         )}
       </article>
       <div className="readerbar">{sizeControls}</div>
+      <DisplaySheet open={sheetOpen} onClose={() => setSheetOpen(false)} />
     </main>
   );
 }

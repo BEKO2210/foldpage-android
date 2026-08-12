@@ -34,8 +34,9 @@ text rather than for engagement.
 
 - **Share to save** — hit _Share_ in any app, pick FoldPage, done. The link is
   fetched and filed away in the background.
-- **A real reader** — serif body text, four text sizes, light and dark following
-  your system theme.
+- **A real reader** — serif or sans, four text sizes, ragged-right or justified
+  with proper hyphenation, two line spacings, and a theme that follows your
+  system or stays where you put it.
 - **Picks up where you stopped** — scroll position is remembered per article and
   a progress bar shows how far in you are.
 - **Inbox, Archive, Favorites** — plus free-form tags and full-text search

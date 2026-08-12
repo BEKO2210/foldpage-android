@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import TopBar from "@/components/TopBar";
+import DisplaySettings from "@/components/DisplaySettings";
 import {
   exportHtml,
   exportJson,
@@ -135,6 +136,15 @@ export default function SettingsPage() {
         >
           Settings
         </h1>
+
+        <section className="section-card mb-5">
+          <h2 className="text-lg font-semibold mb-2">Appearance</h2>
+          <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>
+            How the app and your articles are set. The same controls sit behind
+            the gear in the reader, so you can change them while reading.
+          </p>
+          <DisplaySettings />
+        </section>
 
         <section className="section-card mb-5">
           <h2 className="text-lg font-semibold mb-2">Your library</h2>
