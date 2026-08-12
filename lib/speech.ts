@@ -166,8 +166,25 @@ class Player {
     return !this.playing && this.at > 0;
   }
 
+  /** Stops the voice but keeps the article, the position and the controls.
+   *
+   *  The lock screen's pause used to call stop(), which released the session
+   *  and cleared `started` — the notification vanished instead of flipping to
+   *  a play button, and nothing outside the app could start it again. */
+  pause(): void {
+    this.token += 1;
+    this.playing = false;
+    void this.controls(false);
+    void releaseAudioFocus();
+    if (isNative()) {
+      void engine().then(({ tts }) => tts.stop()).catch(() => {});
+      void FoldPageSpeech.stop().catch(() => {});
+    } else globalThis.speechSynthesis?.cancel();
+    this.emit();
+  }
+
   async toggle(): Promise<void> {
-    if (this.playing) this.stop();
+    if (this.playing) this.pause();
     else {
       this.started = true;
       await this.play();
@@ -223,6 +240,10 @@ class Player {
           e instanceof Error && e.message
             ? e.message
             : "This phone could not read the article out";
+        // Whatever failed, the focus and the lock-screen controls were taken by
+        // this run and nobody else will give them back.
+        void this.controls(false, true);
+        void releaseAudioFocus();
         this.emit();
         return;
       }
@@ -368,6 +389,7 @@ export const speech = new Player();
 if (isNative()) {
   void FoldPageSpeech.addListener("transport", ({ action }) => {
     if (action === "play") void speech.resumeFromControls();
+    else if (action === "pause") speech.pause();
     else speech.stop();
   }).catch(() => {
     /* older build without the plugin method */
@@ -504,6 +526,10 @@ export function sampleFor(tag: string | null): { text: string; lang: string | nu
 }
 
 export async function previewVoice(lang: string | null): Promise<void> {
+  // A preview while an article is being read would stop the article and then
+  // hand back the focus the article still needs — the reader would be left
+  // with a silent play button. The article wins.
+  if (speech.state.playing) speech.pause();
   const wanted = speechLanguage(lang);
   const sample = sampleFor(wanted);
   const tag = sample.lang;

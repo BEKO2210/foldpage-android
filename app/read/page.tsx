@@ -33,6 +33,9 @@ import {
 import { TEXT_SIZES } from "@/lib/display";
 import { IMAGE_KEY_ATTR } from "@/lib/imagePlan";
 
+/** Every tag lib/readAloud.ts speaks, as a selector. One list, two readers. */
+const SPOKEN_SELECTOR = "p, h1, h2, h3, h4, h5, h6, li, blockquote, figcaption";
+
 /** Static export has no dynamic route segments, so the article id travels in
     the query string: /read/?id=<uuid>. */
 
@@ -94,7 +97,13 @@ const ArticleContent = memo(function ArticleContent({
       // hole it leaves in the text. Only the browser knows either number,
       // which is why this cannot happen during extraction.
       if (img.naturalWidth === 0 || img.naturalWidth < 100) {
-        (img.closest("figure") ?? img).remove();
+        // The picture goes, the caption stays. A <figcaption> is a spoken
+        // block, counted from the stored HTML; removing it here would leave
+        // the page one element short of the voice and every highlight after it
+        // would land on the wrong paragraph.
+        const figure = img.closest("figure");
+        if (figure && figure.querySelector("figcaption")) img.remove();
+        else (figure ?? img).remove();
       }
     };
     images.forEach((img) => {
@@ -134,9 +143,16 @@ const ArticleContent = memo(function ArticleContent({
   useEffect(() => {
     const root = contentRef.current;
     if (!root) return;
-    const spoken = [
-      ...root.querySelectorAll<HTMLElement>("p, h1, h2, h3, h4, h5, h6, li, blockquote, figcaption"),
-    ].filter((element) => (element.textContent ?? "").trim().length >= 3);
+    // The same blocks the voice has, in the same order — and "the same" is the
+    // hard part. lib/readAloud.ts matches tags in the HTML string with a
+    // non-overlapping regex, so <blockquote><p>…</p></blockquote> is ONE block
+    // there while querySelectorAll returns two elements. Ten of the forty
+    // corpus articles have that shape, and from the first one onwards every
+    // highlight was a block early. Keeping only the outermost match restores
+    // one definition of a spoken block.
+    const spoken = [...root.querySelectorAll<HTMLElement>(SPOKEN_SELECTOR)]
+      .filter((element) => element.parentElement?.closest(SPOKEN_SELECTOR) == null)
+      .filter((element) => (element.textContent ?? "").trim().length >= 3);
     spoken.forEach((element, index) => {
       element.classList.toggle("is-speaking", index === speakingAt);
     });
@@ -258,7 +274,19 @@ export default function ReadPage() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
-      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (saveTimer.current) {
+        // Leaving within the debounce window used to throw the last half
+        // second of reading away — exactly the half second in which somebody
+        // scrolls and then taps Back.
+        clearTimeout(saveTimer.current);
+        const el = document.documentElement;
+        const max = el.scrollHeight - window.innerHeight;
+        const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 1;
+        void updateArticle(current.id, {
+          progress: p,
+          readAt: p >= 0.98 ? Date.now() : current.readAt,
+        });
+      }
     };
   }, [article]);
 

@@ -80,6 +80,20 @@ interface Found {
   voice: string | null;
 }
 
+/** Engines name their voices for machines: "de-DE-language",
+ *  "en-us-x-sfg-local", sometimes just "de". None of that tells a reader
+ *  anything, so the machine parts are dropped and what remains is either a real
+ *  name or the honest answer — the phone's standard voice for that language. */
+function prettyVoice(name: string, language: string): string {
+  const bare = name
+    .replace(/[-_](language|local|network)$/i, "")
+    .replace(/^[a-z]{2,3}([-_][a-z0-9]{2,8})?[-_]x[-_]/i, "")
+    .replace(/[-_]/g, " ")
+    .trim();
+  const looksLikeCode = /^[a-z]{2,3}( [a-z]{2,8})?$/i.test(bare);
+  return looksLikeCode || !bare ? `standard ${language} voice` : bare;
+}
+
 /** How the article is read out — and that is all.
  *
  *  There used to be a language picker, an engine picker and a voice picker
@@ -197,7 +211,9 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
                 <b>{row.label}</b>{" "}
                 {row.voice ? (
                   <>
-                    <span className="setting-note">{row.voice}</span>{" "}
+                    <span className="setting-note">
+                      {prettyVoice(row.voice, row.label)}
+                    </span>{" "}
                     <button
                       type="button"
                       className="linkbtn pressable"

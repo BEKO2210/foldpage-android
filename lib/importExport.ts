@@ -13,6 +13,36 @@ export interface ImportRow {
 }
 
 /** Parse a CSV line respecting quoted fields. */
+/** Rows, not lines: a newline inside a quoted field belongs to the field. */
+function splitCsvRows(text: string): string[] {
+  const rows: string[] = [];
+  let current = "";
+  let quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '"') {
+      // A doubled quote inside a quoted field is an escaped quote, not the end.
+      if (quoted && text[i + 1] === '"') {
+        current += '""';
+        i++;
+        continue;
+      }
+      quoted = !quoted;
+      current += char;
+      continue;
+    }
+    if (!quoted && (char === "\n" || char === "\r")) {
+      if (char === "\r" && text[i + 1] === "\n") i++;
+      rows.push(current);
+      current = "";
+      continue;
+    }
+    current += char;
+  }
+  if (current) rows.push(current);
+  return rows;
+}
+
 function splitCsvLine(line: string): string[] {
   const out: string[] = [];
   let cur = "";
@@ -43,7 +73,10 @@ function splitCsvLine(line: string): string[] {
 
 /** Pocket CSV export: title,url,time_added,tags,status */
 export function parsePocketCsv(text: string): ImportRow[] {
-  const lines = text.split(/\r?\n/).filter((l) => l.trim());
+  // A quoted field may legally contain a newline, and Pocket exports titles
+  // that do. Splitting the whole text first threw those rows away silently, so
+  // the rows are cut with the quote state in hand.
+  const lines = splitCsvRows(text).filter((l) => l.trim());
   if (lines.length < 2) return [];
   const header = splitCsvLine(lines[0]).map((h) => h.trim().toLowerCase());
   const idx = {
@@ -72,7 +105,10 @@ export function parsePocketCsv(text: string): ImportRow[] {
       archived:
         idx.status >= 0 ? cols[idx.status]?.trim() === "archive" : false,
       addedAt:
-        idx.time >= 0 && cols[idx.time]
+        // Number("") is 0 and Number("gestern") is NaN; a NaN addedAt makes
+        // the article sort nowhere and drop out of every list that orders by
+        // date. Only a real number is used.
+        idx.time >= 0 && Number.isFinite(Number(cols[idx.time])) && cols[idx.time]
           ? Number(cols[idx.time]) * 1000
           : Date.now(),
     });
@@ -124,8 +160,18 @@ export async function exportJson() {
   );
 }
 
+/** Quotes are part of the job: these strings go into `href="…"`, and a stored
+    address that contains a double quote used to close the attribute and let
+    whatever followed become markup in the exported file. */
 function esc(s: string) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 export async function exportHtml() {

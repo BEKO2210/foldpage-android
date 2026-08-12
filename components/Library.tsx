@@ -79,6 +79,9 @@ const PAGE = 40;
 
 export default function Library() {
   const router = useRouter();
+  /** Which search this render belongs to. A slower earlier query used to land
+      after a faster later one and put the wrong list on screen. */
+  const searchRun = useRef(0);
   const [articles, setArticles] = useState<Article[]>([]);
   const [tab, setTab] = useState<Tab>("inbox");
   const [query, setQuery] = useState("");
@@ -132,16 +135,22 @@ export default function Library() {
   );
 
   const refresh = useCallback(async () => {
+    const run = ++searchRun.current;
     if (query) {
       const hits = await search(query);
+      // A search started three letters ago must not paint over this one.
+      if (run !== searchRun.current) return;
       setArticles(hits.map((hit) => hit.article));
       setBodyOnly(
         new Set(hits.filter((hit) => hit.where === "body").map((hit) => hit.article.id))
       );
     } else {
-      setArticles(await listArticles());
+      const all = await listArticles();
+      if (run !== searchRun.current) return;
+      setArticles(all);
       setBodyOnly(new Set());
     }
+    if (run !== searchRun.current) return;
     // Not while searching. `allTags()` reads every article — bodies included —
     // and the tag list cannot change because somebody typed a letter. On a
     // thousand articles this alone was most of the time a search took.
@@ -605,6 +614,13 @@ export default function Library() {
                     // entirely and would stretch into the whole article.
                     if (e.metaKey || e.ctrlKey || e.shiftKey) return;
                     e.preventDefault();
+                    // Remember where the shelf was before leaving it, so
+                    // coming back does not start at the top of a long list.
+                    try {
+                      sessionStorage.setItem(scrollKey(tab), String(window.scrollY));
+                    } catch {
+                      /* private mode: the list simply starts at the top */
+                    }
                     openWithTransition(e.currentTarget, () =>
                       router.push(`/read/?id=${a.id}`)
                     );

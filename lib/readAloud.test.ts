@@ -117,3 +117,23 @@ test("the spoken length is measured for ears, not eyes", async () => {
   assert.equal(minutes, 2);
   assert.equal(spokenMinutes([]), 1);
 });
+
+test("a nested quote is one block for the voice, and the reader must count it the same way", async () => {
+  const { spokenBlocks } = await load();
+  // The regex is non-overlapping: the inner <p> lives inside the blockquote's
+  // match and is never matched again. The reader's DOM query would return
+  // both, which is why app/read/page.tsx keeps only the outermost element —
+  // ten of the forty corpus articles have exactly this shape, and every
+  // highlight after the first one was a block early.
+  const blocks = spokenBlocks(
+    "<p>Davor.</p><blockquote><p>Das Zitat.</p></blockquote><p>Danach.</p>"
+  );
+  assert.deepEqual(
+    blocks.map((block) => [block.kind, block.text]),
+    [
+      ["paragraph", "Davor."],
+      ["quote", "Das Zitat."],
+      ["paragraph", "Danach."],
+    ]
+  );
+});

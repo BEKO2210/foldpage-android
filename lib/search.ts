@@ -119,7 +119,14 @@ function matchedInMeta(article: Article, query: string): boolean {
   if (metaOf(article).includes(needle)) return true;
   // A multi-word query rarely appears verbatim in the metadata; if every word
   // is in there, the card still shows the reader why it matched.
-  return planQuery(query).terms.every((term) => metaOf(article).includes(term));
+  //
+  // The empty case is the trap: for a single word typed without a trailing
+  // space the plan holds a prefix and *no* terms, and `[].every(...)` is true —
+  // so every body-only hit was labelled a title hit and the "Found in the
+  // article text" note never appeared.
+  const plan = planQuery(query);
+  if (!plan.terms.length) return false;
+  return plan.terms.every((term) => metaOf(article).includes(term));
 }
 
 async function scan(articles: Article[], query: string): Promise<SearchHit[]> {

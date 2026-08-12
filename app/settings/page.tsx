@@ -62,7 +62,11 @@ export default function SettingsPage() {
         imageBytes: images.bytes,
       });
     })();
-  }, [status, pruned]);
+    // `status.phase` only, not the whole object: during an import a fresh
+    // object is written per link, and this effect re-read the entire library
+    // each time — a hundred links meant a hundred full reads.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status.phase, pruned]);
 
   async function runImport(rows: ImportRow[]) {
     cancelRef.current = false;

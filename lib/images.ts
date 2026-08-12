@@ -146,8 +146,13 @@ export async function storeImagesForArticle(
   }
 
   if (!keyed.size) return result;
-  const html = markStoredImages(article.contentHtml, keyed);
-  if (html !== article.contentHtml) {
+  // The article was read minutes ago and forty downloads have happened since;
+  // a "Reload" in the meantime would be silently undone by writing that stale
+  // snapshot back. Read it again and mark up whatever is there now.
+  const current = await getArticle(id);
+  if (!current) return result;
+  const html = markStoredImages(current.contentHtml, keyed);
+  if (html !== current.contentHtml) {
     await updateArticle(id, { contentHtml: html });
     result.changed = true;
   }
