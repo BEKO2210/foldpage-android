@@ -626,3 +626,46 @@ minutes**". Fixed.
 **Remaining:** a TalkBack pass on the device (a machine cannot judge
 announcement order), library performance has not been re-measured this session,
 and the pack download has not been tried on a deliberately slow connection.
+
+### Run 14 — the numbers, and what happens when the connection goes
+
+**The library bench had been broken since run 2** and nobody noticed: it clicked
+a button called "Index for search", which was renamed to "Speed up search" when
+the developer vocabulary went, and it never learned that the maintenance actions
+moved one level down into a disclosure. Fixed; it runs again.
+
+200 articles of 900 words, Chromium on this machine, three runs:
+
+| | recorded before | now |
+|---|---:|---:|
+| open the library | 347 ms | 544 / 416 / 404 ms |
+| search the bodies | 119 ms | 202 / 148 / 155 ms |
+| build the search index | 1,533 ms | 1,725 / 1,715 / 1,650 ms |
+| search once indexed | 116 ms | 147 / 147 / 128 ms |
+| one star | 91 ms | 90 / 92 / 88 ms |
+
+The first run of the three was taken with a Gradle daemon still alive; the
+spread across the other two is the honest picture. That is *slower than the
+recorded baseline*, and the recorded baseline was taken on an idle machine
+while this one has been building Android all evening — so the difference is not
+attributable to the changes, and it is not claimed to be. The star toggle, the
+one number that is about the code rather than the machine, is unchanged.
+
+**A download interrupted by the network going away**, on the phone, with wifi
+switched off mid-transfer:
+
+```
+downloading 16219755
+downloading 16490091
+failed 0
+zustand: "FEHLER: Software caused connection abort"
+```
+
+The reader never sees that sentence: the screen says "That download did not
+finish. Check the connection and try again." and offers **Try again**. Nothing
+partial is left behind — after the failure the list held only the voice that
+was already installed — and the retry, with wifi back, installed the voice in
+9.2 s.
+
+**Verification:** `npm test` 58 · lint silent · `ui:check` clean · `jargon`
+clean · `voice:check` 26/26 · `keyboard` 12/12 · plus the device checks above.

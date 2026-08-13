@@ -5,10 +5,10 @@
     "width": 412,
     "height": 915
   },
-  "openLibraryMs": 347,
-  "bodySearchMs": 119,
-  "buildIndexMs": 1533,
-  "bodySearchIndexedMs": 116,
-  "favouriteToggleMs": 91,
+  "openLibraryMs": 404,
+  "bodySearchMs": 155,
+  "buildIndexMs": 1650,
+  "bodySearchIndexedMs": 128,
+  "favouriteToggleMs": 88,
   "note": "Chromium on a development machine, not a phone. Useful as a before/after on the same machine, not as an absolute number."
 }

@@ -167,8 +167,12 @@ try {
   await page.waitForSelector(".card");
   const indexStart = Date.now();
   await page.goto("/settings/");
-  await page.click('button:has-text("Index for search")');
-  await page.waitForSelector('[role="status"]:has-text("indexed")', { timeout: 600_000 });
+  // The maintenance actions live one level down since the settings screen
+  // stopped being a wall of open cards, and the button says what a reader gets
+  // rather than what the code builds.
+  await page.click('summary:has-text("Repairs and space")');
+  await page.click('button:has-text("Speed up search")');
+  await page.waitForSelector('[role="status"]:has-text("prepared")', { timeout: 600_000 });
   const indexMs = Date.now() - indexStart;
 
   await page.goto("/");
