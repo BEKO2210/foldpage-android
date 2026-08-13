@@ -23,6 +23,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(ShareTargetPlugin.class);
         registerPlugin(SystemSettingsPlugin.class);
         registerPlugin(SpeechPlugin.class);
+        registerPlugin(VoicePackPlugin.class);
         super.onCreate(savedInstanceState);
         forwardInsetsToCss();
     }

@@ -55,6 +55,12 @@ android {
     }
     buildTypes {
         debug {
+            // Nur arm64 im Debug-Bau: die Sprach-Engine bringt vier ABIs mit,
+            // und drei davon kosten hier nur Bauzeit und Platz. Der Release-Bau
+            // behaelt alle — ein AAB liefert je Geraet ohnehin nur seine.
+            ndk {
+                abiFilters "arm64-v8a"
+            }
             // Eigener Paketname, damit die Debug-Fassung **neben** der aus dem
             // Play-Test installierten laeuft. Ohne das scheitert `adb install`
             // an der Signatur (INSTALL_FAILED_UPDATE_INCOMPATIBLE), und der
@@ -82,6 +88,17 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // Die Sprach-Engine, die FoldPage **selbst** mitbringt: sherpa-onnx
+    // (Apache-2.0) spricht die nachladbaren Stimmen, ohne dass eine zweite App
+    // installiert sein muss. Das AAR liegt nicht im Git — `npm run voices:aar`
+    // holt es, siehe docs/ARCHITECTURE.md.
+    implementation files('libs/sherpa-onnx-1.13.5.aar')
+    // Das AAR ist in Kotlin geschrieben; Java-Code darf seine Klassen benutzen,
+    // braucht dafuer aber die Kotlin-Standardbibliothek zur Laufzeit.
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.21"
+    // Die Stimmpakete kommen als .tar.bz2; Android bringt weder tar noch bzip2
+    // mit.
+    implementation "org.apache.commons:commons-compress:1.27.1"
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
