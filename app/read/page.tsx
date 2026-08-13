@@ -386,7 +386,12 @@ export default function ReadPage() {
                 // button says so, because the banner explaining it sits at the
                 // top of the article and nobody scrolls back up to read it.
                 `Read aloud from the top; the voice last stopped at part ${voice.resumeAt + 1}`
-              : `Read aloud, about ${spokenMinutes(spokenBlocks(article.contentHtml))} minutes`
+              : // "about 1 minutes" — found by the keyboard check reading the
+                // label out. A screen reader says this sentence; it has to be
+                // one.
+                `Read aloud, about ${spokenMinutes(spokenBlocks(article.contentHtml))} minute${
+                  spokenMinutes(spokenBlocks(article.contentHtml)) === 1 ? "" : "s"
+                }`
         }
         aria-pressed={voice.playing}
         onClick={() => {

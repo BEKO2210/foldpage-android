@@ -13,6 +13,7 @@
     "ui:check": "node .claude/skills/foldpage-product-ux/scripts/ui-check.mjs",
     "jargon": "node scripts/jargon-audit.mjs",
     "voice:check": "node scripts/voice-flow-check.mjs",
+    "keyboard": "node scripts/keyboard-check.mjs",
     "voices:aar": "bash scripts/fetch-sherpa-aar.sh",
     "voices:catalogue": "node scripts/build-voice-catalogue.mjs",
     "sync": "npm run build && npx cap sync android",

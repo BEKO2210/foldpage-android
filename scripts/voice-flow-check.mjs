@@ -160,6 +160,15 @@ check(
   "an empty library offers exactly one language row"
 );
 
+// --- a control that does nothing is not shown ---
+// Pitch is a number the phone's engines take and a downloaded model has no use
+// for. With a phone voice chosen it is there; the check below proves it goes
+// when a downloaded voice is the one reading.
+check(
+  (await page.getByText("Pitch", { exact: true }).count()) > 0,
+  "pitch is offered while the phone's own voice is doing the reading"
+);
+
 // --- add a language by searching for it, in the language's own name ---
 await page.getByRole("button", { name: "Add a language" }).click();
 await page.locator("#fp-language-search").fill("deutsch");
@@ -321,6 +330,37 @@ await page.screenshot({ path: path.join(SHOTS, "voices-welcome.png"), fullPage: 
 await page.evaluate(() => {
   localStorage.removeItem("fp-want-welcome");
   localStorage.setItem("fp-welcomed", "1");
+});
+
+// --- and it goes when a downloaded voice is the one reading ---
+// Stored directly, because the browser preview cannot install a voice. What is
+// under test is the rule, not the download: a model has the pitch it was
+// trained with, and a slider that moves nothing is a lie.
+await page.evaluate(() => {
+  const prefs = JSON.parse(localStorage.getItem("fp-voice") || "{}");
+  // Every language on this screen, not just one: the control is offered while
+  // *any* language is still read by a phone voice, which is the point of it.
+  prefs.voices = {
+    ...(prefs.voices || {}),
+    en: "foldpage:some-downloaded-voice",
+    de: "foldpage:some-downloaded-voice",
+    nl: "foldpage:some-downloaded-voice",
+    it: "foldpage:some-downloaded-voice",
+  };
+  localStorage.setItem("fp-voice", JSON.stringify(prefs));
+});
+await page.goto("/settings/");
+await page.waitForLoadState("networkidle");
+await page.waitForTimeout(700);
+check(
+  (await page.getByText("Pitch", { exact: true }).count()) === 0,
+  "pitch is not offered when a downloaded voice is doing the reading"
+);
+await page.evaluate(() => {
+  const prefs = JSON.parse(localStorage.getItem("fp-voice") || "{}");
+  delete prefs.voices.en;
+  delete prefs.voices.nl;
+  localStorage.setItem("fp-voice", JSON.stringify(prefs));
 });
 
 // --- inside the reader, only the article's own language is on offer ---

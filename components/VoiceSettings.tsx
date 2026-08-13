@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import {
   PITCHES,
   RATES,
@@ -8,9 +8,12 @@ import {
   getVoicePrefs,
   saveVoicePrefs,
   subscribeVoicePrefs,
+  voiceKey,
   type VoicePrefs,
 } from "@/lib/voice";
 import VoiceLanguages from "@/components/VoiceLanguages";
+import { packIdOf } from "@/lib/voicePacks";
+import { languagesInLibrary } from "@/lib/speech";
 import { tap } from "@/lib/native";
 
 /** Same contract as `useDisplayPrefs`: the settings live outside React, two
@@ -80,6 +83,28 @@ function Segmented<T extends string | number>({
  *  the starting point rather than the only answer. */
 export default function VoiceSettings({ lang = null }: { lang?: string | null }) {
   const [prefs, update] = useVoicePrefs();
+  /** Pitch is a setting the phone's own engines take. A voice FoldPage
+   *  downloaded is a model: it has the pitch it was trained with, and there is
+   *  no number to pass it. A control that changes nothing is worse than a
+   *  missing one, so it is shown only where it does something — for the
+   *  article's own language in the reader, and for any language still read by
+   *  a phone voice in the settings. */
+  const [pitchApplies, setPitchApplies] = useState(true);
+
+  useEffect(() => {
+    let alive = true;
+    void (async () => {
+      const codes = lang
+        ? [voiceKey(lang)]
+        : (await languagesInLibrary()).map((entry) => entry.code);
+      const shown = codes.length ? codes : ["en"];
+      const anyPhoneVoice = shown.some((code) => !packIdOf(getVoicePrefs().voices[code]));
+      if (alive) setPitchApplies(anyPhoneVoice);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [lang, prefs.voices]);
 
   return (
     <div>
@@ -94,16 +119,18 @@ export default function VoiceSettings({ lang = null }: { lang?: string | null })
           hint: `Speed ${index + 1} of ${RATES.length}`,
         }))}
       />
-      <Segmented
-        label="Pitch"
-        name="fp-pitch"
-        value={prefs.pitch}
-        onChange={(pitch) => update({ pitch })}
-        options={PITCHES.map((_, index) => ({
-          value: index,
-          label: ["Low", "Normal", "High"][index],
-        }))}
-      />
+      {pitchApplies && (
+        <Segmented
+          label="Pitch"
+          name="fp-pitch"
+          value={prefs.pitch}
+          onChange={(pitch) => update({ pitch })}
+          options={PITCHES.map((_, index) => ({
+            value: index,
+            label: ["Low", "Normal", "High"][index],
+          }))}
+        />
+      )}
       <Segmented
         label="Pauses"
         name="fp-pace"

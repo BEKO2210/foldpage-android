@@ -464,6 +464,7 @@ positioniert war, sondern der Streifen hinter der Statusleiste ungefuellt blieb
 | `node scripts/image-budget.mjs` | misst reale Bildgrößen — **braucht Netz**, gehört nicht in einen Testlauf | mehrere Minuten |
 | `npm run ui:check` | Konsolenfehler, Seitenfehler, tote Requests und waagerechter Überlauf auf drei Routen in **zwei** Viewports (412×915 und 1280×900); Flags `--empty`, `--offline`, `--shots` | ~1 min, braucht Chromium |
 | `npm run jargon` | sucht Entwicklerwörter im gerenderten Text aller Routen (auch in aufgeklappten `<details>` und im Lese-Sheet) | ~30 s, braucht Chromium |
+| `npm run keyboard` | Tab-Reihenfolge, Fokusringe, Namen und Escape auf drei Routen bei 1280 × 900 | ~30 s, braucht Chromium |
 | `npm run voice:check` | prüft die Produktregel selbst: eine Sprache zeigt **nur** ihre eigenen Stimmen, Suche, Auswahl, Merken, Tastatur, Reader-Sheet — mit einer gestellten Stimmenliste, weil ein Headless-Browser keine hat | ~1 min, braucht Chromium |
 
 `corpus/report.json` und `report.md` sind **eingecheckt**. Eine Änderung an der

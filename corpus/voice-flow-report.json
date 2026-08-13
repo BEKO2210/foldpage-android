@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-08-13T01:03:38.334Z",
+  "ranAt": "2026-08-13T01:11:00.509Z",
   "voices": [
     {
       "name": "Thorsten",
@@ -60,6 +60,7 @@
   ],
   "passed": [
     "ok: an empty library offers exactly one language row",
+    "ok: pitch is offered while the phone's own voice is doing the reading",
     "ok: searching \"deutsch\" offers German first",
     "ok: the chosen language appears as a row",
     "ok: German offers at least one voice",
@@ -75,6 +76,7 @@
     "ok: the welcome screen reports what it found — saw 1 rows",
     "ok: the welcome screen prettifies a machine-named voice — saw [\"✓ Nederlands standard Dutch voice Hear it\"]",
     "ok: the welcome screen names voices for people — saw \"✓ Nederlands standard Dutch voice Hear it\"",
+    "ok: pitch is not offered when a downloaded voice is doing the reading",
     "ok: the reader offers the article's language only — saw [\"Deutsch\"]",
     "ok: the reader does not offer to add other languages",
     "ok: the reader's language opens on its voices rather than on a row to tap",

@@ -596,3 +596,33 @@ for that language.
 
 **Verification:** `npm test` 58 pass · lint silent · build ok · `jargon` clean ·
 `ui:check` clean · plus the device measurements above.
+
+### Run 13 — a control that changed nothing, and the keyboard
+
+**Pitch was a lie for half the voices.** It is a number the phone's engines
+take; a voice FoldPage downloaded is a model with the pitch it was trained
+with, and there is nothing to pass it. The slider moved and the voice did not.
+It is now shown only where it does something — for the article's own language
+in the reader, and in Settings while any listed language is still read by a
+phone voice. Both directions are checked (`voice:check`, now **26**): it is
+there with a phone voice, and gone when every language on screen uses a
+downloaded one.
+
+**The keyboard, an open point in `docs/A11Y.md` since it was written.** New
+`npm run keyboard` walks the library, settings and reader at 1280 × 900 with
+nothing but Tab, and checks: there is an order, every stop has a **visible
+focus ring**, every stop has a **name**, no stop lands on something invisible,
+the first stop is the top of the page, the reading sheet opens with Enter and
+closes with **Escape**, and the keyboard reaches the read-aloud control.
+**12 checks, all passing.**
+
+It found a copy fault on its first run, by reading a name out loud the way a
+screen reader would: the play control announced "Read aloud, about **1
+minutes**". Fixed.
+
+**Verification:** `npm test` 58 · lint silent · build ok · `ui:check` clean ·
+`jargon` clean · `voice:check` 26/26 · `keyboard` 12/12.
+
+**Remaining:** a TalkBack pass on the device (a machine cannot judge
+announcement order), library performance has not been re-measured this session,
+and the pack download has not been tried on a deliberately slow connection.

@@ -1,0 +1,211 @@
+{
+  "ranAt": "2026-08-13T01:11:08.258Z",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "library": [
+    {
+      "tag": "a",
+      "cls": "brandlink",
+      "ring": true,
+      "name": "FoldPage",
+      "hidden": false
+    },
+    {
+      "tag": "a",
+      "cls": "btn",
+      "ring": true,
+      "name": "Settings",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "input",
+      "ring": true,
+      "name": "Article URL",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "tab",
+      "ring": true,
+      "name": "Inbox (0)",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "tab",
+      "ring": true,
+      "name": "Archive (0)",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "tab",
+      "ring": true,
+      "name": "Favorites (0)",
+      "hidden": false
+    },
+    {
+      "tag": "a",
+      "cls": "brandlink",
+      "ring": true,
+      "name": "FoldPage",
+      "hidden": false
+    }
+  ],
+  "settings": [
+    {
+      "tag": "a",
+      "cls": "backlink",
+      "ring": true,
+      "name": "Library",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "System",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "XS",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "Serif",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "Ragged right",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "Normal",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "1×",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "Normal",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "",
+      "ring": true,
+      "name": "Natural",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "language-head",
+      "ring": true,
+      "name": "Englishchoose a voice›",
+      "hidden": false
+    }
+  ],
+  "reader": [
+    {
+      "tag": "a",
+      "cls": "backlink",
+      "ring": true,
+      "name": "Library",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "listenbtn",
+      "ring": true,
+      "name": "Read aloud, about 1 minute",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "iconbtn",
+      "ring": true,
+      "name": "Reading settings",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "iconbtn",
+      "ring": true,
+      "name": "Favorite",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "iconbtn",
+      "ring": true,
+      "name": "Archive",
+      "hidden": false
+    },
+    {
+      "tag": "a",
+      "cls": "",
+      "ring": true,
+      "name": "View original ↗",
+      "hidden": false
+    },
+    {
+      "tag": "button",
+      "cls": "linkbtn",
+      "ring": true,
+      "name": "Reload",
+      "hidden": false
+    },
+    {
+      "tag": "input",
+      "cls": "input",
+      "ring": true,
+      "name": "Add tag",
+      "hidden": false
+    },
+    {
+      "tag": "a",
+      "cls": "backlink",
+      "ring": true,
+      "name": "Library",
+      "hidden": false
+    }
+  ],
+  "passed": [
+    "ok: the library has a tab order — 7 stops",
+    "ok: every stop shows a focus ring — []",
+    "ok: every stop has a name — []",
+    "ok: focus never lands on something invisible — []",
+    "ok: the first stop is the top of the page, not the middle — saw {\"tag\":\"a\",\"cls\":\"brandlink\",\"ring\":true,\"name\":\"FoldPage\",\"hidden\":false}",
+    "ok: settings has a tab order — 10 stops",
+    "ok: every settings stop shows a ring — []",
+    "ok: every settings stop has a name — []",
+    "ok: the reading sheet opens from the keyboard",
+    "ok: Escape closes the reading sheet",
+    "ok: the keyboard reaches the one control this app is for — [\"Library\",\"Read aloud, about 1 minute\",\"Reading settings\",\"Favorite\",\"Archive\",\"View original ↗\",\"Reload\",\"Add tag\",\"Library\"]",
+    "ok: every reader stop shows a ring — []"
+  ],
+  "failures": [],
+  "coversOnly": "Tab order, visible focus and Escape. Whether the order makes sense to a person, and whether a screen reader announces it usefully, still needs a human."
+}
