@@ -533,6 +533,17 @@ direktes APK-Update lehnt Android ab. Betrifft niemanden, 1.4 war nie öffentlic
     und schließen im Französischen, `“` schließt im Deutschen und öffnet im
     Englischen. Leerzeichen daran zu „korrigieren" verklebt Wörter. Nur `„` und
     `”` sind eindeutig.
+13. **R8 benennt die Felder der Sprach-Engine um.** Der C++-Teil von
+    sherpa-onnx liest die Konfiguration über JNI per Feldnamen
+    (`GetFieldID("model", …)`, `GetFieldID("vits", …)`). Ohne
+    `-keep class com.k2fsa.sherpa.onnx.** { *; }` macht R8 im Release-Bau
+    daraus `a`, `b`, `ps` — die Debug-Fassung bleibt heil, der Release stürzt
+    beim ersten Vorlesen mit einem nativen Absturz ab:
+    `JNI DETECTED ERROR IN APPLICATION: fid == null … OfflineTts.newFromFile`.
+    Kein Java-Stacktrace, kein Logeintrag der App. Nachgewiesen an
+    `app/build/outputs/mapping/release/mapping.txt`
+    (`OfflineTtsConfig.model -> a`). Gilt für jede weitere Bibliothek, deren
+    natives Gegenstück Java-Felder über ihren Namen sucht.
 
 ---
 
