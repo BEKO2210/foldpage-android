@@ -513,3 +513,45 @@ ok · `ui:check` clean · `jargon` clean · `voice:check` 24/24 · plus the four
 device checks above. The instruments' database wait was also raised from 4 s to
 10 s after the jargon audit failed once under load — a seed that gives up early
 reports a clean screen it never saw.
+
+### Run 11 — the voice was never audible, and the reason was one missing wait
+
+**The fault.** FoldPage's own voice produced audio and nobody heard it. Not a
+volume problem and not a routing problem: `play()` wrote the samples into the
+`AudioTrack` buffer and returned as soon as they were *queued*, then stopped and
+released the track. The next sentence arrived, flushed what was still playing,
+and the article ran silently to the end.
+
+Measurable from the beginning and missed anyway — the first device run reported
+"3.61 s of audio produced in 1.8 s", which is exactly the shape of audio that
+was never played. A call that returns faster than the sound it makes has not
+made a sound.
+
+```
+before   3.61 s of audio, call returned after 1,775 ms   → nothing heard
+after    3.29 s of audio, call returned after 5,106 ms   → heard to the end
+```
+
+`play()` now waits for the playback head to reach the last sample.
+
+**The second half of the same problem.** With the wait in place, synthesis and
+playback are strictly in turn: half a second of silence per second of speech
+while the model works. So the plugin has two threads now — one that makes
+sentences, one that plays them — and the player asks for the *next* sentence
+before waiting on the current one. Measured on the phone, from the bridge log:
+
+```
+prepare  +0 ms      ← the next sentence starts being made …
+speak    +0 ms      ← … as this one starts being heard
+prepare  +5604 ms   ← the pair repeats only when the sentence has finished
+speak    +1 ms
+prepare  +5697 ms
+speak    +1 ms
+```
+
+Nothing waits for the model any more; the only silence between two sentences is
+the one `SENTENCE_GAP` puts there on purpose.
+
+**Verification:** `npm test` 58 pass · `npm run build` ok · `ui:check` clean ·
+`jargon` clean · `voice:check` 24/24 · `a11y-audit` unchanged · and on the
+phone, an article read end to end in FoldPage's own voice — confirmed by ear.

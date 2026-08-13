@@ -1,7 +1,7 @@
 "use client";
 
 import { FoldPageSpeech, holdAudioFocus, isNative, releaseAudioFocus } from "./native";
-import { packIdOf, speakWithPack, stopPack } from "./voicePacks";
+import { packIdOf, prepareWithPack, speakWithPack, stopPack } from "./voicePacks";
 import {
   SPEECH_LANGUAGES,
   speechLanguage,
@@ -284,11 +284,19 @@ class Player {
     await silence(gapBefore(block.kind, prefs.pace, first));
     if (run !== this.token) return;
     const between = sentenceGap(prefs.pace);
+    const pack = packIdOf(prefs.voices[voiceKey(this.lang)]);
     for (let i = 0; i < block.parts.length; i++) {
       if (run !== this.token) return;
       if (i > 0) {
         await silence(between);
         if (run !== this.token) return;
+      }
+      // The sentence after this one is made while this one is being heard.
+      // Only for FoldPage's own voices: the phone's engines stream, ours
+      // synthesises a whole sentence before a sound comes out.
+      if (pack) {
+        const next = block.parts[i + 1] ?? this.blocks[this.at + 1]?.parts[0];
+        if (next) prepareWithPack(pack, next, RATES[prefs.rate]);
       }
       await this.speakOne(block.parts[i]);
     }

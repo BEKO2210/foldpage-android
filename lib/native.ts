@@ -91,6 +91,13 @@ export interface FoldPageVoicePacksPlugin {
     speed?: number;
     speaker?: number;
   }): Promise<{ samples: number; sampleRate: number; seconds: number }>;
+  /** Make a sentence ready without saying it — see `prepareWithPack`. */
+  prepare(options: {
+    id: string;
+    text: string;
+    speed?: number;
+    speaker?: number;
+  }): Promise<void>;
   stop(): Promise<void>;
   addListener(
     event: "voicePackProgress",

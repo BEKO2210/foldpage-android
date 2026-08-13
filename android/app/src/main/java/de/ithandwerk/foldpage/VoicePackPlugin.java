@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -63,7 +64,23 @@ public class VoicePackPlugin extends Plugin {
     /** Everything lives under one directory, one subdirectory per voice. */
     private static final String PACK_DIR = "voices";
 
+    /** Two threads on purpose. Synthesis is the slow half — about half a second
+     *  of work for a second of speech — and playing is the other. With one
+     *  thread the reader hears a sentence, then silence while the next one is
+     *  made. With two, the next sentence is being made while the current one is
+     *  still being heard, and the silence between them is the pause the app
+     *  chose rather than the pause the model needed. */
     private final ExecutorService work = Executors.newSingleThreadExecutor();
+    private final ExecutorService audio = Executors.newSingleThreadExecutor();
+    /** At most a couple of sentences ahead: this is a lookahead, not a
+     *  recording studio, and a minute of 22 kHz float audio is five megabytes. */
+    private final Map<String, float[]> ready = new LinkedHashMap<String, float[]>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, float[]> eldest) {
+            return size() > 3;
+        }
+    };
+    private int readyRate = 22050;
     /** Cancellation is per pack: a reader who stops one download does not stop
      *  the other one they started a minute ago. */
     private final Map<String, AtomicBoolean> cancelled = new HashMap<>();
@@ -249,17 +266,18 @@ public class VoicePackPlugin extends Plugin {
         }
         work.execute(() -> {
             try {
-                load(id);
-                stopTrack();
-                GeneratedAudio audio = tts.generate(text, speaker, speed);
-                float[] samples = audio.getSamples();
-                int rate = audio.getSampleRate();
-                play(samples, rate);
-                JSObject result = new JSObject();
-                result.put("samples", samples.length);
-                result.put("sampleRate", rate);
-                result.put("seconds", rate > 0 ? (double) samples.length / rate : 0);
-                call.resolve(result);
+                final float[] samples = synthesise(id, text, speed, speaker);
+                final int rate = readyRate;
+                // Handed to the audio thread, which frees this one to make the
+                // next sentence immediately.
+                audio.execute(() -> {
+                    play(samples, rate);
+                    JSObject result = new JSObject();
+                    result.put("samples", samples.length);
+                    result.put("sampleRate", rate);
+                    result.put("seconds", rate > 0 ? (double) samples.length / rate : 0);
+                    call.resolve(result);
+                });
             } catch (Throwable e) {
                 Log.w(TAG, "speak failed", e);
                 call.reject(e.getMessage() == null ? "speaking failed" : e.getMessage());
@@ -267,9 +285,59 @@ public class VoicePackPlugin extends Plugin {
         });
     }
 
+    /**
+     * Make a sentence ready without saying it.
+     *
+     * <p>Called for the sentence *after* the one being spoken. By the time the
+     * reader gets there it is already made, so what they hear between two
+     * sentences is the breath the app puts there rather than the model thinking.
+     */
+    @PluginMethod
+    public void prepare(PluginCall call) {
+        final String id = call.getString("id");
+        final String text = call.getString("text");
+        final float speed = call.getFloat("speed", 1.0f);
+        final int speaker = call.getInt("speaker", 0);
+        if (id == null || text == null) {
+            call.reject("id and text are required");
+            return;
+        }
+        work.execute(() -> {
+            try {
+                synthesise(id, text, speed, speaker);
+                call.resolve();
+            } catch (Throwable e) {
+                // A lookahead that fails is not an error the reader should ever
+                // meet: the real call will try again and report properly.
+                Log.w(TAG, "prepare failed", e);
+                call.resolve();
+            }
+        });
+    }
+
+    /** The model, or the cache if this sentence was made a moment ago. */
+    private float[] synthesise(String id, String text, float speed, int speaker) throws IOException {
+        String key = id + "|" + speed + "|" + speaker + "|" + text;
+        synchronized (ready) {
+            float[] cached = ready.get(key);
+            if (cached != null) return cached;
+        }
+        load(id);
+        GeneratedAudio audio = tts.generate(text, speaker, speed);
+        float[] samples = audio.getSamples();
+        synchronized (ready) {
+            readyRate = audio.getSampleRate();
+            ready.put(key, samples);
+        }
+        return samples;
+    }
+
     @PluginMethod
     public void stop(PluginCall call) {
         stopTrack();
+        synchronized (ready) {
+            ready.clear();
+        }
         call.resolve();
     }
 
@@ -341,9 +409,22 @@ public class VoicePackPlugin extends Plugin {
             if (written <= 0) break;
             offset += written;
         }
-        if (speaking.get()) {
-            // Let the buffer drain rather than cutting the last syllable.
+        // The buffer holds the whole sentence, so writing it finishes long
+        // before it has been *heard*. Without this wait the call resolved
+        // early, the next sentence started, and its first act was to flush the
+        // one still playing — every sentence lost its ending.
+        while (speaking.get() && player.getPlaybackHeadPosition() < samples.length) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        try {
             player.stop();
+        } catch (Throwable ignored) {
+            /* already stopped */
         }
         player.release();
         if (track == player) track = null;

@@ -125,14 +125,31 @@ export async function removePack(id: string): Promise<void> {
   forgetInstalled();
 }
 
-/** Speak one piece of text in a downloaded voice. Resolves when the audio has
-    been handed to the device, which is the only "finished" there is. */
+/** Speak one piece of text in a downloaded voice.
+ *
+ *  Resolves when the sentence has been *heard*, not when it was handed over.
+ *  The difference was audible: the first version returned as soon as the
+ *  samples were in the buffer, so the next sentence started immediately and
+ *  flushed the one still playing — and on the phone that meant no sound at all.
+ */
 export async function speakWithPack(
   id: string,
   text: string,
   speed: number
 ): Promise<void> {
   await FoldPageVoicePacks.speak({ id, text, speed });
+}
+
+/** Make the *next* sentence while this one is still being heard.
+ *
+ *  Synthesis costs about half a second per second of speech. Done in turn, the
+ *  reader hears a sentence, then that half second of nothing, then the next —
+ *  and the pauses the app carefully measured are drowned by the ones the model
+ *  needs. Fired and forgotten on purpose: if it fails, the real call will do
+ *  the work and report properly. */
+export function prepareWithPack(id: string, text: string, speed: number): void {
+  if (!packsAvailable()) return;
+  void FoldPageVoicePacks.prepare({ id, text, speed }).catch(() => {});
 }
 
 export async function stopPack(): Promise<void> {
