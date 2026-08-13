@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LANGUAGES, languageLabel, languageName } from "@/lib/languages";
+import { deviceLanguage, languageLabel, languageName } from "@/lib/languages";
 import {
   autoConfigure,
   languagesInLibrary,
@@ -58,13 +58,17 @@ export default function VoiceOnboarding({
     let alive = true;
     void languagesInLibrary().then((found) => {
       if (!alive) return;
-      const device = (navigator.language || "en").split("-")[0].toLowerCase();
+      // The library first, and the phone's own language when there is no
+      // library yet. English is not added on top: this app has no default
+      // language, and a reader whose phone is Turkish was being shown an
+      // English row they never asked for.
+      const device = deviceLanguage(navigator.language);
       const guess = found.length
         ? found.map((entry) => entry.code)
-        : [...new Set([device, "en"])].filter((code) =>
-            LANGUAGES.some((entry) => entry.code === code)
-          );
-      const codes = guess.length ? guess : ["en"];
+        : device
+          ? [device]
+          : [];
+      const codes = guess;
       setPicked(codes);
       // Run it straight away. Asking "shall I look?" is a question with one
       // sensible answer, which is not a question.

@@ -398,3 +398,66 @@ documented consequence of holding transient audio focus.
 ok · `ui:check` seeded/empty/offline clean · `jargon` clean · `voice:check`
 24/24 · `reader-render` 148/0 · on the device: paragraphs separated, headings
 visibly headings, reading aloud runs and pauses from the notification.
+
+### Run 9 — the voices reach the screen, and the article is read by one
+
+The pack layer from run 8 is now a thing a person can use, and the article
+actually goes through it.
+
+**On screen**, inside a language row, two labelled groups:
+
+```
+BETTER VOICES YOU CAN ADD
+  Thorsten   20 MB download        [Add]
+  Kerstin    20 MB download        [Add]
+ALREADY ON THIS PHONE
+  ( ) standard German voice        Hear it
+```
+
+Downloading shows the name, a bar, `4.1 MB of 20 MB` and **Cancel**; a failure
+turns into one plain sentence and **Try again**; an installed voice is a radio
+like any other, with **Remove**. Choosing one stores it in the same place as any
+phone voice, under an id that says where it came from, so nothing else in the
+app has to know packs exist.
+
+**Routing**, verified on the S23 Ultra by reading a German article aloud:
+
+```
+pluginId: FoldPageVoicePacks, methodName: speak
+methodData: {"id":"vits-piper-de_DE-kerstin-low-int8",
+             "text":"Zudem konkurrieren die generierten Songs mit menschlicher Musik.","speed":1}
+```
+
+Sentence by sentence, through FoldPage's own engine, with a voice FoldPage
+fetched. Pausing stops it — `pause()` silences the pack as well as the system
+engine.
+
+**Three faults the phone showed, and what they cost:**
+
+1. **Six rows reading "standard German voice".** Several installed engines each
+   offer a machine-named voice, and every one of them prettifies to the same
+   sentence. Six identical labels are not six choices. The list arrives
+   best-first, so the first of each name is kept and the rest dropped.
+2. **No grouping.** Downloadable and installed voices sat in one list, and the
+   only clue which was which was the button on the right. Two small labels fix
+   it; they are `aria-hidden`, because the radio group already carries its name
+   and a screen reader would otherwise hear it twice.
+3. **A system-green Win95 trough.** `accent-color` is ignored on `<progress>`
+   in this WebView. The bar is now two elements with `role="progressbar"`: the
+   app's own colour, a light band travelling along the fill so a slow download
+   still looks alive, and the width still telling the truth.
+
+**Also:** there is no default language any more. A fresh install showed an
+English row to everybody; it now guesses the *phone's* language and shows
+nothing at all when that language is not one FoldPage knows. English is never
+added on top.
+
+**Verification:** `npm run lint` silent · `npm test` 58 pass · `npm run build`
+ok · `ui:check` clean · `jargon` clean · `voice:check` 24/24 · and on the
+device: download with a real bar, cancel, install, selection, and an article
+read by the downloaded voice.
+
+**Remaining:** the reader's own sheet does not offer packs yet (it shows the
+article's language only, which is right, but the pack rows are not in it);
+nothing manages storage across languages in Settings; and the packs have not
+been tried on a slow or interrupted connection.

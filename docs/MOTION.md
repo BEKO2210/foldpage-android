@@ -31,6 +31,8 @@ a finished article — never on a hover or a scroll. A browser that does not kno
 | `.state-in` (loading, empty, error) | `fp-state-in`, spring easing | 250ms | 0 | backwards |
 | `.language-body` (a language's voices opening) | `fp-state-in`, spring easing | 250ms | 0 | backwards |
 | `.language-chevron` | rotates 90° when its row opens | 150ms | 0 | n/a |
+| `.fp-bar-fill` (a voice downloading) | width follows the bytes that arrived | 250ms | 0 | n/a |
+| `.fp-bar-fill` sheen | `fp-bar-sheen`, a light band travelling along the fill | 1.5s per loop | 0 | none, infinite |
 | `.card:active` | sinks: translateY(1px) scale(0.995) plus a tighter shadow | 150ms | 0 | n/a |
 | `.topbar.is-scrolled` | border-colour transition | 150ms | 0 | n/a |
 | opening an article | view transition, shared `fp-article` title | 250ms | 0 | n/a (browser-driven) |

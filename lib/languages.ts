@@ -125,6 +125,19 @@ export function languageName(tag: string | null | undefined): string {
   return findLanguage(tag)?.name ?? languageLabel(tag);
 }
 
+/** The language this phone is set to, if FoldPage knows it.
+ *
+ *  Used only where a first guess is needed and there is nothing better to go
+ *  on. It is a *guess*, not a default: a fresh install has no library to read
+ *  and no business assuming English — a phone set to Turkish belongs to
+ *  somebody who reads Turkish.
+ *
+ *  The tag is passed in rather than read from `navigator` so this stays a pure
+ *  function of a string, which is also the only way to test it. */
+export function deviceLanguage(tag: string | null | undefined): string | null {
+  return findLanguage(tag)?.code ?? null;
+}
+
 export function isRightToLeft(tag: string | null | undefined): boolean {
   return findLanguage(tag)?.rtl === true;
 }

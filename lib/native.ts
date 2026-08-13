@@ -69,6 +69,38 @@ export interface FoldPageSpeechPlugin {
 
 export const FoldPageSpeech = registerPlugin<FoldPageSpeechPlugin>("FoldPageSpeech");
 
+/** The voices FoldPage brings itself: fetched, unpacked and spoken by the app,
+ *  with no second application anywhere in the way. The native side is
+ *  `android/.../VoicePackPlugin.java`; what a pack *is* lives in
+ *  `lib/voicePacks.ts`. */
+export interface VoicePackProgress {
+  id: string;
+  phase: "downloading" | "unpacking" | "installed" | "failed";
+  received: number;
+  total: number;
+}
+
+export interface FoldPageVoicePacksPlugin {
+  list(): Promise<{ packs: { id: string; bytes: number }[] }>;
+  download(options: { id: string; url: string }): Promise<{ id: string; bytes: number }>;
+  cancel(options: { id: string }): Promise<void>;
+  remove(options: { id: string }): Promise<void>;
+  speak(options: {
+    id: string;
+    text: string;
+    speed?: number;
+    speaker?: number;
+  }): Promise<{ samples: number; sampleRate: number; seconds: number }>;
+  stop(): Promise<void>;
+  addListener(
+    event: "voicePackProgress",
+    handler: (progress: VoicePackProgress) => void
+  ): Promise<{ remove: () => Promise<void> }>;
+}
+
+export const FoldPageVoicePacks =
+  registerPlugin<FoldPageVoicePacksPlugin>("FoldPageVoicePacks");
+
 /** The pulse a gesture gives the moment it commits.
  *
  *  Distinct from `tap()` on purpose: this is the platform's own gesture

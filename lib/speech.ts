@@ -1,6 +1,7 @@
 "use client";
 
 import { FoldPageSpeech, holdAudioFocus, isNative, releaseAudioFocus } from "./native";
+import { packIdOf, speakWithPack, stopPack } from "./voicePacks";
 import {
   SPEECH_LANGUAGES,
   speechLanguage,
@@ -185,6 +186,7 @@ class Player {
     if (isNative()) {
       void engine().then(({ tts }) => tts.stop()).catch(() => {});
       void FoldPageSpeech.stop().catch(() => {});
+      void stopPack();
     } else globalThis.speechSynthesis?.cancel();
     this.emit();
   }
@@ -289,6 +291,20 @@ class Player {
 
   private async speakOne(text: string): Promise<void> {
     if (isNative()) {
+      const chosenVoice = getVoicePrefs().voices[voiceKey(this.lang)];
+      const pack = packIdOf(chosenVoice);
+      if (pack) {
+        // A voice FoldPage fetched itself. It needs no engine, no language tag
+        // and no pitch: the model *is* the language, and the only thing to hand
+        // it is the speed. Same timeout as the rest — a model that never comes
+        // back must not freeze the reader in "playing".
+        await withTimeout(
+          speakWithPack(pack, text, RATES[getVoicePrefs().rate]),
+          60000,
+          "The voice"
+        );
+        return;
+      }
       // A block that never comes back would freeze the reader in "playing" with
       // no way out but leaving the article. Sixty seconds is longer than any
       // paragraph takes and shorter than a user's patience.

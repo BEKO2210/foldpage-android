@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   LANGUAGES,
+  deviceLanguage,
   isRightToLeft,
   languageLabel,
   languageName,
@@ -20,6 +21,18 @@ import {
   type VoiceChoice,
 } from "@/lib/speech";
 import { tap } from "@/lib/native";
+import {
+  cancelPack,
+  downloadPack,
+  installedPacks,
+  packIdOf,
+  packSize,
+  packVoiceURI,
+  packsAvailable,
+  packsFor,
+  removePack,
+  type VoicePack,
+} from "@/lib/voicePacks";
 
 /** Language first, then the voices that language actually has.
  *
@@ -47,7 +60,20 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
   const [adding, setAdding] = useState(false);
   const [query, setQuery] = useState("");
   const [reloads, setReloads] = useState(0);
+  /** Which FoldPage voices are on the phone, and what the ones being fetched
+      are doing. Kept apart from the phone's own voices because they have states
+      the phone's never have: offered, downloading, failed. */
+  const [installed, setInstalled] = useState<Set<string>>(new Set());
+  const [fetching, setFetching] = useState<
+    Record<string, { received: number; total: number; phase: string }>
+  >({});
+  const [failed, setFailed] = useState<Record<string, string>>({});
   const searchRef = useRef<HTMLInputElement>(null);
+
+  const refreshPacks = useCallback(async () => {
+    const packs = await installedPacks(true);
+    setInstalled(new Set(packs.map((pack) => pack.id)));
+  }, []);
 
   const loadVoices = useCallback(async (code: string) => {
     setVoices((previous) => ({ ...previous, [code]: "loading" }));
@@ -57,12 +83,23 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
     // overwritten — that is `autoConfigure`'s own rule.
     await autoConfigure(code);
     const found = await voicesForLanguage(code);
-    setVoices((previous) => ({ ...previous, [code]: found }));
+    // Three rows reading "standard German voice" are not three choices; they
+    // are one choice printed three times. The list arrives best-first, so the
+    // first of each name is the one worth offering and the rest are noise.
+    const seen = new Set<string>();
+    const distinct = found.filter((voice) => {
+      const label = prettyVoiceName(voice.name, languageName(code));
+      if (seen.has(label)) return false;
+      seen.add(label);
+      return true;
+    });
+    setVoices((previous) => ({ ...previous, [code]: distinct }));
     setChosen((previous) => ({
       ...previous,
       [code]: getVoicePrefs().voices[voiceKey(code)],
     }));
-  }, []);
+    await refreshPacks();
+  }, [refreshPacks]);
 
   /** The languages worth a row: the ones the library holds, plus the ones the
       reader asked for on purpose. Nothing else — a phone speaks dozens and a
@@ -82,7 +119,14 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
       const merged = only
         ? [voiceKey(only)]
         : [...new Set([...library, ...prefs.languages])];
-      const shown = merged.length ? merged : ["en"];
+      // Nothing to show is a real answer on a fresh install. The one guess
+      // worth making is the phone's own language — English was a default in an
+      // app that has no default language, and it put a row in front of readers
+      // who never asked for one.
+      const guess = deviceLanguage(
+        typeof navigator === "undefined" ? null : navigator.language
+      );
+      const shown = merged.length ? merged : guess ? [guess] : [];
       if (!alive) return;
       setInLibrary(new Set(library));
       setCodes(shown);
@@ -108,6 +152,76 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
     }
     setOpen(code);
     if (!voices[code]) void loadVoices(code);
+  }
+
+  /** Keep a FoldPage voice for this language. Stored in the same place as a
+      phone voice, under an id that says where it came from — nothing else in
+      the app has to know packs exist. */
+  function keepPack(code: string, pack: VoicePack) {
+    void tap();
+    const prefs = getVoicePrefs();
+    saveVoicePrefs({
+      ...prefs,
+      voices: { ...prefs.voices, [voiceKey(code)]: packVoiceURI(pack.id) },
+    });
+    setChosen((previous) => ({ ...previous, [code]: packVoiceURI(pack.id) }));
+  }
+
+  async function fetchPack(code: string, pack: VoicePack) {
+    void tap();
+    setFailed((previous) => {
+      const next = { ...previous };
+      delete next[pack.id];
+      return next;
+    });
+    setFetching((previous) => ({
+      ...previous,
+      [pack.id]: { received: 0, total: pack.bytes, phase: "downloading" },
+    }));
+    try {
+      await downloadPack(pack, (progress) =>
+        setFetching((previous) => ({
+          ...previous,
+          [pack.id]: {
+            received: progress.received,
+            total: progress.total || pack.bytes,
+            phase: progress.phase,
+          },
+        }))
+      );
+      await refreshPacks();
+      // A voice that was fetched on purpose is the one to use.
+      keepPack(code, pack);
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      setFailed((previous) => ({
+        ...previous,
+        [pack.id]:
+          message === "cancelled"
+            ? ""
+            : "That download did not finish. Check the connection and try again.",
+      }));
+    } finally {
+      setFetching((previous) => {
+        const next = { ...previous };
+        delete next[pack.id];
+        return next;
+      });
+    }
+  }
+
+  async function dropPack(code: string, pack: VoicePack) {
+    void tap();
+    await removePack(pack.id);
+    await refreshPacks();
+    if (getVoicePrefs().voices[voiceKey(code)] === packVoiceURI(pack.id)) {
+      const prefs = getVoicePrefs();
+      const voices = { ...prefs.voices };
+      delete voices[voiceKey(code)];
+      saveVoicePrefs({ ...prefs, voices });
+      setChosen((previous) => ({ ...previous, [code]: undefined }));
+      void loadVoices(code);
+    }
   }
 
   function keep(code: string, voice: VoiceChoice) {
@@ -239,6 +353,107 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
                           role="radiogroup"
                           aria-label={`Voices for ${languageName(code)}`}
                         >
+                          {/* Two groups, because they are two different kinds of
+                              thing: one is here and can be picked, the other has
+                              to arrive first and costs twenty megabytes. An
+                              undifferentiated list made the reader work that out
+                              from the buttons. */}
+                          {packsAvailable() && packsFor(code).length > 0 && (
+                            <li className="voice-group" aria-hidden="true">
+                              {packsFor(code).every((pack) => installed.has(pack.id))
+                                ? "Best for this language"
+                                : "Better voices you can add"}
+                            </li>
+                          )}
+                          {packsAvailable() &&
+                            packsFor(code).map((pack) => {
+                              const here = installed.has(pack.id);
+                              const busy = fetching[pack.id];
+                              const problem = failed[pack.id];
+                              return (
+                                <li key={pack.id} className="voice-pack">
+                                  {here ? (
+                                    <>
+                                      <label className="voice-pick">
+                                        <input
+                                          type="radio"
+                                          name={`voice-${code}`}
+                                          checked={packIdOf(chosen[code]) === pack.id}
+                                          onChange={() => keepPack(code, pack)}
+                                        />
+                                        <span className="voice-name">{pack.label}</span>
+                                      </label>
+                                      <button
+                                        type="button"
+                                        className="linkbtn pressable"
+                                        onClick={() => void dropPack(code, pack)}
+                                      >
+                                        Remove
+                                      </button>
+                                    </>
+                                  ) : busy ? (
+                                    <div className="voice-progress" role="status">
+                                      <span className="voice-name">{pack.label}</span>
+                                      <div
+                                        className="fp-bar"
+                                        role="progressbar"
+                                        aria-label={`Downloading ${pack.label}`}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                        aria-valuenow={Math.round(
+                                          (busy.received / (busy.total || pack.bytes)) * 100
+                                        )}
+                                      >
+                                        <div
+                                          className="fp-bar-fill"
+                                          style={{
+                                            width: `${Math.min(
+                                              100,
+                                              Math.round(
+                                                (busy.received / (busy.total || pack.bytes)) * 100
+                                              )
+                                            )}%`,
+                                          }}
+                                        />
+                                      </div>
+                                      <span className="setting-note">
+                                        {busy.phase === "unpacking"
+                                          ? "Installing…"
+                                          : `${packSize(busy.received)} of ${packSize(busy.total || pack.bytes)}`}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        className="linkbtn pressable"
+                                        onClick={() => void cancelPack(pack.id)}
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <span className="voice-offer">
+                                        <span className="voice-name">{pack.label}</span>
+                                        <span className="setting-note">
+                                          {problem ? problem : `${packSize(pack.bytes)} download`}
+                                        </span>
+                                      </span>
+                                      <button
+                                        type="button"
+                                        className="btn btn-quiet pressable"
+                                        onClick={() => void fetchPack(code, pack)}
+                                      >
+                                        {problem ? "Try again" : "Add"}
+                                      </button>
+                                    </>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          {list.length > 0 && (
+                            <li className="voice-group" aria-hidden="true">
+                              Already on this phone
+                            </li>
+                          )}
                           {list.map((voice) => (
                             <li key={`${voice.engine}|${voice.voiceURI}`}>
                               <label className="voice-pick">

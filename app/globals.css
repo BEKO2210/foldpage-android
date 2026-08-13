@@ -1259,6 +1259,15 @@ mark {
   color: var(--muted);
 }
 
+/* The languages sit under the three ear-judged settings, and they are not a
+   fourth one: choosing a voice per language is a different kind of decision
+   from moving a slider, and the block earns a rule and some air to say so. */
+.voice-languages {
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
 /* ---------- languages and their voices ----------
    The shape follows the decision: a language is a row, and the voices for that
    language live inside it. Rows are plain lines separated by a rule rather than
@@ -1324,6 +1333,24 @@ mark {
   display: grid;
   gap: 0.15rem;
 }
+/* The small line that says what the next few rows are. Not a heading — a
+   heading in the middle of a radio group would be a lie about the structure —
+   and hidden from the screen reader, which is told the same thing by the
+   group's own label and would otherwise hear it twice. */
+.voice-group {
+  display: block;
+  margin: 0.9rem 0 0.15rem;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-height: 0;
+}
+.voice-choices > li:first-child.voice-group {
+  margin-top: 0.2rem;
+}
 .voice-choices li {
   display: flex;
   align-items: center;
@@ -1358,6 +1385,81 @@ mark {
 }
 .voice-none {
   padding: 0.2rem 0 0.4rem;
+}
+/* A voice FoldPage can add. Three states in one row: offered with its size,
+   coming down with a bar that means something, or here and choosable like any
+   other. No spinner anywhere — a download whose size is known deserves a real
+   measure of how much of it has arrived. */
+.voice-pack {
+  align-items: center;
+}
+.voice-offer {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.voice-offer .setting-note {
+  margin: 0;
+}
+.voice-progress {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.15rem 0.6rem;
+  width: 100%;
+}
+.voice-progress .voice-name {
+  grid-column: 1;
+}
+/* The download bar.
+ *
+ *  Not a <progress>: this WebView ignores `accent-color` on it and draws a
+ *  system-green trough that belongs to another operating system's decade. Two
+ *  elements with a real ARIA role give the same meaning to a screen reader and
+ *  full control of the pixels.
+ *
+ *  The fill carries a light band that travels along it, so a download that has
+ *  stalled for a second still looks alive without the bar lying about its
+ *  position — the width is the truth, the sheen is only breathing. It stops
+ *  under `prefers-reduced-motion` with every other animation in the app. */
+.fp-bar {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--ink) 12%, transparent);
+  overflow: hidden;
+}
+.fp-bar-fill {
+  height: 100%;
+  min-width: 6px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent-text) 0%,
+      color-mix(in oklab, var(--accent-text) 45%, white) 45%,
+      var(--accent-text) 90%
+    );
+  background-size: 220% 100%;
+  animation: fp-bar-sheen 1.5s linear infinite;
+  transition: width var(--dur-med) var(--ease-out);
+}
+@keyframes fp-bar-sheen {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+.voice-progress .setting-note {
+  grid-column: 1;
+  margin: 0;
+}
+.voice-progress .linkbtn {
+  grid-column: 2;
+  grid-row: 1;
 }
 .language-remove {
   margin-top: 0.6rem;

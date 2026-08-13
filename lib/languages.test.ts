@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   LANGUAGES,
   baseCode,
+  deviceLanguage,
   findLanguage,
   isRightToLeft,
   languageLabel,
@@ -83,4 +84,13 @@ test("right-to-left languages are marked, left-to-right ones are not", () => {
   assert.equal(isRightToLeft("he-IL"), true);
   assert.equal(isRightToLeft("de"), false);
   assert.equal(isRightToLeft(null), false);
+});
+
+test("the phone's own language is a guess, and only when it is one we know", () => {
+  assert.equal(deviceLanguage("de-DE"), "de");
+  assert.equal(deviceLanguage("tr"), "tr");
+  assert.equal(deviceLanguage("pt-BR"), "pt");
+  // Not in the catalogue, and not quietly turned into English either.
+  assert.equal(deviceLanguage("xx-YY"), null);
+  assert.equal(deviceLanguage(null), null);
 });
