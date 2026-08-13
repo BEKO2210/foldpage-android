@@ -478,6 +478,18 @@ gut, wird es **nicht veröffentlicht**. Kein „Beta"-Etikett, kein „experimen
 im Einstellungsmenü. Eine falsche Zusammenfassung ist schlimmer als keine, weil
 sie gelesen und geglaubt wird.
 
+### D0 · Eine Stimme, die nicht nach Maschine klingt — **erledigt 13.08.2026**
+
+FoldPage bringt die Engine jetzt selbst mit (`sherpa-onnx`, Apache-2.0, im APK)
+und lädt seine Stimmen **in** der App: 31 Stimmen in 22 Sprachen, je rund
+21 MB, danach offline. Ausgewählt nach Messung, nicht nach Namen — eine Stimme,
+die 0,95 s rechnet, um 1 s zu sprechen, reisst Lücken; der Katalog führt nur
+Stimmen um 0,15×. Einzelheiten, Messwerte und Fallen: `docs/SPEECH.md`.
+Der Weg zum Installer des Telefons bleibt für Sprachen ausserhalb des Katalogs.
+
+Die ursprüngliche Abwägung von 2026-08-12 steht unten, weil sie erklärt, warum
+es so und nicht anders gebaut wurde.
+
 ### D0 · Eine Stimme, die nicht nach Maschine klingt
 Die Systemstimmen klingen nach 2010. Das ist keine Frage der App — sie fragt nur
 die Engine, die das Telefon eingestellt hat. Die Antwort liegt deshalb **neben**

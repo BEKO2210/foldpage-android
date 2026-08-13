@@ -806,3 +806,54 @@ what to do if it ever does.
 **Verification:** `npm test` 58 · lint silent · `ui:check` light and dark clean,
 including the new sideways check · `jargon` clean · `voice:check` 27/27 ·
 `keyboard` 12/12.
+
+### Run 20 — the closing audit, and the version Play will accept
+
+**Version.** `npm run set-version -- 1.12`: `1.11 (code 13) -> 1.12 (code 14)`
+across `android/app/build.gradle`, `package.json` and `README.md`. Play refused
+the previous upload because 13 was spent.
+
+**Artefacts built and signed:** `app-release.aab` 49 MB for the Play Console,
+`app-release.apk` 122 MB (all four ABIs) for GitHub. The download a phone
+actually gets grows from about 5 MB to about 30 MB, because the speech engine
+now travels with the app — stated here rather than discovered by a reader on a
+metered connection.
+
+**The full suite, one after another, all green:**
+
+| | |
+|---|---|
+| `npm test` | 58 pass, 0 fail |
+| `npm run lint` | silent |
+| `npm run build` | 6 static routes |
+| `npm run corpus` | report written, extraction unchanged |
+| `npm run ui:check` | seeded · empty · offline · dark — 6 route/viewport passes each, no console errors, no page errors, no overflow, nothing draggable sideways |
+| `npm run jargon` | library 25, reader 48, settings 103, welcome 25 lines — nothing found |
+| `npm run voice:check` | 27 checks |
+| `npm run keyboard` | 12 checks |
+| `node scripts/a11y-audit.mjs` | 0 unnamed, 0 heading skips, 3 known small targets, live regions 1/2/0, focus lands on the new page's heading |
+| `npm run reader-render` | 148 renders, 0 failures, 84 tables |
+
+`reader-render` failed once on the first attempt with "the app never created its
+database" while four Playwright runs were competing for the machine, and passed
+on the next. The wait is 10 s; under that load it was not enough. Worth knowing
+before believing a single red run.
+
+## Where this ended up, against the baseline
+
+| | 12 Aug, start | 13 Aug, end |
+|---|---|---|
+| Developer words on screen | 7 | **0**, and checked on every run |
+| Voices | whatever the phone had; a flat list with ✓/✗ | language → that language's voices, FoldPage's own first, with preview, size, progress, cancel, retry, remove |
+| A voice for a language the phone lacks | a trip to another app | **21 MB inside FoldPage**, offline afterwards |
+| Settings, mobile | 3,288 px, five bordered cards | **2,284 px**, four sections, three disclosures |
+| Settings, desktop | 2,922 px, one column | **1,505 px**, two columns from 900 px up |
+| Reader controls | six identical glyphs | one labelled `Listen` and three |
+| Article typography | no paragraph spacing, headings at body size | measured scale in `em`, checked by `reader-render` |
+| Instruments | test, lint, corpus, reader-render, a11y-audit, library-bench | + `ui:check` (4 modes), `jargon`, `voice:check`, `keyboard`, `voices:catalogue` |
+| Checks that exist at all | ~14 unit tests | 58 unit tests + 39 browser checks + 3 audits |
+
+**What a machine still cannot say**, and is therefore not claimed: whether
+TalkBack announces these screens in a sensible order, whether the motion feels
+right on a phone in a hand, and whether the copy reads as honest to somebody who
+did not write it.

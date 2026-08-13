@@ -127,7 +127,11 @@ async function seed(page, article) {
       db = await open();
     }
     if (!db.objectStoreNames.contains("articles")) {
-      throw new Error("the app never created its database — did the page load?");
+      throw new Error(
+        `the app never created its database — page shows: ${document.body.innerText
+          .replace(/\s+/g, " ")
+          .slice(0, 120)}`
+      );
     }
     await new Promise((resolve, reject) => {
       const transaction = db.transaction("articles", "readwrite");

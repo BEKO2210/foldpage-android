@@ -1,102 +1,81 @@
-# Übergabe an die nächste Sitzung — 12. August 2026, spät
+# Übergabe an die nächste Sitzung — 13. August 2026, früh
 
-Stand: **1.11 / versionCode 13**, gebaut, auf GitHub als reguläres Release
-(kein Beta) veröffentlicht, AAB liegt bereit für die Play Console. Alles
-Dauerhafte steht in `docs/ARCHITECTURE.md` (Aufbau), `docs/ROADMAP.md` (was
-ansteht), `docs/SPEECH.md` (Vorlesen, mit Messwerten) und `docs/MOTION.md`.
+Stand: **1.12 / versionCode 14**, gebaut und signiert. `app-release.aab`
+(49 MB) liegt für die Play Console bereit, `app-release.apk` (122 MB, alle vier
+ABIs) für GitHub. Alles Dauerhafte steht in `docs/ARCHITECTURE.md` (Aufbau),
+`docs/SPEECH.md` (Vorlesen, mit Messwerten), `docs/UI-BASELINE.md` (die zwanzig
+Läufe dieser Sitzung mit Zahlen), `docs/ROADMAP.md`, `docs/MOTION.md`,
+`docs/CONTRAST.md`, `docs/A11Y.md`.
 
-## Wo es steht
+## Was sich in dieser Sitzung geändert hat
 
-- **Vorlesen richtet sich selbst ein.** Eine Sprache, eine Stimme: `autoConfigure()`
-  wählt über alle installierten Engines die beste lokale Stimme je Sprache
-  (`pickBestSetup` in `lib/voice.ts`). Die Auswahl von Sprache, Engine und
-  Stimme ist **entfernt** — einstellbar bleiben Tempo, Tonhöhe, Pausen.
-- **Eigenes Sprach-Plugin** (`android/.../SpeechPlugin.java`) spricht über eine
-  benannte Engine, weil das Telefon nur *eine* Standard-Engine hat und die
-  Bibliothek mehrere Sprachen. Manifest braucht dafür `<queries>` mit
-  `TTS_SERVICE`.
-- **Sperrbildschirm** über MediaSession + MediaStyle-Benachrichtigung,
-  **Fortsetzen** über eine gemerkte Blockposition (nur als Angebot, nie
-  automatisch).
-- **C6, C7, C3 sind erledigt** (Tiefe aus Zustand, Sprungmarken in den
-  Einstellungen, geteilte Element-Bewegung in den Artikel).
-- **Ein 8-Agenten-Lauf** hat 16 bestätigte Fehler gefunden, alle behoben
-  (Commit `dae8c1b`): Blockindex-Drift zwischen Stimme und Markierung,
-  Sperrbildschirm-Pause, Audio-Fokus, Lesefortschritt, Such-Race, CSV-Import,
-  HTML-Export, `allowBackup`, klebende Kopfzeile, doppelter `.chip`-Block.
+**FoldPage spricht jetzt mit eigenen Stimmen.** Das ist die grosse Änderung.
+`sherpa-onnx` (Apache-2.0) steckt als AAR im APK, 31 Stimmen in 22 Sprachen
+stehen als Download **in** der App bereit, je rund 21 MB, danach offline. Keine
+zweite App mehr nötig. Katalog, Fluss, Routing und die Messungen, nach denen
+die Stimmen ausgewählt wurden, stehen in `docs/SPEECH.md`.
 
-## Was als Nächstes ansteht
+⚠️ **Die App ist dadurch grösser:** Der Play-Download springt von rund 5 MB auf
+rund 30 MB je Gerät (das AAB splittet nach ABI; die 122-MB-APK enthält alle
+vier). Wenn das je stören sollte, wäre der nächste Schritt Play Feature
+Delivery für die Engine — bewusst **nicht** gebaut, weil es Maschinerie für ein
+Problem wäre, das noch niemand gemeldet hat.
 
-1. **Gerätetest unterwegs** durch Belkis mit der Release-APK. Erst wenn dabei
-   nichts auffällt, geht es an UI-Verbesserungen.
-2. **Nicht per Finger geprüft:** Pause/Stop aus der Medien-Benachrichtigung.
-3. **Bewusst offen:** Hardware-Medientasten erreichen die App nicht, solange sie
-   `AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK` hält (Begründung in `docs/SPEECH.md`).
-4. Danach: C4 (Play-Aufnahmen aus dem Reader-Lab), C5, B7.4, D2/D3.
+**Der sichtbare Fluss** ist jetzt Sprache → Stimme: eine Zeile je Sprache, darin
+**nur** deren Stimmen — FoldPages eigene zuerst, die des Telefons darunter, mit
+Vorhören, Grösse, Fortschritt, Abbrechen, Wiederholen und Entfernen.
 
-## Arbeitsweise, die sich bewährt hat
+**Neue Messgeräte** (alle als npm-Skript, alle mit Bericht in `corpus/`):
 
-1. **Skills zuerst:** `superpowers:systematic-debugging` bei jedem Fehlerbild
-   (Phase 1 zu Ende, bevor etwas geändert wird), `ui-ux-pro-max` bei allem, was
-   Aussehen, Bedienung oder Bewegung ändert.
-2. **Das Messgerät ist verdächtig, bevor es der Code ist.** In diesem Lauf war
-   es dreimal selbst der Fehler (siehe `docs/SPEECH.md`).
-3. **Belege statt Behauptungen:** `npm test`, `npm run corpus`,
-   `node scripts/speech-audit.mjs`, `node scripts/a11y-audit.mjs`,
-   `adb logcat` am Gerät.
-4. **Bauen:** `JAVA_HOME=/opt/android-studio/android-studio/jbr`, dann
-   `npm run sync && cd android && ./gradlew assembleRelease bundleRelease`.
+| Befehl | Was er misst |
+|---|---|
+| `npm run ui:check` | Console-Fehler, Seitenfehler, tote Requests, waagerechter Überlauf **und** Seitwärts-Ziehbarkeit, drei Routen × zwei Viewports; Flags `--empty`, `--offline`, `--dark`, `--shots` |
+| `npm run jargon` | Entwicklerwörter im gerenderten Text aller Routen |
+| `npm run voice:check` | die Produktregel selbst: nur passende Stimmen je Sprache, Suche, Auswahl, Vorhören, Pakete, Tastatur, Reader-Sheet (27 Prüfungen) |
+| `npm run keyboard` | Tab-Reihenfolge, Fokusringe, Namen, Escape (12 Prüfungen) |
+| `npm run voices:catalogue` | erzeugt `lib/voicePacks.generated.ts` aus dem Upstream-Release |
+| `npm run voices:aar` | holt das sherpa-onnx-AAR (nicht im Git) |
 
-## Lauf 3 (12.08. abends): die Stimme
+## Bevor du irgendetwas anfasst
 
-- **Einstellbar:** Tempo (0,7–1,6×), Tonhöhe, Pausenlänge, Stimme — und die
-  **Engine je Sprache**, über ein eigenes Plugin
-  (`android/.../SpeechPlugin.java`). Ohne das bleibt Englisch stumm, sobald die
-  deutsche neuronale Engine der System-Standard ist.
-- **Am Gerät belegt:** Deutsch über sherpa-onnx (neuronal), Englisch über
-  Googles Engine mit **29** lokalen Stimmen; Pausen zwischen Absätzen von
-  1,80 s auf 0,23–0,35 s (Google) gebracht. Zahlen und Methode:
-  `docs/SPEECH.md`.
-- **Sprech-Text getrennt vom Lesetext** (`forTheEar()`): Überschriften bekommen
-  einen Punkt, Fußnotenmarken und Aufzählungszeichen fallen weg, eine nackte URL
-  wird zum Hostnamen. Absätze werden satzweise gesprochen — das kostet nichts,
-  weil die Vorlaufzeit der Engine mit der Länge wächst.
-- **Neues Messgerät:** `node scripts/speech-audit.mjs` →
-  `corpus/speech-report.json`. Es war selbst dreimal der Fehler (siehe
-  `docs/SPEECH.md`), unter anderem hat es 46 korrekte englische
-  Anführungszeichen als Defekt gezählt — derselbe Denkfehler steckte im Code.
-- **Grenze, die bleibt:** Die sherpa-Engine-APKs tragen alle denselben
-  Paketnamen. Eine englische Piper-Stimme **ersetzt** damit die deutsche; beide
-  neuronal gleichzeitig geht nur über ein in der App gebündeltes Modell (D0).
+1. `bash scripts/fetch-sherpa-aar.sh` (oder `npm run voices:aar`) — ohne das
+   AAR baut Android nicht.
+2. `npm run apk:debug` installiert als **`de.ithandwerk.foldpage.debug`** neben
+   der Play-Fassung. Nie die echte App deinstallieren, um Platz zu machen: das
+   löscht die Bibliothek des Nutzers.
 
-## Was als Nächstes ansteht
+## Offen
 
-In dieser Reihenfolge, sofern nichts dazwischenkommt:
+- **TalkBack-Durchgang am Gerät.** Die Struktur ist maschinell geprüft
+  (`a11y-audit`, `keyboard`), die Ansage-Reihenfolge kann nur ein Mensch
+  beurteilen.
+- **Ein Bericht ohne Reproduktion:** Die Bibliothek war am Telefon einmal
+  seitwärts verschoben („wenn ich am Handy rumziehe"). Mit echten
+  Touch-Ereignissen im Browser nicht reproduzierbar; die Ursache ist unbekannt.
+  Das Loch ist zu (`overflow-x: clip` + `overscroll-behavior-x: none`, dazu eine
+  Dauerprüfung in `ui:check`), der Grund nicht gefunden. Wenn es wieder
+  auftritt: Handy anstecken und den Zustand per DevTools auslesen
+  (`window.scrollX`, Transform am Element).
+- **Automatische Updates geladener Stimmen** sind bewusst nicht gebaut,
+  Begründung in
+  `.claude/skills/foldpage-product-ux/references/voice-and-language.md`.
+- **Pitch** wirkt nur auf Telefonstimmen; bei einer geladenen Stimme wird der
+  Regler ausgeblendet, weil das Modell die Tonhöhe mitbringt.
 
-1. **C6 zu Ende** — „Premium-Gefühl": Der Schwellen-Impuls beim Wischen ist
-   gebaut; offen sind Tiefe aus Zustand (Karte senkt sich beim Drücken, Kopfzeile
-   bekommt beim Scrollen eine Kante) und Feder-Übergänge zwischen Lade-, Leer-
-   und Fehlerzuständen.
-2. **C7 zu Ende** — die Einstellungen sind fünf Karten lang; Gliederung oder
-   zweite Ebene.
-3. **C3** — der Übergang in den Artikel (geteilte Element-Bewegung). Vorher das
-   Zusammenspiel mit den `backwards`-Animationen klären, sonst schwebt die
-   Bottom-Navigation wieder in der Bildschirmmitte.
-4. **D1-Rest** — Sperrbildschirm-Steuerung (Media-Session) und Fortsetzen nach
-   App-Neustart. Der Player merkt sich die Stelle heute nur innerhalb der
-   Sitzung.
-5. **D2/D3** — Zusammenfassung und Fragen. Erst messen, dann entscheiden, und
-   **nur veröffentlichen, wenn die Qualität stimmt** — das ist Belkis' Bedingung,
-   nicht ein Vorbehalt.
+## Fallen, die in dieser Sitzung Zeit gekostet haben
 
-## Fallen, die heute Zeit gekostet haben
-
-- Ein Capacitor-Plugin-Proxy darf **nie** direkt aus einer `async`-Funktion
-  zurückgegeben werden (siehe oben).
-- Das TTS-Plugin fasst `window` beim Laden an; als normaler Import bricht
-  `npm run build`, weil die Reader-Route vorgerendert wird. Erst bei Bedarf
-  laden.
-- Ein `versionCode` ist verbraucht, sobald ein Bundle damit in der Play Console
-  liegt. `npm run set-version -- 1.10` zieht alle drei Stellen gemeinsam.
-- Play nimmt **keine** debuggable Artefakte: für den Store `bundleRelease`,
-  für GitHub `assembleRelease`.
+- **`AudioTrack.write()` kehrt zurück, wenn die Daten in der Warteschlange
+  stehen — nicht wenn sie gehört wurden.** Ein Aufruf, der schneller
+  zurückkommt als der Ton dauert, hat keinen Ton gemacht. Kostete einen ganzen
+  Lauf, in dem „perfekt erzeugtes Audio" niemand hörte.
+- **Eine deinstallierte Sprach-Engine macht die App stumm**, ohne einen Hinweis
+  irgendwo. `autoConfigure()` vergisst sie jetzt, `play()` prüft vor dem ersten
+  Wort.
+- **Messgeräte, die nichts sehen, melden „sauber".** Dreimal passiert: das
+  Jargon-Audit ohne Artikel im Reader, die Maschinennamen-Prüfung ohne Stimmen
+  im Browser, der Bibliotheks-Benchmark mit einem Knopf, den es seit einem
+  Umbenennen nicht mehr gab. Jede Prüfung erst mit einem echten Fehler
+  gegenprüfen, bevor man ihr glaubt.
+- **`reader-render` und `ui:check` warten auf die Datenbank der App.** Unter
+  Last hat 4 s einmal nicht gereicht und der Lauf meldete einen sauberen
+  Bildschirm, den er nie gesehen hat. Steht jetzt auf 10 s.
