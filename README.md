@@ -203,7 +203,7 @@ scripts/        icon/splash generation and the signed release build
 
 ## Status
 
-Version 1.12 — local-only, no account, in closed testing on Google Play. Reading
+Version 1.13 — local-only, no account, in closed testing on Google Play. Reading
 aloud now runs on FoldPage's own engine with voices it fetches itself; the
 phone's voices remain available. Sync between devices exists in the web version
 and is deliberately absent here.
