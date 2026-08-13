@@ -276,6 +276,8 @@ public class VoicePackPlugin extends Plugin {
                     result.put("samples", samples.length);
                     result.put("sampleRate", rate);
                     result.put("seconds", rate > 0 ? (double) samples.length / rate : 0);
+                    result.put("synthMs", lastSynthMs);
+                    result.put("loadedModel", lastLoaded);
                     call.resolve(result);
                 });
             } catch (Throwable e) {
@@ -316,12 +318,24 @@ public class VoicePackPlugin extends Plugin {
     }
 
     /** The model, or the cache if this sentence was made a moment ago. */
+    /** How long the last synthesis took, and whether a model had to be loaded
+     *  for it. Reported back so the app can measure the wait a reader actually
+     *  has rather than guess at it. */
+    private long lastSynthMs;
+    private boolean lastLoaded;
+
     private float[] synthesise(String id, String text, float speed, int speaker) throws IOException {
         String key = id + "|" + speed + "|" + speaker + "|" + text;
         synchronized (ready) {
             float[] cached = ready.get(key);
-            if (cached != null) return cached;
+            if (cached != null) {
+                lastSynthMs = 0;
+                lastLoaded = false;
+                return cached;
+            }
         }
+        long started = System.currentTimeMillis();
+        boolean fresh = tts == null || !id.equals(loadedId);
         load(id);
         GeneratedAudio audio = tts.generate(text, speaker, speed);
         float[] samples = audio.getSamples();
@@ -329,6 +343,8 @@ public class VoicePackPlugin extends Plugin {
             readyRate = audio.getSampleRate();
             ready.put(key, samples);
         }
+        lastSynthMs = System.currentTimeMillis() - started;
+        lastLoaded = fresh;
         return samples;
     }
 

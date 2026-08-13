@@ -493,7 +493,11 @@ export default function ReadPage() {
           style={{ color: "var(--muted)" }}
           role="status"
         >
-          {voice.error || voiceMissing ? (
+          {voice.preparing && !voice.error ? (
+            // The gap between pressing Listen and the first word. Short, but a
+            // screen that says nothing in it looks broken rather than busy.
+            <>Getting the voice ready…</>
+          ) : voice.error || voiceMissing ? (
             <>
               {voice.error ??
                 "This phone has no voice installed for this article's language."}{" "}

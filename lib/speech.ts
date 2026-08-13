@@ -54,6 +54,8 @@ export interface SpeechState {
   at: number;
   total: number;
   error: string | null;
+  /** True while the first sentence is being made and nothing can be heard yet. */
+  preparing: boolean;
   /** Where the voice was when this article was last left, or -1.
    *
    *  Deliberately *not* the same field as `at`: the first version restored the
@@ -115,6 +117,10 @@ class Player {
   private playing = false;
   private token = 0;
   private error: string | null = null;
+  /** True between "the reader pressed play" and the first sound. It is short —
+   *  a third of a second with the model already in memory — but it is not
+   *  nothing, and a screen that says nothing at all in that gap looks broken. */
+  private preparing = false;
   private listeners = new Set<Listener>();
 
   subscribe(listener: Listener): () => void {
@@ -129,6 +135,7 @@ class Player {
       total: this.blocks.length,
       error: this.error,
       resumeAt: this.resumeAt,
+      preparing: this.preparing,
     };
   }
 
@@ -165,6 +172,17 @@ class Player {
     this.articleId = articleId;
     this.lang = speechLanguage(lang);
     this.emit();
+    // Loading a model costs about a second, and it was a second of silence
+    // after the reader pressed Listen — measured on the device: 1,338 ms cold
+    // against 328 ms once the model is in memory. Making the first sentence
+    // when the article opens spends that second while nobody is waiting for it.
+    // Only for a language whose voice FoldPage carries, and only the first
+    // sentence: the rest is made while this one is being heard.
+    const pack = packIdOf(getVoicePrefs().voices[voiceKey(this.lang)]);
+    const first = blocks[0]?.parts[0];
+    if (pack && first && isNative()) {
+      prepareWithPack(pack, first, RATES[getVoicePrefs().rate]);
+    }
   }
 
   /** True when the position came out of storage rather than out of this
@@ -181,6 +199,7 @@ class Player {
   pause(): void {
     this.token += 1;
     this.playing = false;
+    this.preparing = false;
     void this.controls(false);
     void releaseAudioFocus();
     if (isNative()) {
@@ -228,6 +247,7 @@ class Player {
     this.playing = true;
     this.error = null;
     this.at = from;
+    this.preparing = true;
     this.emit();
     // Check the setup before the first word rather than discovering mid-article
     // that the engine a stored choice names has been uninstalled. Idempotent
@@ -246,6 +266,10 @@ class Player {
       this.emit();
       try {
         await this.speakBlock(this.blocks[i], i === from, run);
+        if (this.preparing) {
+          this.preparing = false;
+          this.emit();
+        }
       } catch (e) {
         if (run !== this.token) return;
         this.playing = false;

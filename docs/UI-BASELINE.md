@@ -555,3 +555,44 @@ the one `SENTENCE_GAP` puts there on purpose.
 **Verification:** `npm test` 58 pass · `npm run build` ok · `ui:check` clean ·
 `jargon` clean · `voice:check` 24/24 · `a11y-audit` unchanged · and on the
 phone, an article read end to end in FoldPage's own voice — confirmed by ear.
+
+### Run 12 — the wait before the first word
+
+**Measured before changing anything**, on the phone, with the plugin reporting
+its own synthesis time:
+
+| | synthesis | audio |
+|---|---:|---:|
+| first sentence, model not yet in memory | **1,338 ms** | 1.54 s |
+| any sentence after that | 328 ms | 2.23 s |
+
+So the wait a reader feels after pressing Listen is almost entirely the model
+being loaded — one second of silence, once per article, with nothing on screen
+to say why.
+
+**Changed:** the first sentence is made when the *article* opens, not when the
+reader presses play. That spends the second while nobody is waiting for it, and
+it only happens for a language whose voice FoldPage carries. On the device:
+
+```
+03:01:03  prepare  {"text":"Der KI-Musikgenerator Suno steht in der Kritik."}   ← article opened
+03:01:09  prepare  {"text":"Das Startup soll unrechtmäßig …"}                    ← Listen pressed:
+03:01:09  speak    {"text":"Der KI-Musikgenerator Suno steht in der Kritik."}       the next one is
+                                                                                    started, the first
+                                                                                    one is already made
+```
+
+Measured end to end for a prepared sentence: **`synthMs: 0`**, and the call
+takes 1,714 ms for 1,693 ms of audio — **21 ms** of anything that is not sound.
+
+**And where the wait is still real** — the reader who presses Listen a second
+after opening — the reader now says so: "Getting the voice ready…" in the same
+live region that later reports which part is being read. A screen that says
+nothing for a second looks broken rather than busy.
+
+**Cost, stated plainly:** an article opened and never listened to spends about
+a second of one core. It happens only when a downloaded voice is the chosen one
+for that language.
+
+**Verification:** `npm test` 58 pass · lint silent · build ok · `jargon` clean ·
+`ui:check` clean · plus the device measurements above.
