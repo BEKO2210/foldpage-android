@@ -112,6 +112,12 @@ public class VoicePackPlugin extends Plugin {
         File[] dirs = packsRoot().listFiles();
         if (dirs != null) {
             for (File dir : dirs) {
+                // `.new` and `.part` belong to a download that never finished —
+                // a process killed mid-install leaves them behind.
+                if (dir.getName().endsWith(".new") || dir.getName().endsWith(".part")) {
+                    delete(dir);
+                    continue;
+                }
                 if (!dir.isDirectory() || !isInstalled(dir)) continue;
                 JSObject pack = new JSObject();
                 pack.put("id", dir.getName());
@@ -148,6 +154,12 @@ public class VoicePackPlugin extends Plugin {
         work.execute(() -> {
             File target = new File(packsRoot(), id);
             File temp = new File(packsRoot(), id + ".part");
+            // Unpacked beside the real thing and moved into place at the end.
+            // The first version unpacked *into* the target and deleted it when
+            // anything went wrong — so a download that failed on a bad
+            // connection took the working voice with it, and the reader lost a
+            // voice by asking for one.
+            File staging = new File(packsRoot(), id + ".new");
             try {
                 if (isInstalled(target)) {
                     JSObject already = new JSObject();
@@ -157,6 +169,7 @@ public class VoicePackPlugin extends Plugin {
                     return;
                 }
                 delete(temp);
+                delete(staging);
                 long received = fetch(url, temp, id, stop);
                 if (stop.get()) {
                     delete(temp);
@@ -164,13 +177,17 @@ public class VoicePackPlugin extends Plugin {
                     return;
                 }
                 emit(id, "unpacking", received, received);
-                delete(target);
-                if (!target.mkdirs()) throw new IOException("could not create " + target);
-                unpack(temp, target);
+                if (!staging.mkdirs()) throw new IOException("could not create " + staging);
+                unpack(temp, staging);
                 delete(temp);
-                if (!isInstalled(target)) {
-                    delete(target);
+                if (!isInstalled(staging)) {
+                    delete(staging);
                     throw new IOException("the archive held no voice");
+                }
+                delete(target);
+                if (!staging.renameTo(target)) {
+                    delete(staging);
+                    throw new IOException("could not put the voice in place");
                 }
                 JSObject done = new JSObject();
                 done.put("id", id);
@@ -178,8 +195,10 @@ public class VoicePackPlugin extends Plugin {
                 emit(id, "installed", sizeOf(target), sizeOf(target));
                 call.resolve(done);
             } catch (Exception e) {
+                // Only what this download made. An installed voice is not this
+                // download's to remove.
                 delete(temp);
-                delete(target);
+                delete(staging);
                 Log.w(TAG, "download failed", e);
                 emit(id, "failed", 0, 0);
                 call.reject(e.getMessage() == null ? "download failed" : e.getMessage());

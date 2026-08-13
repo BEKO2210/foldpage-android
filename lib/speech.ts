@@ -229,6 +229,11 @@ class Player {
     this.error = null;
     this.at = from;
     this.emit();
+    // Check the setup before the first word rather than discovering mid-article
+    // that the engine a stored choice names has been uninstalled. Idempotent
+    // and quick: it returns immediately when the choice still holds, and it
+    // never touches a voice FoldPage fetched itself.
+    await autoConfigure(this.lang).catch(() => null);
     // Held for the whole article rather than per block: taking and giving back
     // focus between paragraphs would duck the user's music twenty times.
     await holdAudioFocus();
@@ -312,7 +317,9 @@ class Player {
       const chosen = prefs.engines[voiceKey(this.lang)];
       if (chosen) {
         // An engine was picked for this language, so the app drives it itself
-        // rather than going through the phone's default one.
+        // rather than going through the phone's default one. If that engine has
+        // since been uninstalled the article would be silent, so the choice is
+        // re-checked once and dropped if it is gone.
         await withTimeout(
           FoldPageSpeech.speak({
             text,
@@ -569,6 +576,15 @@ export async function previewVoice(lang: string | null, voiceURI?: string): Prom
   const useVoice = voiceURI ?? remembered;
   await holdAudioFocus();
   try {
+    // A voice FoldPage fetched speaks for itself. Without this the preview
+    // handed "foldpage:…" to the phone's engine, which does not know that name
+    // and would fall back to whatever it felt like — the reader would hear a
+    // different voice from the one they were about to keep.
+    const pack = packIdOf(useVoice);
+    if (pack && isNative()) {
+      await withTimeout(speakWithPack(pack, text, RATES[prefs.rate]), 30000, "The voice");
+      return;
+    }
     if (isNative()) {
       const chosen = prefs.engines[voiceKey(tag)];
       if (chosen) {
@@ -804,10 +820,28 @@ export async function autoConfigure(
   if (!isNative()) return null;
   const key = voiceKey(speechLanguage(lang) ?? lang);
   const prefs = getVoicePrefs();
-  if (prefs.engines[key]) return null;
+  // A voice FoldPage fetched needs no engine at all, and must not be replaced
+  // by one.
+  if (packIdOf(prefs.voices[key])) return null;
 
   const { engines, defaultEngine } = await speechEngines();
   if (!engines.length) return null;
+
+  // An engine can be uninstalled, and a stored choice then points at nothing:
+  // the article goes silent with no fault visible anywhere. Found on a device
+  // after two speech apps were removed — the phone's own default still named
+  // one of them. A choice that no longer exists is forgotten here rather than
+  // handed to the plugin.
+  const stored = prefs.engines[key];
+  if (stored) {
+    if (engines.some((engine) => engine.packageName === stored)) return null;
+    const voices = { ...prefs.voices };
+    const kept = { ...prefs.engines };
+    delete kept[key];
+    delete voices[key];
+    saveVoicePrefs({ ...prefs, engines: kept, voices });
+    voiceCaches.delete(stored);
+  }
   const offers = await Promise.all(
     engines.map(async (engine) => ({
       engine: engine.packageName,

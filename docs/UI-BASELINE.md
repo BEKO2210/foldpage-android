@@ -457,7 +457,59 @@ ok · `ui:check` clean · `jargon` clean · `voice:check` 24/24 · and on the
 device: download with a real bar, cancel, install, selection, and an article
 read by the downloaded voice.
 
-**Remaining:** the reader's own sheet does not offer packs yet (it shows the
-article's language only, which is right, but the pack rows are not in it);
-nothing manages storage across languages in Settings; and the packs have not
-been tried on a slow or interrupted connection.
+**Remaining:** nothing manages storage across languages in Settings, and the
+packs have not been tried on a slow or interrupted connection. (The reader's
+own sheet *does* offer packs — an earlier note here said otherwise and was
+wrong; it was written from the code rather than from the screen.)
+
+### Run 10 — the parts that only fail on somebody's real phone
+
+**Hearing a downloaded voice before keeping it.** Installed packs had a Remove
+and no way to listen. Worse, `previewVoice()` did not know packs existed: it
+handed `foldpage:…` to the phone's engine, which does not know that name and
+would have answered with some other voice — a preview of the wrong thing.
+Both fixed; pack rows now read `Hear it   Remove`.
+
+**A failed download used to delete a working voice.** The first version
+unpacked into the target directory and, on any error, deleted it. So asking for
+a voice on a bad connection could cost the reader the voice they already had.
+Installs are atomic now: unpack beside it, swap into place, and on failure
+delete only what this download made. `list()` also sweeps `.new` and `.part`
+left behind by a process killed mid-install.
+
+Measured on the phone, with a URL that cannot exist:
+
+```
+fehlermeldung: "the download answered with 404"
+nochInstalliert: ["vits-piper-de_DE-thorsten-medium-int8"]
+```
+
+**An uninstalled speech engine made the app silent.** Two speech apps were
+removed from the phone; the system's own default still named one of them, and
+FoldPage's stored per-language choice pointed at another. Nothing on screen
+said so — the article simply did not speak. `autoConfigure()` now drops a
+stored engine that is no longer installed and picks again, and `play()` runs
+that check before the first word rather than discovering it mid-article.
+
+Proved by breaking it on purpose: with `engines.de = "com.beispiel.geloescht"`
+stored, pressing Listen healed the choice to `com.google.android.tts` and the
+article spoke.
+
+**Storage** is reported where it can be acted on: "Downloaded voices take up
+70 MB on this phone. Each one can be removed under its language."
+
+**And the end of the chain, on the device:** with Thorsten chosen in the
+reader's own sheet, the article is read by FoldPage's engine —
+
+```
+pluginId: FoldPageVoicePacks, methodName: speak
+{"id":"vits-piper-de_DE-thorsten-medium-int8","text":"Suno räumt ein, dass …"}
+```
+
+No other application involved, offline, with the app's own voice.
+
+**Verification:** `npm run lint` silent · `npm test` 58 pass · `npm run build`
+ok · `ui:check` clean · `jargon` clean · `voice:check` 24/24 · plus the four
+device checks above. The instruments' database wait was also raised from 4 s to
+10 s after the jargon audit failed once under load — a seed that gives up early
+reports a clean screen it never saw.

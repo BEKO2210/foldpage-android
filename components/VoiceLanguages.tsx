@@ -64,6 +64,11 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
       are doing. Kept apart from the phone's own voices because they have states
       the phone's never have: offered, downloading, failed. */
   const [installed, setInstalled] = useState<Set<string>>(new Set());
+  /** What the downloaded voices take up altogether. Asked of the phone rather
+      than added up from the catalogue: an unpacked voice is bigger than its
+      archive, and a number that disagrees with the phone's own storage screen
+      is worse than none. */
+  const [installedBytes, setInstalledBytes] = useState(0);
   const [fetching, setFetching] = useState<
     Record<string, { received: number; total: number; phase: string }>
   >({});
@@ -73,6 +78,7 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
   const refreshPacks = useCallback(async () => {
     const packs = await installedPacks(true);
     setInstalled(new Set(packs.map((pack) => pack.id)));
+    setInstalledBytes(packs.reduce((sum, pack) => sum + pack.bytes, 0));
   }, []);
 
   const loadVoices = useCallback(async (code: string) => {
@@ -207,6 +213,21 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
         delete next[pack.id];
         return next;
       });
+    }
+  }
+
+  /** Hearing a downloaded voice before keeping it — the same right the phone's
+      own voices have had all along. */
+  async function hearPack(code: string, pack: VoicePack) {
+    if (speaking) return;
+    setSpeaking(packVoiceURI(pack.id));
+    setProblem(null);
+    try {
+      await previewVoice(code, packVoiceURI(pack.id));
+    } catch {
+      setProblem("That voice would not speak. Turn the media volume up and try again.");
+    } finally {
+      setSpeaking(null);
     }
   }
 
@@ -386,6 +407,16 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
                                       <button
                                         type="button"
                                         className="linkbtn pressable"
+                                        onClick={() => void hearPack(code, pack)}
+                                        disabled={speaking !== null}
+                                      >
+                                        {speaking === packVoiceURI(pack.id)
+                                          ? "Speaking…"
+                                          : "Hear it"}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="linkbtn pressable voice-remove"
                                         onClick={() => void dropPack(code, pack)}
                                       >
                                         Remove
@@ -504,6 +535,16 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
       {problem && (
         <p className="setting-note voice-problem" role="alert">
           {problem}
+        </p>
+      )}
+
+      {/* What the downloaded voices cost, where the reader can act on it: each
+          one has a Remove inside its language. A separate storage screen would
+          be a second place to keep in step for no gain. */}
+      {!only && installedBytes > 0 && (
+        <p className="setting-note voice-total">
+          Downloaded voices take up {packSize(installedBytes)} on this phone. Each
+          one can be removed under its language.
         </p>
       )}
 

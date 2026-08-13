@@ -1392,6 +1392,12 @@ mark {
    measure of how much of it has arrived. */
 .voice-pack {
   align-items: center;
+  /* Hear it and Remove sit side by side; the row keeps its 44 px whichever of
+     the three states it is in. */
+  gap: 0.9rem;
+}
+.voice-remove {
+  color: var(--muted);
 }
 .voice-offer {
   display: flex;
@@ -1466,6 +1472,9 @@ mark {
 }
 /* A quiet button rather than a link: it does something on this page, it does
    not go anywhere. The underline of a link promised navigation. */
+.voice-total {
+  margin-top: 0.8rem;
+}
 .language-add-open {
   margin-top: 0.9rem;
   min-height: 44px;

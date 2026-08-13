@@ -142,10 +142,13 @@ await page.evaluate(async () => {
       request.onerror = () => reject(request.error);
     });
   let db = await open();
-  for (let attempt = 0; attempt < 40 && !db.objectStoreNames.contains("articles"); attempt++) {
+  for (let attempt = 0; attempt < 100 && !db.objectStoreNames.contains("articles"); attempt++) {
     db.close();
     await new Promise((resolve) => setTimeout(resolve, 100));
     db = await open();
+  }
+  if (!db.objectStoreNames.contains("articles")) {
+    throw new Error("the app never created its database — did the page load?");
   }
   const transaction = db.transaction("articles", "readwrite");
   transaction.objectStore("articles").put({
