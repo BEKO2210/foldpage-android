@@ -136,6 +136,17 @@ export default function VoiceOnboarding({
         the best voice each language has here — you can change it later in
         Settings.
       </p>
+      {/* Said once, at the moment it is relevant, and without a button: a
+          twenty-megabyte download is not something to press at a stranger on
+          the first screen. The voices are one tap away in Settings for anybody
+          who wants a better one. */}
+      {results && results.some((result) => packsFor(result.code).length > 0) && (
+        <p className="setting-note">
+          FoldPage also has voices of its own — about 20 MB each, better than
+          most phones carry, and they work offline once added. They are in
+          Settings, under the language.
+        </p>
+      )}
 
       <div className="voice-actions">
         <button

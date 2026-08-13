@@ -122,6 +122,15 @@ What still goes out to the phone's own installer: languages FoldPage does not
 carry a voice for. That is the honest remainder of the rule, and the language
 row says so rather than pretending.
 
+**Deliberately not built: automatic updates of a downloaded voice.** The
+catalogue is generated at build time and the ids are stable, so a voice only
+changes when the app ships a new catalogue — and upstream has never re-released
+the same id with different audio. A version field, an update check and an
+"Update available" state would be machinery kept alive for an event that has not
+happened. If it ever does: store the release tag beside each installed pack, and
+compare it with the catalogue's on open. Written here so the next person makes
+that call on purpose rather than discovering the gap.
+
 ## Traps already paid for
 
 - **Android 11 hides engines.** Without

@@ -249,6 +249,18 @@ for (const viewport of VIEWPORTS) {
     await page.waitForTimeout(400);
 
     const layout = await page.evaluate(OVERFLOW);
+    // Overflow is one way a page goes sideways; being *draggable* sideways is
+    // another, and a phone finds it long before a measurement does. Reported
+    // from a real device: the whole library shifted, the left edge gone, and
+    // nothing on screen offering a way back. Nothing in this app is read
+    // sideways, so the page must refuse to move even when told to.
+    const sideways = await page.evaluate(() => {
+      const before = window.scrollX;
+      window.scrollTo(400, window.scrollY);
+      const after = window.scrollX;
+      window.scrollTo(before, window.scrollY);
+      return after;
+    });
     if (SHOOT) {
       fs.mkdirSync(SHOTS, { recursive: true });
       await page.screenshot({
@@ -262,6 +274,7 @@ for (const viewport of VIEWPORTS) {
       viewport: viewport.name,
       path: route.path,
       overflowPx: layout.overflow,
+      sidewaysPx: sideways,
       overflowCulprits: layout.culprits,
       console: console_.slice(before.console),
       pageErrors: errors.slice(before.errors),
@@ -270,6 +283,9 @@ for (const viewport of VIEWPORTS) {
     results.push(entry);
 
     const where = `${route.name} @ ${viewport.name}`;
+    if (entry.sidewaysPx > 0) {
+      findings.push(`${where}: the page can be pushed ${entry.sidewaysPx}px sideways`);
+    }
     if (entry.overflowPx > 1) {
       findings.push(`${where}: scrolls sideways by ${entry.overflowPx}px — ${entry.overflowCulprits[0] ?? "no element found"}`);
     }

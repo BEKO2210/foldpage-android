@@ -763,3 +763,46 @@ real thing. Nothing to fix; written down so the next person does not chase it.
 **Verification:** `npm test` 58 · lint silent · `ui:check` seeded, empty and
 dark all clean · `jargon` clean · `voice:check` 27/27 · `keyboard` 12/12 ·
 `a11y-audit` 0 unnamed, 0 heading skips, 3 known small targets.
+
+### Run 19 — the screen that slid sideways
+
+**Reported from the phone, with a picture:** the whole library shifted a few
+dozen pixels, the left edge of every line cut off, and it stayed that way —
+"das passiert wenn ich am Handy rumziehe".
+
+**Could not be reproduced in the browser.** A card dragged with real touch
+events (CDP `Input.dispatchTouchEvent`, not a mouse) left `scrollWidth` equal to
+`clientWidth` throughout: 412 before, during and after. So the swipe gesture is
+not the cause, and the cause is not yet known — a gesture on the device, an
+interrupted page transition, or the system's own back-preview are all still
+candidates.
+
+**What was done anyway, because the cause does not have to be known to close the
+hole:** nothing in this app is ever read sideways, so the document now refuses
+to move sideways at all — `overflow-x: clip` and `overscroll-behavior-x: none`
+on `html, body`.
+
+`clip` rather than `hidden` deliberately: `hidden` would make `body` a scroll
+container and the sticky header would stick to *it* instead of to the viewport.
+Measured after the change: vertical scrolling still works (scrollY 600 of a
+2,325 px page), the header still sticks (`position: sticky`, y=0 while
+scrolled), and `window.scrollTo(300, …)` leaves `scrollX` at **0**.
+
+**And it is now a permanent check.** `ui:check` pushes every route sideways on
+purpose and fails if the page moves — overflow is one way a page goes sideways,
+being draggable is another, and a phone finds the second one long before a
+measurement finds the first.
+
+**Also this run:** the welcome screen mentions FoldPage's own voices once, at
+the moment it is relevant, without a button — a 20 MB download is not something
+to press at a stranger on the first screen.
+
+**Written down rather than built:** automatic updates for a downloaded voice.
+The catalogue ships with the app and the ids are stable, so a voice only changes
+when a new version of the app ships one. Machinery kept alive for an event that
+has not happened is machinery that rots; the note in the skill reference says
+what to do if it ever does.
+
+**Verification:** `npm test` 58 · lint silent · `ui:check` light and dark clean,
+including the new sideways check · `jargon` clean · `voice:check` 27/27 ·
+`keyboard` 12/12.

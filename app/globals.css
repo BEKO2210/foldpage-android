@@ -86,6 +86,22 @@ html {
      theme the user picked, not the one the system reports. */
   color-scheme: light dark;
 }
+/* Nothing in this app is read sideways.
+ *
+ *  A phone screen that has been dragged a few pixels off-centre and stays there
+ *  is one of the worst things that can happen to a reading app: every line is
+ *  cut, and nothing on screen explains it or offers a way back. It was reported
+ *  from a real phone, with the whole library shifted and the left edge gone.
+ *
+ *  `clip` rather than `hidden` on purpose: `hidden` makes this a scroll
+ *  container, and the sticky header would then stick to *it* instead of to the
+ *  viewport. `clip` refuses the scroll without changing what sticky means.
+ *  `overscroll-behavior-x` stops the rubber-band that starts the movement. */
+html,
+body {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
 body {
   margin: 0;
   background: var(--paper);
