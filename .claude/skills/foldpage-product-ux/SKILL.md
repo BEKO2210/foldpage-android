@@ -31,8 +31,9 @@ what a TTS engine is, and must never be asked.
 - routing decisions ("falling back to Google TTS", "selected engine 2 of 3")
 
 Say what the listener hears instead: the language, a human voice name, or the
-honest fallback wording — `prettyVoice()` in `components/VoiceSettings.tsx`
-already does this and is the pattern to reuse. Engine-level facts belong in
+honest fallback wording — `prettyVoiceName()` in `lib/voice.ts` already does
+this and is the pattern to reuse; it also refuses a leftover with digits in it,
+because "msm00013" is a serial number and not a name. Engine-level facts belong in
 `docs/`, code comments, and audit reports, never on screen.
 
 Diagnostics are an exception only when the user has explicitly gone looking for
@@ -52,9 +53,10 @@ Text → Language → Voice → Generate
 - If no compatible voice exists, say so in one sentence and offer the download
   path (section 3) — never fall back to showing foreign voices.
 
-In today's code the language step is implicit: `article.lang` decides, one
-language gets one voice, and `pickBestSetup()` chooses it. That satisfies the
-flow — the ordering rule binds whenever a *visible* choice is introduced.
+In today's code the language step is a row and the voice step is what opens
+inside it: `article.lang` decides which language the reader is offered, and the
+list under it holds that language's voices only — FoldPage's own first, the
+phone's below. `pickBestSetup()` still fills the gap when nobody has chosen.
 
 ## 3. One coherent voice system
 
@@ -66,9 +68,9 @@ experiences one FoldPage voice system.
   the next best one that can actually speak the language, locally.
 - Never make the user pick an engine to make sound come out.
 - Never require installing a separate third-party app to obtain another
-  FoldPage voice. Sending the user to Android's own speech settings is a
-  legacy escape hatch, not the target — see
-  `references/voice-and-language.md`.
+  FoldPage voice. Since 13 August 2026 FoldPage carries its own engine and
+  downloads its own voices; the phone's installer is offered only for languages
+  the catalogue does not hold — see `references/voice-and-language.md`.
 
 ## 4. Language architecture: many languages, small app
 
@@ -84,7 +86,7 @@ Design for dozens of languages, ship a small binary.
 - Downloaded languages are manageable from Settings: list, size, update,
   remove.
 
-The full target architecture, the current gap, and the constraints that already
+The target architecture, what of it is built, and the constraints that already
 cost time (per-language engines, the Android 11 `<queries>` manifest trap,
 local-only voices, IndexedDB origin lock) are in
 `references/voice-and-language.md`. Read it before designing or changing
@@ -126,6 +128,10 @@ npm run build                  # produces out/ — the export the checks serve
 npm run ui:check               # console errors, page errors, failed requests, overflow
 npm run ui:check -- --empty    # the same walk with an empty library
 npm run ui:check -- --offline  # everything beyond the app's own origin blocked
+npm run ui:check -- --dark     # the same walk in the dark theme
+npm run jargon                 # developer words in the rendered interface
+npm run voice:check            # language → voice, packs, previews, the reader
+npm run keyboard               # tab order, focus rings, names, Escape
 ```
 
 `ui:check` runs `scripts/ui-check.mjs` from this skill: it serves the static

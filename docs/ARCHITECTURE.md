@@ -418,12 +418,18 @@ Gemessen wird das mit `npm run voice:check` (siehe Abschnitt 8): keine fremde
 Sprache in einer Sprachliste, keine Netzstimme, Auswahl bleibt gemerkt,
 Tastaturbedienung, und im Reader nur die Artikelsprache.
 
-**Offen (kein Code, bewusst benannt):** In-App-Sprachpakete mit Größe,
-Fortschritt, Abbrechen, Wiederholen und Verwaltung. Solange es die nicht gibt,
-führt „Get a voice" auf den Installationsweg des Telefons — der einzige Weg,
-der heute existiert, und der einzige verbliebene Bruch mit der Produktregel.
-Was dafür nötig wäre, steht in
-`.claude/skills/foldpage-product-ux/references/voice-and-language.md`.
+**Seit 13.08.2026 bringt FoldPage eigene Stimmen mit.** Der Katalog
+(`lib/voicePacks.generated.ts`, erzeugt) führt 31 Stimmen in 22 Sprachen, je
+rund 21 MB, geladen **in** der App und danach offline nutzbar; die Engine dafür
+ist `sherpa-onnx` im APK. Die Oberfläche steht in derselben Sprachzeile: zwei
+Gruppen, „Better voices you can add" mit Größe, Fortschritt, Abbrechen,
+Wiederholen und Entfernen, darunter „Already on this phone". Eine gewählte
+eigene Stimme wird als `foldpage:<id>` in `VoicePrefs.voices` gemerkt — der Rest
+der App muss von Paketen nichts wissen. Einzelheiten und die Messungen, nach
+denen die Stimmen ausgewählt wurden, stehen in `docs/SPEECH.md`.
+
+Der Weg zum Installationsweg des Telefons bleibt genau dort, wo FoldPage selbst
+nichts anzubieten hat — für Sprachen ausserhalb des Katalogs.
 
 ## 7c. Gerätetest ohne Datenverlust (seit 12.08.2026)
 

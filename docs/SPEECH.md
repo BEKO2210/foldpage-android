@@ -145,3 +145,55 @@ FoldPage de.ithandwerk.foldpage/FoldPage/149 (userId=0)
 erschien trotzdem, weil Medien-Benachrichtigungen einen eigenen Weg gehen. Auf
 einem Gerät ohne diesen Weg fehlen die Steuerungen — der Artikel liest
 weiter, das ist der bewusste Rückfall.
+
+## FoldPage bringt jetzt eigene Stimmen mit (13.08.2026)
+
+Alles oben beschreibt die Stimmen **des Telefons**. Seit dem 13.08. hat FoldPage
+zusätzlich eigene — und der Unterschied ist der ganze Punkt: die eigenen sind
+auf jedem Gerät dieselben, in der Sprache des Artikels, und sie kommen ohne eine
+zweite installierte App.
+
+| Teil | Wo |
+|---|---|
+| Engine | `sherpa-onnx` 1.13.5 (Apache-2.0), AAR unter `android/app/libs/`, geholt mit `npm run voices:aar` (nicht im Git, 47 MB) |
+| Nativer Teil | `android/.../VoicePackPlugin.java` — Laden mit Fortschritt, Entpacken, Auflisten, Sprechen, Entfernen |
+| Katalog | `lib/voicePacks.generated.ts`, erzeugt von `npm run voices:catalogue` aus dem `tts-models`-Release |
+| Web-Schicht | `lib/voicePacks.ts` (Zustand, Größen, Auswahl), Oberfläche in `components/VoiceLanguages.tsx` |
+| Routing | `lib/speech.ts` — eine gewählte Stimme mit `foldpage:`-Präfix spricht über das Plugin, alles andere über die Telefon-Engine |
+
+**Warum nichts mitgeliefert wird:** zwei Stimmen für fünf Sprachen sind rund
+210 MB, der ganze Katalog 667 MB. Play deckelt das Basis-APK bei 200 MB. Also
+21 MB pro Stimme, auf Wunsch, danach offline.
+
+**Warum genau diese Stimmen** — gemessen auf dem S23 Ultra, Modell im Speicher:
+
+| Stimme | Download | Rechnen für 1 s Sprache |
+|---|---:|---:|
+| `thorsten-high` | 35 MB | **0,95×** |
+| `thorsten-medium` | 21 MB | 0,16× |
+| `miro-high` | 21 MB | **0,15×** |
+
+Eine Stimme bei 0,95× reisst Lücken, sobald ein Satz lang ist oder das Telefon
+etwas anderes tut. Der Katalog führt deshalb nur die 21-MB-Stimmen.
+
+**Warum zwei Threads im Plugin:** Synthese und Wiedergabe laufen getrennt, und
+der Player fordert Satz *N+1* an, bevor er auf *N* wartet. Ohne das wäre
+zwischen zwei Sätzen die halbe Sprechdauer Stille.
+
+⚠️ **Die Falle, die einen ganzen Lauf gekostet hat:** `AudioTrack.write()` mit
+einem Puffer in Größe der Äußerung kehrt zurück, sobald die Daten **in der
+Warteschlange** stehen — nicht wenn sie gehört wurden. Die erste Fassung hat
+danach sofort `stop()` und `release()` gerufen: perfekt erzeugtes Audio, das nie
+zu hören war. `play()` wartet jetzt, bis `getPlaybackHeadPosition()` das letzte
+Sample erreicht hat. Merkmal im Log: ein Aufruf, der **schneller** zurückkommt
+als der Ton dauert, hat keinen Ton gemacht.
+
+⚠️ **Modelle laden kostet eine Sekunde.** Deshalb wird der erste Satz beim
+Öffnen des Artikels gerechnet, nicht beim Drücken von „Listen" (1.338 ms kalt
+gegen 328 ms warm). Ein geöffneter, nie angehörter Artikel kostet damit rund
+eine Sekunde eines Kerns.
+
+⚠️ **Eine deinstallierte Engine macht die App stumm.** Android meldet weiter die
+gelöschte Standard-Engine, und eine gespeicherte Wahl zeigt ins Leere.
+`autoConfigure()` vergisst eine Engine, die nicht mehr installiert ist, und
+`play()` prüft das **vor** dem ersten Wort.

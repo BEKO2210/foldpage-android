@@ -73,15 +73,17 @@ about what will happen to those articles' playback, then obeys.
 
 Files: `lib/voice.ts` (preferences, gaps, selection), `lib/speech.ts` (player),
 `components/VoiceSettings.tsx` (settings UI), `components/VoiceOnboarding.tsx`,
-`lib/readAloud.ts` (text for the ear, `SPEECH_LANGUAGES`),
+`lib/readAloud.ts` (text for the ear), `lib/languages.ts` (the 60-language
+catalogue and its search), `lib/voicePacks.ts` + `lib/voicePacks.generated.ts`
+(FoldPage's own voices), `components/VoiceLanguages.tsx` (the language → voice
+screen), `android/.../VoicePackPlugin.java` (engine, download, playback),
 `android/app/src/main/java/de/ithandwerk/foldpage/SpeechPlugin.java` (engines,
 media session). Measurements and their provenance: `docs/SPEECH.md`.
 
 What already matches the target:
 
-- **No pickers.** The language/engine/voice dropdowns were removed. One
-  language gets one voice — the best the phone can speak it with. Only speed,
-  pitch and pause length are user choices, because those can be judged by ear.
+- **Language first, then that language's voices.** A row per language; inside
+  it FoldPage's own voices, then the phone's, and never another language's.
 - **Automatic selection.** `pickBestSetup(offers, lang, defaultEngine)` takes
   engines that actually have a *local* voice for the language, prefers the
   device default among them, otherwise the best-rated voice (Android's own
@@ -96,21 +98,29 @@ What already matches the target:
 - **Machine names cleaned** before display (`prettyVoice()`), falling back to
   "standard <language> voice".
 
-Where the current state falls short of the target — the work this skill exists
-to guide:
+**Since 13 August 2026 the target is largely built.** FoldPage carries its own
+engine (`sherpa-onnx`, Apache-2.0, in the APK) and its own voices, downloaded
+inside the app:
 
-1. **No in-app packs.** "Install a voice" calls `openSpeechSettings()`, which
-   opens Android's own speech settings. That is exactly the third-party detour
-   rule 15 forbids. It stays only until an in-app pack flow exists; do not
-   build new UI that depends on it.
-2. **No size, progress, cancel, retry** anywhere, because there is no download
-   the app owns.
-3. **No pack management in Settings** — only a per-language found/missing list.
-4. **No versioning or update path** for voices.
+- **Catalogue** — `lib/voicePacks.generated.ts`, written by
+  `npm run voices:catalogue` from the upstream release, so sizes and addresses
+  are facts rather than recollections. 31 voices, 22 languages, ~21 MB each.
+- **Download flow** — size before the tap, a real bar with bytes, Cancel,
+  a plain sentence and Try again on failure, Remove afterwards, and a line
+  saying what the downloaded voices cost altogether.
+- **Atomic install** — unpacked beside the target and swapped in, so a failed
+  download can never take a working voice with it.
+- **Routing** — a chosen pack is stored as `foldpage:<id>` in
+  `VoicePrefs.voices`; `lib/speech.ts` sends those sentences to the plugin and
+  everything else to the phone's engine. Nothing else in the app knows packs
+  exist.
+- **Choosing the voices** — by measurement, not by the word "high". A voice
+  that needs 0.95 s of work per second of speech leaves gaps; the catalogue
+  holds only voices around 0.15×. See `docs/SPEECH.md`.
 
-When implementing packs, `docs/ROADMAP.md` section D0 holds the evaluated
-options (RHVoice, sherpa-onnx/Piper, MediaPipe) and the reasoning for the
-current engine-per-language approach. Check it before re-evaluating anything.
+What still goes out to the phone's own installer: languages FoldPage does not
+carry a voice for. That is the honest remainder of the rule, and the language
+row says so rather than pretending.
 
 ## Traps already paid for
 

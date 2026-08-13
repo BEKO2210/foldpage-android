@@ -2,8 +2,8 @@
 
 import { FoldPageSpeech, holdAudioFocus, isNative, releaseAudioFocus } from "./native";
 import { packIdOf, prepareWithPack, speakWithPack, stopPack } from "./voicePacks";
+import { findLanguage } from "./languages";
 import {
-  SPEECH_LANGUAGES,
   speechLanguage,
   spokenBlocks,
   wrapEngine,
@@ -771,7 +771,7 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
         languages
           .map(
             (tag) =>
-              SPEECH_LANGUAGES.find((entry) => entry.code === voiceKey(tag))?.label ?? null
+              findLanguage(tag)?.endonym ?? null
           )
           .filter((label): label is string => !!label)
       ),
@@ -788,7 +788,7 @@ export async function diagnose(sampleLang: string | null): Promise<DiagnosisStep
 
   const wanted = speechLanguage(sampleLang) ?? "en-US";
   const wantedLabel =
-    SPEECH_LANGUAGES.find((entry) => entry.code === voiceKey(wanted))?.label ?? "this language";
+    findLanguage(wanted)?.endonym ?? "this language";
   try {
     const { supported } = await withTimeout(
       tts.isLanguageSupported({ lang: wanted }),
