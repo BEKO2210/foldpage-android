@@ -736,3 +736,30 @@ time. German, English, French, Italian, Spanish, Dutch and Portuguese each get
 clean · `voice:check` 26/26 · `keyboard` 12/12 · and on the phone: Italian
 offering Paola and Riccardo where the phone has only its own voice, and the
 heavy 35 MB voice removed again after the measurement.
+
+### Run 18 — a strict look at the desktop, and two controls that lied
+
+**A layout fault that was not one.** The full-page settings screenshot at
+1280 px showed the left column clipped and the back link floating between the
+columns. Measured before believing it: `settings-grid` 1016 px, two columns of
+490 px at x=132 and x=658, heights 693 and 793, header at y=8, `scrollY` 0 —
+the layout is right, and the picture was Playwright stitching a `position:
+sticky` header into a full-page capture. A viewport-sized screenshot shows the
+real thing. Nothing to fix; written down so the next person does not chase it.
+
+**Two controls that lied, found in that same screenshot:**
+
+1. **"Nothing for English — the voice above is the one to add"** was printed
+   whether or not there was a voice above. Where FoldPage carries none for that
+   language it now says so: "This phone has no voice for English, and FoldPage
+   has none to add for it yet."
+2. **"Remove English"** was offered for the language *guessed* from the phone
+   at first run. That language was never in the stored list, so the button did
+   nothing while looking like it would. Remove is now offered only for a
+   language the reader added themselves — and `voice:check` (now **27**) checks
+   both directions: the added one can be removed, the guessed one offers no
+   Remove at all.
+
+**Verification:** `npm test` 58 · lint silent · `ui:check` seeded, empty and
+dark all clean · `jargon` clean · `voice:check` 27/27 · `keyboard` 12/12 ·
+`a11y-audit` 0 unnamed, 0 heading skips, 3 known small targets.

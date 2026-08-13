@@ -52,7 +52,9 @@ import {
  *  A language with no voice on this phone is a sentence, not a dead end. */
 export default function VoiceLanguages({ only = null }: { only?: string | null }) {
   const [codes, setCodes] = useState<string[] | null>(null);
-  const [inLibrary, setInLibrary] = useState<Set<string>>(new Set());
+  /** The languages the reader asked for themselves — the only ones a "Remove"
+      can honestly act on. */
+  const [added, setAdded] = useState<Set<string>>(new Set());
   const [open, setOpen] = useState<string | null>(null);
   const [voices, setVoices] = useState<Record<string, VoiceChoice[] | "loading">>({});
   const [chosen, setChosen] = useState<Record<string, string | undefined>>({});
@@ -135,7 +137,7 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
       );
       const shown = merged.length ? merged : guess ? [guess] : [];
       if (!alive) return;
-      setInLibrary(new Set(library));
+      setAdded(new Set(prefs.languages));
       setCodes(shown);
       setChosen(
         Object.fromEntries(shown.map((code) => [code, prefs.voices[voiceKey(code)]]))
@@ -495,8 +497,9 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
                           {list.length === 0 && (
                             <li className="voice-none">
                               <span className="setting-note">
-                                Nothing for {languageName(code)} — the voice above is
-                                the one to add.
+                                {packsAvailable() && packsFor(code).length > 0
+                                  ? `Nothing for ${languageName(code)} — the voice above is the one to add.`
+                                  : `This phone has no voice for ${languageName(code)}, and FoldPage has none to add for it yet.`}
                               </span>
                             </li>
                           )}
@@ -529,7 +532,12 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
                           ))}
                         </ul>
                       )}
-                      {!only && !inLibrary.has(code) && (
+                      {/* Only a language the reader added by hand can be taken
+                          away. The library's own languages come back the moment
+                          the list is rebuilt, and the first guess — the phone's
+                          language — was never in the stored list at all, so
+                          "Remove" did nothing and said otherwise. */}
+                      {!only && added.has(code) && (
                         <button
                           type="button"
                           className="linkbtn pressable language-remove"

@@ -169,6 +169,15 @@ check(
   "pitch is offered while the phone's own voice is doing the reading"
 );
 
+// --- a language nobody added cannot be "removed" ---
+// The first row on a fresh install is a guess at the phone's language. It was
+// never in the stored list, so a Remove there did nothing while looking like it
+// would.
+check(
+  (await page.getByRole("button", { name: /^Remove / }).count()) === 0,
+  "the guessed language offers no Remove"
+);
+
 // --- add a language by searching for it, in the language's own name ---
 await page.getByRole("button", { name: "Add a language" }).click();
 await page.locator("#fp-language-search").fill("deutsch");

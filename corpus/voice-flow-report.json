@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-08-13T01:43:16.475Z",
+  "ranAt": "2026-08-13T01:48:06.901Z",
   "voices": [
     {
       "name": "Thorsten",
@@ -61,6 +61,7 @@
   "passed": [
     "ok: an empty library offers exactly one language row",
     "ok: pitch is offered while the phone's own voice is doing the reading",
+    "ok: the guessed language offers no Remove",
     "ok: searching \"deutsch\" offers German first",
     "ok: the chosen language appears as a row",
     "ok: German offers at least one voice",
