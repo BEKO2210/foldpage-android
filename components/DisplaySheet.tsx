@@ -14,17 +14,30 @@ export default function DisplaySheet({
   open,
   onClose,
   lang = null,
+  startOn = "text",
 }: {
   open: boolean;
   onClose: () => void;
   /** The article's own language, so the voice list offers what can say it. */
   lang?: string | null;
+  /** Which panel to open on. The reader sends "voice" when it opened the sheet
+   *  to solve a voice problem — landing on the type settings would make the
+   *  reader look for the thing they were just offered. */
+  startOn?: "text" | "voice";
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   // Two panels rather than one long scroll: type settings and voice settings
   // are used at different moments, and a sheet a reader opens mid-article has
   // to fit on the screen it opens over.
-  const [panel, setPanel] = useState<"text" | "voice">("text");
+  const [panel, setPanel] = useState<"text" | "voice">(startOn);
+  // A sheet opened for a reason opens on that reason. Adjusted while
+  // rendering rather than in an effect: React's own advice for "reset state
+  // when a prop changes", and it avoids the extra pass an effect would cost.
+  const [openedOn, setOpenedOn] = useState(startOn);
+  if (startOn !== openedOn) {
+    setOpenedOn(startOn);
+    setPanel(startOn);
+  }
 
   useEffect(() => {
     const dialog = ref.current;

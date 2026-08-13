@@ -1,9 +1,9 @@
 {
-  "ranAt": "2026-08-13T01:19:20.860Z",
+  "ranAt": "2026-08-13T01:38:43.656Z",
   "mode": {
-    "empty": true,
+    "empty": false,
     "offline": false,
-    "dark": true
+    "dark": false
   },
   "viewports": [
     {
@@ -31,7 +31,7 @@
     {
       "route": "reader",
       "viewport": "mobile",
-      "path": "/read/",
+      "path": "/read/?id=ui-0",
       "overflowPx": 0,
       "overflowCulprits": [],
       "console": [],
@@ -61,7 +61,7 @@
     {
       "route": "reader",
       "viewport": "desktop",
-      "path": "/read/",
+      "path": "/read/?id=ui-0",
       "overflowPx": 0,
       "overflowCulprits": [],
       "console": [],

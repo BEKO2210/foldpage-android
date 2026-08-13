@@ -19,6 +19,7 @@ import {
 } from "@/components/icons";
 import { buzzSuccess, buzzWarning, commit, openExternal, tap, uncommit } from "@/lib/native";
 import { refetchArticle } from "@/lib/articles";
+import { packsAvailable, packsFor } from "@/lib/voicePacks";
 import { objectUrlFor, storeImagesForArticle } from "@/lib/images";
 import { indexArticle } from "@/lib/search";
 import {
@@ -175,6 +176,13 @@ export default function ReadPage() {
   const [article, setArticle] = useState<Article | null | undefined>(undefined);
   const [prefs] = useDisplayPrefs();
   const [sheetOpen, setSheetOpen] = useState(false);
+  /** Which half of the reading sheet to open on. A sheet opened because the
+   *  voice is missing has to land on the voices. */
+  const [sheetPanel, setSheetPanel] = useState<"text" | "voice">("text");
+  /** Whether FoldPage has a voice of its own for this article's language. It
+   *  decides which way out the missing-voice line offers: its own download, or
+   *  the phone's installer for a language FoldPage does not carry. */
+  const canAddVoice = packsAvailable() && packsFor(article?.lang ?? null).length > 0;
   const [refetching, setRefetching] = useState(false);
   const [refetchNote, setRefetchNote] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -409,6 +417,7 @@ export default function ReadPage() {
         aria-haspopup="dialog"
         onClick={() => {
           void tap();
+          setSheetPanel("text");
           setSheetOpen(true);
         }}
       >
@@ -505,11 +514,35 @@ export default function ReadPage() {
           ) : voice.error || voiceMissing ? (
             <>
               {voice.error ??
-                "This phone has no voice installed for this article's language."}{" "}
-              <button type="button" className="linkbtn" onClick={() => void installVoices()}>
-                Install voices
-              </button>{" "}
-              <Link href="/settings">Check the voice</Link>
+                (canAddVoice
+                  ? "No voice for this article's language yet — FoldPage has one to add, about 20 MB, and it works offline afterwards."
+                  : "This phone has no voice installed for this article's language.")}{" "}
+              {canAddVoice ? (
+                // FoldPage can solve this itself, so the way out is one tap
+                // inside the app rather than a trip to another screen.
+                <button
+                  type="button"
+                  className="linkbtn pressable"
+                  onClick={() => {
+                    void tap();
+                    setSheetPanel("voice");
+                    setSheetOpen(true);
+                  }}
+                >
+                  Add a voice
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="linkbtn"
+                    onClick={() => void installVoices()}
+                  >
+                    Install voices
+                  </button>{" "}
+                  <Link href="/settings">Check the voice</Link>
+                </>
+              )}
             </>
           ) : voice.playing ? (
             <>
@@ -572,6 +605,7 @@ export default function ReadPage() {
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}
         lang={article.lang}
+        startOn={sheetPanel}
       />
     </main>
   );

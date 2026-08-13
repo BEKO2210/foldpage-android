@@ -38,37 +38,50 @@ const BASE =
  *  female and a male voice are offered, so "the other one" is a real
  *  alternative and not the same voice twice. */
 const WANTED = {
+  // Chosen by what a phone can actually keep up with, measured on an S23 Ultra
+  // with the model already in memory:
+  //
+  //   thorsten-high (35 MB)  3,867 ms of work for 4.08 s of speech = 0.95x
+  //   miro-high     (21 MB)    653 ms of work for 4.34 s of speech = 0.15x
+  //   thorsten-medium (21 MB)  782 ms of work for 4.82 s of speech = 0.16x
+  //
+  // A voice that needs nearly as long to think as to speak leaves gaps the
+  // moment a sentence is long or the phone is busy, and it is a third bigger
+  // to download. So: the 21 MB voices, and the big `-high` models are left
+  // alone however good their name sounds. `miro` and `dii` are one voice
+  // across many languages, which is why the same name turns up under several —
+  // a reader who likes it keeps it when they change language.
   de: [
+    { file: "vits-piper-de_DE-miro-high-int8", label: "Miro" },
     { file: "vits-piper-de_DE-thorsten-medium-int8", label: "Thorsten" },
-    { file: "vits-piper-de_DE-kerstin-low-int8", label: "Kerstin" },
   ],
   en: [
+    { file: "vits-piper-en_US-miro-high-int8", label: "Miro" },
     { file: "vits-piper-en_US-amy-medium-int8", label: "Amy" },
-    { file: "vits-piper-en_US-ryan-medium-int8", label: "Ryan" },
   ],
   fr: [
+    { file: "vits-piper-fr_FR-miro-high-int8", label: "Miro" },
     { file: "vits-piper-fr_FR-siwis-medium-int8", label: "Siwis" },
-    { file: "vits-piper-fr_FR-tom-medium-int8", label: "Tom" },
   ],
   it: [
+    { file: "vits-piper-it_IT-miro-high-int8", label: "Miro" },
     { file: "vits-piper-it_IT-paola-medium-int8", label: "Paola" },
-    { file: "vits-piper-it_IT-riccardo-x_low-int8", label: "Riccardo" },
   ],
   es: [
+    { file: "vits-piper-es_ES-miro-high-int8", label: "Miro" },
     { file: "vits-piper-es_ES-davefx-medium-int8", label: "Dave" },
-    { file: "vits-piper-es_ES-sharvard-medium-int8", label: "Sharvard" },
   ],
   nl: [
+    { file: "vits-piper-nl_NL-miro-high-int8", label: "Miro" },
     { file: "vits-piper-nl_NL-alex-medium-int8", label: "Alex" },
-    { file: "vits-piper-nl_BE-nathalie-medium-int8", label: "Nathalie" },
   ],
   pt: [
+    { file: "vits-piper-pt_BR-miro-high-int8", label: "Miro" },
     { file: "vits-piper-pt_BR-faber-medium-int8", label: "Faber" },
-    { file: "vits-piper-pt_PT-tugao-medium-int8", label: "Tugão" },
   ],
   pl: [
-    { file: "vits-piper-pl_PL-darkman-medium-int8", label: "Darek" },
     { file: "vits-piper-pl_PL-gosia-medium-int8", label: "Gosia" },
+    { file: "vits-piper-pl_PL-darkman-medium-int8", label: "Darek" },
   ],
   ru: [
     { file: "vits-piper-ru_RU-irina-medium-int8", label: "Irina" },

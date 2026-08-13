@@ -27,6 +27,13 @@ export interface VoicePack {
 
 export const VOICE_PACKS: VoicePack[] = [
   {
+    "id": "vits-piper-de_DE-miro-high-int8",
+    "language": "de",
+    "label": "Miro",
+    "bytes": 21280966,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-miro-high-int8.tar.bz2"
+  },
+  {
     "id": "vits-piper-de_DE-thorsten-medium-int8",
     "language": "de",
     "label": "Thorsten",
@@ -34,11 +41,11 @@ export const VOICE_PACKS: VoicePack[] = [
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-thorsten-medium-int8.tar.bz2"
   },
   {
-    "id": "vits-piper-de_DE-kerstin-low-int8",
-    "language": "de",
-    "label": "Kerstin",
-    "bytes": 21174728,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-kerstin-low-int8.tar.bz2"
+    "id": "vits-piper-en_US-miro-high-int8",
+    "language": "en",
+    "label": "Miro",
+    "bytes": 21336806,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-en_US-miro-high-int8.tar.bz2"
   },
   {
     "id": "vits-piper-en_US-amy-medium-int8",
@@ -48,11 +55,11 @@ export const VOICE_PACKS: VoicePack[] = [
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-en_US-amy-medium-int8.tar.bz2"
   },
   {
-    "id": "vits-piper-en_US-ryan-medium-int8",
-    "language": "en",
-    "label": "Ryan",
-    "bytes": 21083446,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-en_US-ryan-medium-int8.tar.bz2"
+    "id": "vits-piper-fr_FR-miro-high-int8",
+    "language": "fr",
+    "label": "Miro",
+    "bytes": 21268816,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-fr_FR-miro-high-int8.tar.bz2"
   },
   {
     "id": "vits-piper-fr_FR-siwis-medium-int8",
@@ -62,11 +69,11 @@ export const VOICE_PACKS: VoicePack[] = [
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-fr_FR-siwis-medium-int8.tar.bz2"
   },
   {
-    "id": "vits-piper-fr_FR-tom-medium-int8",
-    "language": "fr",
-    "label": "Tom",
-    "bytes": 21019617,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-fr_FR-tom-medium-int8.tar.bz2"
+    "id": "vits-piper-it_IT-miro-high-int8",
+    "language": "it",
+    "label": "Miro",
+    "bytes": 21238206,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-it_IT-miro-high-int8.tar.bz2"
   },
   {
     "id": "vits-piper-it_IT-paola-medium-int8",
@@ -76,11 +83,11 @@ export const VOICE_PACKS: VoicePack[] = [
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-it_IT-paola-medium-int8.tar.bz2"
   },
   {
-    "id": "vits-piper-it_IT-riccardo-x_low-int8",
-    "language": "it",
-    "label": "Riccardo",
-    "bytes": 13329285,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-it_IT-riccardo-x_low-int8.tar.bz2"
+    "id": "vits-piper-es_ES-miro-high-int8",
+    "language": "es",
+    "label": "Miro",
+    "bytes": 21273088,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-es_ES-miro-high-int8.tar.bz2"
   },
   {
     "id": "vits-piper-es_ES-davefx-medium-int8",
@@ -90,11 +97,11 @@ export const VOICE_PACKS: VoicePack[] = [
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-es_ES-davefx-medium-int8.tar.bz2"
   },
   {
-    "id": "vits-piper-es_ES-sharvard-medium-int8",
-    "language": "es",
-    "label": "Sharvard",
-    "bytes": 23477120,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-es_ES-sharvard-medium-int8.tar.bz2"
+    "id": "vits-piper-nl_NL-miro-high-int8",
+    "language": "nl",
+    "label": "Miro",
+    "bytes": 21359568,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-nl_NL-miro-high-int8.tar.bz2"
   },
   {
     "id": "vits-piper-nl_NL-alex-medium-int8",
@@ -104,11 +111,11 @@ export const VOICE_PACKS: VoicePack[] = [
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-nl_NL-alex-medium-int8.tar.bz2"
   },
   {
-    "id": "vits-piper-nl_BE-nathalie-medium-int8",
-    "language": "nl",
-    "label": "Nathalie",
-    "bytes": 21139955,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-nl_BE-nathalie-medium-int8.tar.bz2"
+    "id": "vits-piper-pt_BR-miro-high-int8",
+    "language": "pt",
+    "label": "Miro",
+    "bytes": 21341456,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-pt_BR-miro-high-int8.tar.bz2"
   },
   {
     "id": "vits-piper-pt_BR-faber-medium-int8",
@@ -118,11 +125,11 @@ export const VOICE_PACKS: VoicePack[] = [
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-pt_BR-faber-medium-int8.tar.bz2"
   },
   {
-    "id": "vits-piper-pt_PT-tugao-medium-int8",
-    "language": "pt",
-    "label": "Tugão",
-    "bytes": 21253211,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-pt_PT-tugao-medium-int8.tar.bz2"
+    "id": "vits-piper-pl_PL-gosia-medium-int8",
+    "language": "pl",
+    "label": "Gosia",
+    "bytes": 21109262,
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-pl_PL-gosia-medium-int8.tar.bz2"
   },
   {
     "id": "vits-piper-pl_PL-darkman-medium-int8",
@@ -130,13 +137,6 @@ export const VOICE_PACKS: VoicePack[] = [
     "label": "Darek",
     "bytes": 21078264,
     "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-pl_PL-darkman-medium-int8.tar.bz2"
-  },
-  {
-    "id": "vits-piper-pl_PL-gosia-medium-int8",
-    "language": "pl",
-    "label": "Gosia",
-    "bytes": 21109262,
-    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-pl_PL-gosia-medium-int8.tar.bz2"
   },
   {
     "id": "vits-piper-ru_RU-irina-medium-int8",

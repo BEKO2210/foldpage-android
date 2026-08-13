@@ -350,7 +350,9 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
                     <div className="language-body" id={`voices-${code}`}>
                       {list === "loading" || list === undefined ? (
                         <p className="setting-note">Asking the phone…</p>
-                      ) : list.length === 0 ? (
+                      ) : list.length === 0 && packsFor(code).length === 0 ? (
+                        // No voice on the phone and none FoldPage can add: the
+                        // phone's own installer is the only door there is.
                         <div className="voice-none">
                           <p className="setting-note">
                             No voice for {languageName(code)} on this phone yet.
@@ -487,9 +489,15 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
                                 </li>
                               );
                             })}
-                          {list.length > 0 && (
-                            <li className="voice-group" aria-hidden="true">
-                              Already on this phone
+                          <li className="voice-group" aria-hidden="true">
+                            Already on this phone
+                          </li>
+                          {list.length === 0 && (
+                            <li className="voice-none">
+                              <span className="setting-note">
+                                Nothing for {languageName(code)} — the voice above is
+                                the one to add.
+                              </span>
                             </li>
                           )}
                           {list.map((voice) => (

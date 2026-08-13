@@ -699,3 +699,40 @@ seeded and empty, all clean · `voice:check` 26/26 · `keyboard` 12/12.
 because versionCode 13 is spent. `npm run set-version -- 1.12` raises the name
 across the three files and the code to 14; that belongs in the final run, once
 nothing else is going to change.
+
+### Run 16 — the way out of "no voice" is now inside the app, and the catalogue was measured
+
+**The empty state swallowed the packs.** When the phone had no voice for a
+language, the language row showed "No voice for Italian on this phone yet" and
+a button that left FoldPage — and the voices FoldPage could add were *not
+rendered at all*, because they sat inside the branch the empty state replaced.
+The one case where the app's own voices matter most was the one case that hid
+them. The pack list is always there now; the phone's group says "Nothing for
+Italian — the voice above is the one to add", and the trip to the phone's own
+installer is offered only for a language FoldPage does not carry.
+
+The same correction in two more places: the welcome screen offers "Choose a
+voice in Settings" when FoldPage has one, and the reader's missing-voice line
+opens the reading sheet **on the Voice panel** instead of sending the reader to
+another app.
+
+**The catalogue was chosen by name and is now chosen by measurement.** On the
+S23 Ultra, model already in memory:
+
+| voice | download | synthesis vs. speech |
+|---|---:|---:|
+| `thorsten-high` | 35 MB | 3,867 ms for 4.08 s — **0.95×** |
+| `thorsten-medium` | 21 MB | 782 ms for 4.82 s — 0.16× |
+| `miro-high` | 21 MB | 653 ms for 4.34 s — **0.15×** |
+
+A voice that needs nearly as long to think as to speak leaves gaps the moment a
+sentence is long or the phone is busy — and costs a third more to download. So
+the big `-high` models are out however good the word "high" sounds, and every
+entry in the catalogue is now a 21 MB voice that runs at about a sixth of real
+time. German, English, French, Italian, Spanish, Dutch and Portuguese each get
+`Miro` — one voice that speaks all of them — plus a native-named second.
+
+**Verification:** `npm test` 58 · lint silent · `ui:check` clean · `jargon`
+clean · `voice:check` 26/26 · `keyboard` 12/12 · and on the phone: Italian
+offering Paola and Riccardo where the phone has only its own voice, and the
+heavy 35 MB voice removed again after the measurement.

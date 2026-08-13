@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { deviceLanguage, languageLabel, languageName } from "@/lib/languages";
+import { packsFor } from "@/lib/voicePacks";
 import {
   autoConfigure,
   languagesInLibrary,
@@ -192,17 +193,34 @@ export default function VoiceOnboarding({
           <p className="setting-note">
             {missing.map((result) => result.label).join(", ")}:{" "}
             {missing.length === 1 ? "this language has" : "these languages have"} no
-            voice on this phone yet. Adding one takes a minute, and it only has
-            to happen once — a voice added this way is picked up here as soon as
-            you check again.
+            voice on this phone yet.{" "}
+            {missing.every((result) => packsFor(result.code).length > 0)
+              ? // FoldPage can solve this itself now, and saying so beats
+                // sending somebody to another screen to solve it for us.
+                "FoldPage has one to add — about 20 MB, and it works offline afterwards."
+              : "Adding one takes a minute, and it only has to happen once."}
           </p>
           <button
             type="button"
             className="btn btn-quiet pressable"
-            onClick={() => void openSpeechSettings()}
+            onClick={() => {
+              void tap();
+              if (onDone) onDone();
+            }}
           >
-            Add a voice
+            {missing.every((result) => packsFor(result.code).length > 0)
+              ? "Choose a voice in Settings"
+              : "Later"}
           </button>
+          {!missing.every((result) => packsFor(result.code).length > 0) && (
+            <button
+              type="button"
+              className="btn btn-quiet pressable"
+              onClick={() => void openSpeechSettings()}
+            >
+              Add a voice
+            </button>
+          )}
         </div>
       )}
     </div>
