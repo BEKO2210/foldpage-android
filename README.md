@@ -32,6 +32,13 @@ newsletter pop-ups and cookie walls, and keeps the article — text and images �
 in local storage. From then on it reads offline, in a typography built for long
 text rather than for engagement.
 
+- **Reads aloud, in its own voice** — FoldPage carries a speech engine and can
+  fetch a neural voice for your language, about 20 MB, straight inside the app.
+  No second app to install, and it works offline once it is there. The phone's
+  own voices stay available beside it.
+- **A language, then its voices** — pick a language and you see the voices for
+  *that* language and nothing else: FoldPage's own first, the phone's below,
+  each with a listen button before you keep it.
 - **Share to save** — hit _Share_ in any app, pick FoldPage, done. The link is
   fetched and filed away in the background.
 - **A real reader** — serif or sans, four text sizes, ragged-right or justified
@@ -55,15 +62,38 @@ text rather than for engagement.
 
 ## What it looks like
 
+<div align="center">
+
+<img src="docs/screenshots/device-library.png" alt="The library on a phone: a saved article as a card with site, reading time and summary" width="30%">
+<img src="docs/screenshots/device-reader-playing.png" alt="The reader while it is being read aloud: the spoken paragraph is tinted and the control says Pause" width="30%">
+<img src="docs/screenshots/device-voices.png" alt="Settings: the German language row open, with FoldPage's voices to add and the phone's own below" width="30%">
+
+<sub>The library, an article being read aloud, and the voices for one language.
+Photographed on a Galaxy S23 Ultra, not mocked up.</sub>
+
+<br><br>
+
+<img src="docs/screenshots/voice-download.gif" alt="Adding a voice: two voices offered with their size, one downloading with a progress bar, then installed and choosable" width="52%">
+
+<sub>Adding a voice, start to finish, inside the app: size before the tap, a bar
+while it arrives, and a voice you can listen to before you keep it.</sub>
+
+</div>
+
 |                                                                                                                        |                                                                                                                                                                                             |
 | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <img src="docs/screenshots/reader-dark.png" alt="The reader in the dark theme" width="240">                            | **The reader** — serif body text at one of four sizes, a hairline progress bar at the top, and a toolbar that stays out of the way. Everything the page carried around the article is gone. |
-| <img src="docs/screenshots/settings-dark.png" alt="The settings screen: library stats, import and export" width="240"> | **Settings** — what your library holds, import from Pocket or a bookmarks file, export to JSON, HTML or Markdown. No account to manage, because there isn't one.                            |
+| <img src="docs/screenshots/reader-dark.png" alt="The reader in the dark theme" width="240">                            | **The reader** — serif body text at one of four sizes, a hairline progress bar at the top, and one labelled control for the thing the app is for. Everything the page carried around the article is gone. |
+| <img src="docs/screenshots/device-voices-italian.png" alt="The Italian language row: two FoldPage voices to add, the phone's own below" width="240"> | **Every language, not just yours** — 31 voices across 22 languages, two for German, English, French, Italian, Spanish, Dutch, Portuguese, Polish and Russian. A language the phone cannot speak is one download away. |
 
 ## Privacy
 
 There is no account, no analytics, no crash reporting, no ad SDK. The app makes
-exactly one kind of outbound request: fetching a page you asked it to save.
+exactly two kinds of outbound request, both of which you start yourself:
+fetching a page you asked it to save, and downloading a voice you asked it to
+add (from the sherpa-onnx release on GitHub — the same file for everybody, with
+nothing about you in the request). Reading aloud itself happens on the phone:
+no sentence of any article ever leaves the device.
+
 Your library lives in the app's private storage on the device and is never
 uploaded anywhere. Permissions requested: `INTERNET` and `VIBRATE` — that's the
 complete list.
@@ -89,6 +119,11 @@ and they are not a sign anything is wrong:
   certainty about who built the file.
 
 Requires Android 7.0 (API 24) or newer.
+
+The APK here is a universal one — it carries the speech engine for all four
+processor types, which is why it is around 120 MB. The Play Store build is split
+per device and downloads about 30 MB. Voices are not in either: they are fetched
+on demand, about 20 MB each, only for languages you ask for.
 
 ### Verifying the download
 

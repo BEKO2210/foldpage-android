@@ -31,9 +31,19 @@ these components.
 | AndroidX `webkit`                                       | 1.14.0  | Copyright The Android Open Source Project            | https://developer.android.com/jetpack/androidx              |
 | `@swc/helpers`                                          | 0.5.15  | Copyright 2024 SWC contributors                      | https://github.com/swc-project/swc                          |
 | `baseline-browser-mapping` (build only)                 | 2.11.12 | Copyright the W3C WebDX Community Group contributors | https://github.com/web-platform-dx/baseline-browser-mapping |
+| sherpa-onnx (`sherpa-onnx-*.aar`)                       | 1.13.5  | Copyright (c) 2022-2026 Xiaomi Corporation           | https://github.com/k2-fsa/sherpa-onnx                       |
+| Apache Commons Compress                                 | 1.27.1  | Copyright The Apache Software Foundation             | https://commons.apache.org/proper/commons-compress/         |
+| Kotlin standard library (`kotlin-stdlib`)               | 2.0.21  | Copyright 2010-2026 JetBrains s.r.o.                 | https://github.com/JetBrains/kotlin                         |
 
 Readability.js is the component that turns a fetched page into the reader view
 in `lib/parse.ts`. It is used unmodified, via npm.
+
+sherpa-onnx is the speech engine that reads articles out loud in FoldPage's own
+voices. It ships inside the APK as an unmodified release AAR (fetched by
+`scripts/fetch-sherpa-aar.sh`, not committed) and carries ONNX Runtime, which is
+listed under the MIT section below. Commons Compress unpacks a downloaded voice
+(`.tar.bz2`); the Kotlin standard library is required because sherpa-onnx's
+Android API is written in Kotlin.
 
 ## MIT License
 
@@ -56,6 +66,16 @@ in `lib/parse.ts`. It is used unmodified, via npm.
 | `@capacitor/status-bar`                  | 8.0.3   | Copyright (c) 2017-present Drifty Co.                                 | https://github.com/ionic-team/capacitor-plugins    |
 | `nanoid` (build only)                    | 3.3.18  | Copyright 2017 Andrey Sitnik                                          | https://github.com/ai/nanoid                       |
 | `postcss` (build only)                   | 8.4.31  | Copyright 2013 Andrey Sitnik                                          | https://github.com/postcss/postcss                 |
+| ONNX Runtime (inside the sherpa-onnx AAR) | 1.x    | Copyright (c) Microsoft Corporation                                   | https://github.com/microsoft/onnxruntime            |
+| Piper voices (downloaded on demand)      | —       | Copyright (c) 2023 Michael Hansen and the voice contributors          | https://github.com/rhasspy/piper                   |
+
+**The voices are not part of this repository or of the APK.** They are Piper
+models, MIT-licensed, published as ready-made archives in the `tts-models`
+release of sherpa-onnx and downloaded by the app only when a reader asks for
+one. `lib/voicePacks.generated.ts` lists which ones, with their sizes and
+addresses; `npm run voices:catalogue` regenerates that list from the upstream
+release. Individual voices are trained on differently licensed corpora — the
+per-voice `MODEL_CARD` in each archive names the source and its terms.
 
 ## ISC License
 

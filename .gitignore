@@ -16,3 +16,6 @@ keystore.properties
 tsconfig.tsbuildinfo
 corpus/ui-shots/
 android/app/libs/*.aar
+
+# Der Ralph-Loop-Zustand gehoert einer Sitzung, nicht dem Projekt.
+.claude/ralph-loop.local.md
