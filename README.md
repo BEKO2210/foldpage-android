@@ -201,6 +201,26 @@ scripts/        icon/splash generation and the signed release build
 ```
 
 
+## Status
+
+Version 1.12 — local-only, no account, in closed testing on Google Play. Reading
+aloud now runs on FoldPage's own engine with voices it fetches itself; the
+phone's voices remain available. Sync between devices exists in the web version
+and is deliberately absent here.
+
+Measured rather than asserted, on every change: 58 unit tests, an extraction
+corpus of 39 real articles from 22 sites, 148 rendered reader pages with no
+failures, a browser pass over every route in four modes (seeded, empty, offline,
+dark) for console errors, overflow and sideways drag, an audit that hunts
+developer words in the rendered interface, 27 checks on the language → voice
+rule, 12 on keyboard operation, and a structural accessibility audit. What those
+cannot judge — the order TalkBack announces things in, whether the motion feels
+right in a hand — is listed as unverified in
+[`docs/UI-BASELINE.md`](docs/UI-BASELINE.md) rather than implied.
+
+Where the work goes next: [`docs/ROADMAP.md`](docs/ROADMAP.md). How the app is
+put together: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
 ## License
 
 Free to use, not free to modify or redistribute. See [LICENSE.md](LICENSE.md).
