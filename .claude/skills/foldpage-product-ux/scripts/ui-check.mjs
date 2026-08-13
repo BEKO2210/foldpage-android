@@ -22,6 +22,7 @@
  *  Flags:
  *    --empty     do not seed the library — checks the empty state instead
  *    --offline   run with the network cut, after the first load
+ *    --dark      run in the dark theme
  *    --shots     write a screenshot per route and viewport
  *    --keep      leave the browser open (headed) for a look
  *
@@ -42,6 +43,10 @@ const flags = new Set(process.argv.slice(2));
 const EMPTY = flags.has("--empty");
 const OFFLINE = flags.has("--offline");
 const SHOOT = flags.has("--shots");
+/** The app has a dark theme and it is the one a phone uses at night, which is
+ *  when a reading app is used. Layout in the dark had only ever been looked at
+ *  on the device. */
+const DARK = flags.has("--dark");
 const HEADED = flags.has("--keep");
 
 /** Mobile is the design viewport, not the reduced one. Desktop is here to
@@ -197,6 +202,7 @@ for (const viewport of VIEWPORTS) {
     // about pretending a mouse is a finger.
     hasTouch: viewport.name === "mobile",
     isMobile: viewport.name === "mobile",
+    colorScheme: DARK ? "dark" : "light",
   });
   const page = await context.newPage();
   await page.addInitScript(() => localStorage.setItem("fp-welcomed", "1"));
@@ -246,7 +252,7 @@ for (const viewport of VIEWPORTS) {
     if (SHOOT) {
       fs.mkdirSync(SHOTS, { recursive: true });
       await page.screenshot({
-        path: path.join(SHOTS, `${route.name}-${viewport.name}.png`),
+        path: path.join(SHOTS, `${route.name}-${viewport.name}${DARK ? "-dark" : ""}.png`),
         fullPage: true,
       });
     }
@@ -287,14 +293,14 @@ server.close();
 fs.mkdirSync(CORPUS, { recursive: true });
 const report = {
   ranAt: new Date().toISOString(),
-  mode: { empty: EMPTY, offline: OFFLINE },
+  mode: { empty: EMPTY, offline: OFFLINE, dark: DARK },
   viewports: VIEWPORTS,
   results,
   findings,
 };
 fs.writeFileSync(path.join(CORPUS, "ui-report.json"), `${JSON.stringify(report, null, 2)}\n`);
 
-const label = `${EMPTY ? "empty" : "seeded"}${OFFLINE ? ", offline" : ""}`;
+const label = `${EMPTY ? "empty" : "seeded"}${OFFLINE ? ", offline" : ""}${DARK ? ", dark" : ""}`;
 if (!findings.length) {
   console.log(`ui-check (${label}): ${results.length} route/viewport passes, nothing found.`);
   console.log("corpus/ui-report.json written. Console warnings, if any, are in it.");

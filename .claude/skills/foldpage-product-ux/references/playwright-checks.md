@@ -12,6 +12,8 @@ npm run build                  # writes out/ — every check below serves that e
 npm run ui:check               # console errors, page errors, failed requests, overflow
 npm run ui:check -- --empty    # the same walk with an empty library
 npm run ui:check -- --offline  # everything beyond the app's own origin blocked
+npm run ui:check -- --dark     # the same walk in the dark theme
+npm run keyboard               # tab order, focus rings, names, Escape
 node scripts/a11y-audit.mjs    # names, heading levels, touch targets, 200 % font, focus
 npm run reader-render          # reader layout, measure, light/dark screenshots
 npm run apk:debug              # on-device build; required for anything native (speech)
@@ -29,6 +31,7 @@ previous state until `cap sync` runs, which `npm run apk:debug` includes.
 For each screen the change touches:
 
 - [ ] mobile viewport 412 × 915 — the design shape
+- [ ] the dark theme (`-- --dark`) — a reading app is used at night
 - [ ] desktop viewport 1280 × 900 — breakage only, not a second design
 - [ ] no console errors, and console warnings read and judged
 - [ ] no uncaught page errors

@@ -24,6 +24,7 @@ import { tap } from "@/lib/native";
 import {
   cancelPack,
   downloadPack,
+  findPack,
   installedPacks,
   packIdOf,
   packSize,
@@ -326,13 +327,19 @@ export default function VoiceLanguages({ only = null }: { only?: string | null }
                       {languageLabel(code)}
                     </span>
                     <span className="language-voice">
-                      {current
-                        ? prettyVoiceName(current.name, languageName(code))
-                        : Array.isArray(list) && list.length === 0
-                          ? "no voice yet"
-                          : chosen[code]
-                            ? "voice set"
-                            : "choose a voice"}
+                      {/* The row names the voice it will read with, closed or
+                          open. A pack knows its own name without asking the
+                          phone, so a closed row says "Thorsten" rather than the
+                          placeholder "voice set" it used to show until somebody
+                          opened it. */}
+                      {findPack(packIdOf(chosen[code]))?.label ??
+                        (current
+                          ? prettyVoiceName(current.name, languageName(code))
+                          : Array.isArray(list) && list.length === 0
+                            ? "no voice yet"
+                            : chosen[code]
+                              ? "the voice this phone uses"
+                              : "choose a voice")}
                     </span>
                     <span className="language-chevron" aria-hidden="true">
                       ›

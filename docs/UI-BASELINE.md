@@ -669,3 +669,33 @@ was already installed — and the retry, with wifi back, installed the voice in
 
 **Verification:** `npm test` 58 · lint silent · `ui:check` clean · `jargon`
 clean · `voice:check` 26/26 · `keyboard` 12/12 · plus the device checks above.
+
+### Run 15 — consistency, in both themes
+
+**A closed language row said "voice set".** A placeholder, shown whenever the
+row had not been opened yet, because the *phone's* voice list had not been
+asked for. A voice FoldPage carries knows its own name without asking anybody,
+so the row reads **"Deutsch — Kerstin"** now, closed or open. Confirmed on the
+device.
+
+Where the name genuinely is not known yet, the placeholder is a sentence rather
+than a label: "the voice this phone uses".
+
+**The dark theme had only ever been looked at on the device.** `ui:check` takes
+`--dark` now and runs the whole walk with the dark palette: library, reader and
+settings, both viewports, seeded and empty — no console errors, no overflow,
+and the screenshots show the sections, hairlines and disclosures holding up.
+A reading app is used at night; the check should have covered it from the
+start.
+
+Also visible on the device in the same screenshot: with a downloaded voice
+reading German, and German the only language in the library, **Pitch is
+absent** — run 13's rule, working in the real app rather than only in the test.
+
+**Verification:** `npm test` 58 · lint silent · `ui:check` light and dark,
+seeded and empty, all clean · `voice:check` 26/26 · `keyboard` 12/12.
+
+**Still open, and the last thing before shipping:** Play refused the last upload
+because versionCode 13 is spent. `npm run set-version -- 1.12` raises the name
+across the three files and the code to 14; that belongs in the final run, once
+nothing else is going to change.
